@@ -1,39 +1,39 @@
 # Roblox Development Skill
 
-A Claude skill for professional Roblox game development with Rojo, Wally, and modern Luau patterns.
+**Give Claude AI expert knowledge about Roblox game development.**
 
-Use for **any Roblox development question** including:
-- Starting new projects with professional tooling
-- Debugging issues and troubleshooting
-- Package/library recommendations
-- Code patterns and best practices
-- MCP setup for AI-assisted Studio control
+This is a "skill" — a knowledge pack that teaches Claude how to help you build Roblox games using professional tools like Rojo, Wally, and modern Luau patterns. Once installed, just ask Claude and it knows what to do.
 
-## What It Does
+---
 
-**Project Setup:**
-- Creates folder structure (`src/client`, `src/server`, `src/shared`)
-- Configures tooling (Rojo, Wally, Selene, StyLua)
-- Sets up VS Code with recommended extensions
-- Copies starter code modules (Logger, Remotes, GameConfig, DataManager)
-- Makes initial git commit
+## What Can It Do?
 
-**Ongoing Development:**
-- Answers Luau/Roblox questions with reference docs
-- Recommends libraries (Promise, GoodSignal, ProfileStore, etc.)
-- Provides troubleshooting via gotchas guide
-- Guides MCP setup for Studio integration
+| Ask Claude... | And it will... |
+|---------------|----------------|
+| "Set up a new Roblox project" | Create a full project with folders, config files, and starter code |
+| "What library should I use for saving player data?" | Recommend ProfileStore with setup instructions |
+| "Why isn't my Rojo sync working?" | Walk through common fixes from the troubleshooting guide |
+| "How do I prevent memory leaks?" | Explain cleanup patterns with code examples |
 
-## Requirements
+**No more Googling DevForum posts** — Claude has the answers built in.
 
-- [Rokit](https://github.com/rojo-rbx/rokit) installed
-- [Claude Code](https://docs.anthropic.com/en/docs/claude-code) or [claude.ai](https://claude.ai) with computer use
-- VS Code (recommended)
-- Roblox Studio
+---
 
-## Installation
+## Quick Start
 
-### Quick Install (Recommended)
+### Step 1: Get Claude Code
+
+You need **Claude Code** — the VS Code extension that lets Claude edit your files and run commands.
+
+1. Open VS Code
+2. Install the [Claude Code extension](https://marketplace.visualstudio.com/items?itemName=anthropic.claude-code)
+3. Sign in with your Anthropic account
+
+> **Don't have Claude Code?** You can also use this skill on [claude.ai](https://claude.ai) with computer use enabled, but Claude Code is easier.
+
+### Step 2: Install the Skill
+
+Open your terminal and run:
 
 **macOS/Linux:**
 ```bash
@@ -45,110 +45,122 @@ curl -sSL https://raw.githubusercontent.com/undeadpickle/roblox-project-skill/ma
 irm https://raw.githubusercontent.com/undeadpickle/roblox-project-skill/main/install.ps1 | iex
 ```
 
-### Manual Install
+That's it! The skill is now installed.
 
-1. Clone this repo
-2. Copy `SKILL.md`, `assets/`, and `references/` to your Claude skills directory:
-   - **Claude Code (global):** `~/.claude/skills/roblox-dev/`
-   - **Claude Code (per-project):** `.claude/skills/roblox-dev/`
-   - **claude.ai computer use:** `/mnt/skills/user/roblox-dev/`
+### Step 3: Use It
 
-## Usage
+Open Claude Code (click the Claude icon in VS Code) and try:
 
-In Claude Code or claude.ai:
-
-**Start a new project:**
 ```
-Set up a new Roblox project called ParkourPanic
+Set up a new Roblox project called MyGame
 ```
 
-**Ask development questions:**
-```
-What library should I use for data persistence?
-Why isn't my Rojo sync working?
-How do I validate remote event arguments?
-```
+Claude will ask a few questions, then create everything for you.
 
-**Reference the skill directly:**
-```
-Use the roblox-dev skill to help me debug this issue
-```
+---
 
-**Project setup flow:**
-1. Ask project name and language (Luau/roblox-ts)
-2. Create folder structure
-3. Initialize and verify tools (Rojo, Wally, Selene, StyLua)
-4. Copy config files and starter code
-5. Optionally add Wally packages (Promise, GoodSignal, ProfileStore)
-6. Optionally set up MCP for AI-assisted Studio control
-7. Optionally add DataManager module
-8. Run linting and make initial commit
+## Before You Build a Project
+
+When you're ready to actually create a Roblox project (not just install this skill), you'll need:
+
+- **[Rokit](https://github.com/rojo-rbx/rokit)** — Tool manager (Claude will help you install this)
+- **VS Code** — Code editor (you probably already have this)
+- **Roblox Studio** — For testing your game
+
+Don't worry if you don't have Rokit yet — when you ask Claude to set up a project, it will check and guide you through installing anything that's missing.
+
+---
+
+## What You Can Ask
+
+**Starting a project:**
+- "Set up a new Roblox project called ParkourPanic"
+- "Initialize a Roblox game with data persistence"
+
+**Getting recommendations:**
+- "What's the best library for UI in Roblox?"
+- "Should I use Knit or go framework-less?"
+- "What packages do I need for a trading system?"
+
+**Troubleshooting:**
+- "My Rojo plugin won't connect"
+- "Why am I getting 'infinite yield' warnings?"
+- "How do I fix DataStore throttling?"
+
+**Learning patterns:**
+- "How do I validate RemoteEvent arguments?"
+- "Show me a debounce pattern for Roblox"
+- "What's the right way to clean up connections?"
+
+---
 
 ## What Gets Created
+
+When you set up a new project, Claude creates this structure:
 
 ```
 your-project/
 ├── src/
-│   ├── client/
-│   │   ├── init.client.luau
-│   │   └── modules/
-│   ├── server/
-│   │   ├── init.server.luau
-│   │   └── modules/
-│   └── shared/
-│       ├── GameConfig.luau
-│       ├── Remotes.luau
-│       └── Logger.luau
-├── Packages/
-├── .vscode/
-│   ├── settings.json
-│   └── extensions.json
-├── .claude/rules/
-├── default.project.json
-├── wally.toml
-├── selene.toml
-├── stylua.toml
-├── .luaurc
-├── .gitignore
-├── .gitattributes
-├── CLAUDE.md
+│   ├── client/          ← Client-side scripts
+│   ├── server/          ← Server-side scripts
+│   └── shared/          ← Code used by both
+├── Packages/            ← Wally dependencies
+├── .vscode/             ← Editor settings
+├── default.project.json ← Rojo config
+├── wally.toml           ← Package manager config
+├── selene.toml          ← Linter config
+├── CLAUDE.md            ← Project notes for AI
 └── README.md
 ```
 
-## Reference Docs
+Plus starter code for logging, remote events, and game config.
 
-The skill includes reference docs for deeper guidance. These are read on-demand, not copied to your project:
+---
 
-| Doc | Purpose |
-|-----|---------|
-| `libraries.md` | Package recommendations (Promise, GoodSignal, ProfileStore, Fusion) |
-| `gotchas.md` | Common issues and troubleshooting (memory leaks, Rojo, Wally, security) |
-| `luau-conventions.md` | Naming, file structure, task library |
-| `luau-patterns.md` | Validation, tweening, error handling |
-| `asset-pipeline.md` | Images, sounds, models workflows |
-| `tool-versions.md` | Version pinning strategies |
-| `mcp-setup.md` | MCP server setup for AI-assisted Studio control |
+## Manual Installation
 
-## After Setup
+If you prefer not to run scripts from the internet:
 
-1. **Install VS Code extensions** — Command Palette → "Extensions: Show Recommended Extensions" → Install all
-2. **Start Rojo:** `rojo serve`
+1. Download this repository (Code → Download ZIP)
+2. Extract and copy these to `~/.claude/skills/roblox-dev/`:
+   - `SKILL.md`
+   - `assets/` folder
+   - `references/` folder
+
+---
+
+## Included Reference Docs
+
+The skill includes guides that Claude reads when relevant:
+
+| Guide | What it covers |
+|-------|----------------|
+| **libraries.md** | Which packages to use (Promise, ProfileStore, Fusion, etc.) |
+| **gotchas.md** | Common mistakes and how to fix them |
+| **luau-conventions.md** | Code style and naming conventions |
+| **luau-patterns.md** | Reusable code patterns |
+| **asset-pipeline.md** | Working with images, sounds, and models |
+| **mcp-setup.md** | Connecting Claude directly to Roblox Studio |
+
+---
+
+## After Your Project Is Set Up
+
+1. **Install VS Code extensions** — Claude will remind you, but: Command Palette → "Show Recommended Extensions" → Install all
+2. **Start the sync:** Run `rojo serve` in your terminal
 3. **Connect Studio:** Open Roblox Studio → Rojo plugin → Connect
-4. **Save place file:** File → Save to File As → `game.rbxl`
-5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
+4. **Save your place:** File → Save to File As → `game.rbxl`
+5. **Test:** Press F5, check Output for "[Client] Ready" and "[Server] Ready"
 
-## Learnings & Gotchas
+---
 
-The generated `CLAUDE.md` includes a "Learnings & Gotchas" section. When you or your AI assistant discovers something that doesn't work as expected, document it there. This knowledge persists across sessions and prevents repeating mistakes.
+## Questions?
 
-## Contributing
+- **Issues with this skill?** [Open an issue](https://github.com/undeadpickle/roblox-project-skill/issues)
+- **General Roblox questions?** Just ask Claude — that's what this skill is for!
 
-Issues and PRs welcome. Please keep contributions game-genre-agnostic.
+---
 
 ## License
 
-MIT — See [LICENSE](LICENSE)
-
-## Credits
-
-Built for the Roblox developer community. Inspired by modern development workflows and the need for consistent, professional project setup.
+MIT — do whatever you want with it.

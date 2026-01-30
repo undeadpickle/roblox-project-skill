@@ -29,6 +29,49 @@ rokit add rojo-rbx/rojo@7         # Latest 7.x.x
 rokit add rojo-rbx/rojo@7.6.1     # Exact version
 ```
 
+### When to Pin Versions
+
+| Context | Recommendation | Why |
+|---------|----------------|-----|
+| **Solo project, learning** | No pinning | Get latest features, learn current APIs |
+| **Solo project, production** | Major version | Avoid breaking changes, still get patches |
+| **Team project** | Exact versions | Everyone uses same tooling, no "works on my machine" |
+| **CI/CD pipelines** | Exact versions | Reproducible builds, predictable behavior |
+| **Open source project** | Major version | Contributors can use compatible versions |
+
+### Example: Team Project Setup
+
+```toml
+# rokit.toml (committed to git)
+[tools]
+rojo = "rojo-rbx/rojo@7.6.1"
+wally = "UpliftGames/wally@0.3.2"
+selene = "Kampfkarren/selene@0.27.1"
+stylua = "JohnnyMorganz/StyLua@0.20.0"
+```
+
+Team members run `rokit install` after pulling to get exact versions.
+
+### Wally Package Pinning
+
+Same principles apply to Wally packages in `wally.toml`:
+
+```toml
+# No pin (latest compatible)
+[dependencies]
+Promise = "evaera/promise"
+
+# Pinned to major (safe updates)
+[dependencies]
+Promise = "evaera/promise@4"
+
+# Exact (team projects, production)
+[dependencies]
+Promise = "evaera/promise@4.0.0"
+```
+
+**Recommendation:** For team projects, pin Wally packages to exact versions and update deliberately.
+
 ## Checking Installed Versions
 
 ```bash

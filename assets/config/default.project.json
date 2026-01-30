@@ -41,15 +41,9 @@
       "$ignoreUnknownInstances": true
     },
     "SoundService": {
-      "$properties": {
-        "RespectFilteringEnabled": true
-      },
       "$ignoreUnknownInstances": true
     },
     "Workspace": {
-      "$properties": {
-        "FilteringEnabled": true
-      },
       "$ignoreUnknownInstances": true
     },
     "Lighting": {

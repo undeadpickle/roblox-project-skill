@@ -76,6 +76,7 @@ local playerStore = ProfileStore.New("PlayerData_v1", DEFAULT_DATA)
 local profiles: { [Player]: Profile } = {}
 local loadPromises: { [Player]: any } = {} -- Promise<PlayerData>
 local playerTroves: { [Player]: any } = {} -- Trove per player
+local sessionStarts: { [Player]: number } = {} -- Track session start for PlayTime calculation
 
 --[[
 	Load player data. Returns a Promise that resolves with the data.
@@ -116,7 +117,8 @@ function DataManager.loadDataAsync(player: Player): any
 		profile.OnSessionEnd:Connect(function()
 			profiles[player] = nil
 			loadPromises[player] = nil
-			
+			sessionStarts[player] = nil
+
 			if playerTroves[player] then
 				playerTroves[player]:Destroy()
 				playerTroves[player] = nil
@@ -129,6 +131,7 @@ function DataManager.loadDataAsync(player: Player): any
 		end)
 
 		profiles[player] = profile
+		sessionStarts[player] = os.time() -- Track session start for PlayTime
 		log:info("Data loaded for", player.Name)
 
 		DataManager.OnDataLoaded:Fire(player, profile.Data)
@@ -224,17 +227,19 @@ end
 local function onPlayerRemoving(player: Player)
 	local profile = profiles[player]
 	if profile then
-		-- Update play time before saving
-		local sessionTime = os.time() - (profile.Data.Stats.JoinDate or os.time())
+		-- Update play time before saving (use session start, not JoinDate)
+		local sessionStart = sessionStarts[player] or os.time()
+		local sessionTime = os.time() - sessionStart
 		profile.Data.Stats.PlayTime += sessionTime
-		
+
 		profile:EndSession()
 	end
 
 	-- Cleanup
 	profiles[player] = nil
 	loadPromises[player] = nil
-	
+	sessionStarts[player] = nil
+
 	if playerTroves[player] then
 		playerTroves[player]:Destroy()
 		playerTroves[player] = nil

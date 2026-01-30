@@ -130,19 +130,50 @@ If you prefer not to run scripts from the internet:
 
 ---
 
+## Tools & Libraries Explained
+
+This skill sets up professional Roblox development using modern tools. Here's what each one does:
+
+### Development Tools
+
+| Tool | What it does |
+|------|--------------|
+| **[Rokit](https://github.com/rojo-rbx/rokit)** | Installs and manages the other tools. Like a toolbox that keeps everything organized. |
+| **[Rojo](https://rojo.space/)** | Syncs your code files to Roblox Studio. Edit in VS Code → changes appear in Studio instantly. |
+| **[Wally](https://wally.run/)** | Package manager. Downloads libraries (like npm for JavaScript). |
+| **[Selene](https://kampfkarren.github.io/selene/)** | Linter. Catches bugs and bad patterns before you run your code. |
+| **[StyLua](https://github.com/JohnnyMorganz/StyLua)** | Formatter. Auto-formats your code so it's consistent and readable. |
+
+### Recommended Libraries
+
+| Library | What it does | When you need it |
+|---------|--------------|------------------|
+| **[Promise](https://eryn.io/roblox-lua-promise/)** | Handles async operations cleanly. | Anytime you wait for something (data loading, HTTP requests). |
+| **[ProfileStore](https://madstudioroblox.github.io/ProfileStore/)** | Saves player data reliably. Prevents data loss and duplication. | Any game that saves progress. |
+| **[GoodSignal](https://github.com/stravant/goodsignal)** | Custom events for your code. Lets modules talk to each other. | When you need event-driven architecture. |
+| **[Trove](https://sleitnick.github.io/RbxUtil/api/Trove/)** | Tracks things for cleanup. Prevents memory leaks. | Managing connections, instances, any cleanup. |
+| **[Fusion](https://elttob.uk/Fusion/)** | Reactive UI framework. UI updates automatically when data changes. | Building complex interfaces. |
+
+**You don't need all of these** — Claude will recommend what's appropriate for your specific game.
+
+---
+
 ## Included Reference Docs
 
 The skill includes guides that Claude reads when relevant:
 
 | Guide | What it covers |
 |-------|----------------|
-| **libraries.md** | Which packages to use (Promise, ProfileStore, Fusion, etc.) |
+| **libraries.md** | Which packages to use and migration paths |
 | **gotchas.md** | Common mistakes and how to fix them |
 | **luau-conventions.md** | Code style and naming conventions |
 | **luau-patterns.md** | Reusable code patterns |
-| **tool-versions.md** | Rokit, version pinning, and tool troubleshooting |
+| **tool-versions.md** | Rokit, version pinning, team setup |
 | **asset-pipeline.md** | Working with images, sounds, and models |
 | **mcp-setup.md** | Connecting Claude directly to Roblox Studio |
+| **testing.md** | Unit testing with TestEZ |
+| **debugging.md** | Finding and fixing bugs in Studio |
+| **quick-reference.md** | Cheat sheet for common Luau patterns |
 
 ---
 

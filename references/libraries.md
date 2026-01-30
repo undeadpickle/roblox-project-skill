@@ -244,6 +244,133 @@ Before panicking about an "inactive" repo, check:
 
 ---
 
+## Migration Paths
+
+Guides for moving from older libraries to recommended alternatives.
+
+### ProfileService → ProfileStore
+
+ProfileStore is the successor by the same author (loleris). Key differences:
+
+| ProfileService | ProfileStore |
+|----------------|--------------|
+| `ProfileService.GetProfileStore()` | `ProfileStore.New()` |
+| `Profile:Release()` | `Profile:EndSession()` |
+| `Profile:ListenToRelease()` | `Profile.OnSessionEnd` |
+| 30+ second session locks | Near-instant via MessagingService |
+
+**Migration steps:**
+
+1. Install ProfileStore alongside ProfileService
+2. Create new data key (e.g., `PlayerData_v2`)
+3. On player join: load ProfileStore, migrate data from ProfileService if needed
+4. Remove ProfileService after all players have migrated
+
+```luau
+-- Simple migration check
+local oldProfile = ProfileService.GetProfileStore("PlayerData"):LoadProfileAsync(key)
+local newProfile = ProfileStore.New("PlayerData_v2", DEFAULT_DATA):StartSessionAsync(key)
+
+if oldProfile and newProfile.Data.migratedAt == 0 then
+    -- Copy old data to new
+    for key, value in oldProfile.Data do
+        newProfile.Data[key] = value
+    end
+    newProfile.Data.migratedAt = os.time()
+    oldProfile:Release()
+end
+```
+
+### Roact → Fusion 0.3
+
+Fusion uses different paradigms than Roact:
+
+| Roact | Fusion 0.3 |
+|-------|------------|
+| `Roact.createElement()` | `scope:New()` |
+| `Roact.mount()` | Direct parenting |
+| `Roact.unmount()` | `scope:doCleanup()` |
+| `useState` hook | `scope:Value()` |
+| Props drilling | Computed values |
+
+**Key concept changes:**
+
+- **No virtual DOM** — Fusion creates real instances
+- **Reactive by default** — Values auto-update UI
+- **Scoped cleanup** — Scope replaces Roact lifecycle
+
+```luau
+-- Roact
+local element = Roact.createElement("TextLabel", {
+    Text = self.state.count,
+})
+Roact.mount(element, parent)
+
+-- Fusion 0.3
+local scope = Fusion:scoped()
+local count = scope:Value(0)
+
+scope:New("TextLabel")({
+    Parent = parent,
+    Text = scope:Computed(function(use)
+        return tostring(use(count))
+    end),
+})
+```
+
+**Migration strategy:** Rewrite components one at a time. Fusion and Roact can coexist during migration.
+
+### Knit → Framework-less
+
+Knit was archived July 2024. The author recommends not using it for new projects.
+
+**What Knit provided:**
+
+| Knit Feature | Replacement |
+|--------------|-------------|
+| `Knit.CreateService()` | Plain ModuleScript |
+| `Knit.CreateController()` | Plain ModuleScript |
+| `Knit.Start()` | Manual initialization |
+| `service.Client` remotes | Remotes.luau helper |
+| `Knit.GetService()` | Direct require |
+
+**Migration approach:**
+
+1. **Services become modules** — Same code, just export functions directly
+2. **Remove Knit.Start()** — Call init functions explicitly from entry points
+3. **Replace service.Client** — Use centralized Remotes module
+
+```luau
+-- Before (Knit)
+local DataService = Knit.CreateService({
+    Name = "DataService",
+    Client = {
+        GetData = Knit.CreateSignal(),
+    },
+})
+
+function DataService:KnitStart()
+    -- init
+end
+
+-- After (framework-less)
+local DataService = {}
+
+function DataService.init()
+    -- init
+end
+
+function DataService.getData(player)
+    -- implementation
+end
+
+return DataService
+```
+
+The main loss is automatic service discovery. In practice, explicit requires are clearer and easier to trace.
+
+---
+
 ## Wally Package Names
 
 For `wally.toml`:

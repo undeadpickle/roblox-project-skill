@@ -14,12 +14,14 @@ Consult these files based on the topic:
 | User asks about... | Consult first |
 |-------------------|---------------|
 | Package recommendations, "what library for X", dependencies | `references/libraries.md` |
-| Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` |
+| Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` then `references/debugging.md` |
 | Code style, naming conventions, file organization | `references/luau-conventions.md` |
 | How to implement patterns (services, cleanup, validation, etc.) | `references/luau-patterns.md` |
 | Tool version conflicts, Rokit pinning, compatibility | `references/tool-versions.md` |
 | MCP setup, Studio connection, AI-assisted development | `references/mcp-setup.md` |
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
+| Testing, TestEZ, writing tests | `references/testing.md` |
+| Quick syntax lookup, common APIs | `references/quick-reference.md` |
 | **Starting a new project** | Follow [Project Setup Workflow](#project-setup-workflow) below |
 
 **Starter code in `assets/starter-code/`** shows recommended patterns:
@@ -101,7 +103,7 @@ Copy from `assets/config/` to project root:
 - `default.project.json` → Replace `PROJECT_NAME` with user's project name
 - `selene.toml`
 - `stylua.toml`
-- `.luaurc` (from `luaurc.json`)
+- `.luaurc.json`
 - `.gitignore` (from `gitignore.txt`)
 - `.gitattributes` (from `gitattributes.txt`)
 

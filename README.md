@@ -103,7 +103,8 @@ your-project/
 ├── src/
 │   ├── client/          ← Client-side scripts
 │   ├── server/          ← Server-side scripts
-│   └── shared/          ← Code used by both
+│   ├── shared/          ← Code used by both
+│   └── replicatedFirst/ ← Early client code (loading screens)
 ├── Packages/            ← Wally dependencies
 ├── .vscode/             ← Editor settings
 ├── default.project.json ← Rojo config
@@ -139,6 +140,7 @@ The skill includes guides that Claude reads when relevant:
 | **gotchas.md** | Common mistakes and how to fix them |
 | **luau-conventions.md** | Code style and naming conventions |
 | **luau-patterns.md** | Reusable code patterns |
+| **tool-versions.md** | Rokit, version pinning, and tool troubleshooting |
 | **asset-pipeline.md** | Working with images, sounds, and models |
 | **mcp-setup.md** | Connecting Claude directly to Roblox Studio |
 

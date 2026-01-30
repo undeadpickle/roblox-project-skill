@@ -49,7 +49,8 @@ PROJECT_NAME/
 ├── src/
 │   ├── client/          # Client-side scripts
 │   ├── server/          # Server-side scripts
-│   └── shared/          # Shared modules
+│   ├── shared/          # Shared modules
+│   └── replicatedFirst/ # Early client code (loading screens)
 ├── Packages/            # Wally dependencies
 ├── default.project.json # Rojo project config
 ├── wally.toml           # Package manifest

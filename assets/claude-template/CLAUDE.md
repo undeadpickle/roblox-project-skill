@@ -10,6 +10,7 @@ Brief description of what this project does.
 - `src/client/` — Client-side code (runs on player's device)
 - `src/server/` — Server-side code (runs on Roblox servers)
 - `src/shared/` — Shared modules (used by both client and server)
+- `src/replicatedFirst/` — Early client code (loading screens, pre-game setup)
 - `Packages/` — Wally dependencies (auto-generated, don't edit)
 
 ### Key Modules

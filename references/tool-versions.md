@@ -69,6 +69,27 @@ rokit self-update
 - Config: `selene.toml`
 - Use `std = "roblox"` for Roblox API support
 
+## A Note on GitHub Activity
+
+Some libraries show infrequent commits. This usually means **"stable and feature-complete,"** not "abandoned."
+
+Examples:
+- **GoodSignal** — Does one job perfectly. No changes needed.
+- **ProfileStore** — Mature, battle-tested. Updates only for engine changes.
+
+Before assuming a library is abandoned, check:
+
+1. **Are issues being responded to?** Active maintainer engagement matters more than commit frequency.
+2. **Are there recent releases?** Releases can happen without commits (version bumps, CI builds).
+3. **Is it still recommended in DevForum discussions?** Community consensus is a strong signal.
+4. **When was the last meaningful update?** A library last updated 6 months ago for a bug fix is healthy.
+
+**Red flags** (actually abandoned):
+- Unanswered issues piling up for 1+ years
+- Broken with current Roblox engine, no fix in sight
+- Author explicitly archived the repo
+- Superseded by author's own newer library (e.g., ProfileService → ProfileStore)
+
 ## Troubleshooting
 
 ### "Tool not found" after install
@@ -88,3 +109,10 @@ rokit add rojo-rbx/rojo
 rm -rf ~/.wally
 wally install
 ```
+
+### Version conflicts in team projects
+
+If team members have different versions:
+1. Ensure `rokit.toml` is committed to git
+2. Everyone runs `rokit install` after pulling
+3. Consider pinning to exact versions for critical tools

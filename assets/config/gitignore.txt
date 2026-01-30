@@ -1,0 +1,34 @@
+# Roblox files
+*.rbxl
+*.rbxlx
+*.rbxm
+*.rbxmx
+*.rbxl.lock
+
+# Dependencies
+Packages/
+!Packages/.gitkeep
+wally.lock
+
+# Build artifacts
+sourcemap.json
+build/
+dist/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+.idea/
+
+# MCP
+RobloxStudioMCP.app/

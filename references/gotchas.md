@@ -5,7 +5,7 @@ Common issues and their solutions, sourced from DevForum, GitHub issues, and com
 ## Contents
 
 - [Memory Leaks](#memory-leaks) — Connection circular references, PlayerAdded nesting
-- [Rojo](#rojo) — Sync issues, two-way sync crashes, macOS bugs, Team Create conflicts
+- [Rojo](#rojo) — `$ignoreUnknownInstances`, sync issues, two-way sync crashes, Team Create conflicts
 - [Wally](#wally) — Private flag, realm separation, dependency resolution
 - [RemoteEvents / Security](#remoteevents--security) — Client validation, server-side checks
 - [DataStores](#datastores) — Throttling, pcall usage, UpdateAsync
@@ -90,6 +90,29 @@ When a Player leaves, Roblox destroys the Player instance, which disconnects all
 ---
 
 ## Rojo
+
+### Rojo Deletes Studio-Created Assets (`$ignoreUnknownInstances`)
+
+By default, Rojo deletes any instances in Studio that don't exist in your filesystem. This means particles, models, sounds, and other Studio-created assets disappear on sync.
+
+```json
+// ❌ DEFAULT BEHAVIOR: Studio assets get deleted
+"Workspace": {
+  "$properties": { "FilteringEnabled": true }
+}
+
+// ✅ RECOMMENDED: Preserve Studio-created instances
+"Workspace": {
+  "$properties": { "FilteringEnabled": true },
+  "$ignoreUnknownInstances": true
+}
+```
+
+**Best practice:** Add `"$ignoreUnknownInstances": true` to every service in your project.json. This enables a "hybrid workflow" where Rojo manages code and Studio manages assets.
+
+Services that commonly need it: `Workspace`, `ServerStorage`, `StarterGui`, `Lighting`, `SoundService`, `ReplicatedStorage`, `StarterPlayer`.
+
+Source: [GitHub issue #716](https://github.com/rojo-rbx/rojo/issues/716)
 
 ### Don't use `$schema` in project.json
 
@@ -373,6 +396,22 @@ end)
 ---
 
 ## Type Checking / Luau LSP
+
+### Deprecated: `luau-lsp.types.roblox`
+
+The old setting `luau-lsp.types.roblox: true` shows a deprecation warning. Use the new setting:
+
+```json
+// ❌ Deprecated
+{
+  "luau-lsp.types.roblox": true
+}
+
+// ✅ Current
+{
+  "luau-lsp.platform.type": "roblox"
+}
+```
 
 ### New Type Solver Changes (Nov 2025)
 

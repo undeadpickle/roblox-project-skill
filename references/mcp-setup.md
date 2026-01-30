@@ -1,112 +1,186 @@
-# Roblox Studio MCP Setup
+# Roblox MCP Server Setup
 
-MCP (Model Context Protocol) lets AI assistants like Claude directly interact with Roblox Studio—reading game structure, editing scripts, creating objects, and more.
+MCP (Model Context Protocol) servers let Claude see and interact with Roblox Studio directly. Studio must be open for either to work.
 
-## Options
+## Available MCP Servers
 
-### Option A: Community MCP (Recommended)
+| Server | Purpose | Tools |
+|--------|---------|-------|
+| **Official Roblox MCP** | Run Luau code, insert models | `run_code`, `insert_model` |
+| **boshyxd MCP** | Read scripts, bulk operations, project analysis | 18+ tools |
 
-**boshyxd/robloxstudio-mcp** — Node.js-based, 18+ tools, active development.
+**Recommendation:** Start with the Official MCP—it covers most use cases. Add boshyxd later if you need script reading or bulk operations.
 
-**Features:**
-- Read/edit scripts directly
-- Create and modify objects
-- Bulk property changes
-- Project structure exploration
-- Mass operations
+---
 
-**Setup:**
+## Official Roblox MCP (Recommended)
 
-1. **Install the Studio plugin:**
-   - Download from [GitHub releases](https://github.com/boshyxd/robloxstudio-mcp/releases)
-   - Copy to your Plugins folder:
-     - Windows: `%LOCALAPPDATA%\Roblox\Plugins\`
-     - macOS: `~/Documents/Roblox/Plugins/`
+### Step 1: Download the App
 
-2. **Enable HTTP requests in Studio:**
-   - Game Settings → Security → Allow HTTP Requests → On
+Download from [GitHub releases](https://github.com/Roblox/studio-rust-mcp-server/releases):
+- macOS: `macOS-rbx-studio-mcp.zip`
+- Windows: `rbx-studio-mcp.exe`
 
-3. **Add to Claude Code:**
-   ```bash
-   claude mcp add robloxstudio -- npx -y robloxstudio-mcp
-   ```
+### Step 2: Move to a Global Location
 
-   Or add to MCP config manually:
-   ```json
-   {
-     "mcpServers": {
-       "robloxstudio-mcp": {
-         "command": "npx",
-         "args": ["-y", "robloxstudio-mcp"]
-       }
-     }
-   }
-   ```
+**Important:** Don't leave it in a random project folder. Move it somewhere permanent:
 
-4. **Verify connection:**
-   - Open Studio with a place
-   - Plugin should show "Connected"
-   - In Claude, MCP tools should appear
-
-### Option B: Official Roblox MCP
-
-**Roblox/studio-rust-mcp-server** — Rust-based, official but limited (2 tools: `insert_model`, `run_code`).
-
-**Setup:**
-
-1. **Prerequisites:**
-   - Rust installed
-   - Roblox Studio installed and opened once
-   - Claude Desktop installed and opened once
-
-2. **Build and install:**
-   ```bash
-   git clone https://github.com/Roblox/studio-rust-mcp-server.git
-   cd studio-rust-mcp-server
-   cargo run
-   ```
-   
-   This builds the server, installs the Claude config, and installs the Studio plugin.
-
-3. **Verify:**
-   - Studio: Plugins tab → MCP plugin should appear
-   - Claude Desktop: Hammer icon should show `insert_model` and `run_code` tools
-
-**Manual config (if needed):**
-```json
-{
-  "mcpServers": {
-    "Roblox Studio": {
-      "command": "/path/to/rbx-studio-mcp",
-      "args": ["--stdio"]
-    }
-  }
-}
+**macOS:**
+```bash
+# Unzip first if needed, then:
+mv ~/Downloads/RobloxStudioMCP.app /Applications/
 ```
+
+**Windows:**
+```
+Move to: C:\Program Files\RobloxStudioMCP\
+```
+
+### Step 3: Add to Claude Code
+
+**macOS:**
+```bash
+claude mcp add roblox-studio -- "/Applications/RobloxStudioMCP.app/Contents/MacOS/rbx-studio-mcp" --stdio
+```
+
+**Windows:**
+```bash
+claude mcp add roblox-studio -- "C:\Program Files\RobloxStudioMCP\rbx-studio-mcp.exe" --stdio
+```
+
+### Step 4: Restart & Verify
+
+1. Restart VS Code
+2. Open Roblox Studio with a place
+3. Check Studio's Output window for: `"The MCP Studio plugin is ready for prompts"`
+4. In Claude Code, run: `claude mcp list` — should show `roblox-studio: ✓ Connected`
+
+---
+
+## boshyxd MCP (Optional)
+
+Adds more tools for reading scripts, searching objects, and bulk operations.
+
+### Step 1: Check Your npx Path
+
+**Critical for NVM users:** Claude Code spawns MCP servers in a clean environment that doesn't load your shell profile, so `npx` won't resolve.
+
+```bash
+which npx
+```
+
+Example output: `/Users/yourname/.nvm/versions/node/v22.13.1/bin/npx`
+
+### Step 2: Add to Claude Code
+
+**If using NVM (use full path):**
+```bash
+claude mcp add robloxstudio -e ROBLOX_STUDIO_PORT=3003 -- /Users/yourname/.nvm/versions/node/v22.13.1/bin/npx -y robloxstudio-mcp@latest
+```
+
+**If npx is in standard PATH:**
+```bash
+claude mcp add robloxstudio -e ROBLOX_STUDIO_PORT=3003 -- npx -y robloxstudio-mcp@latest
+```
+
+> **Why port 3003?** Avoids conflict with the official MCP if running both.
+
+### Step 3: Install Studio Plugin
+
+1. In Studio: Plugins tab → Manage Plugins → Search "MCP" (or get from Creator Store)
+2. Game Settings → Security → Enable **"Allow HTTP Requests"**
+3. Click MCP plugin icon → Set Server URL to `http://localhost:3003`
+4. Click Connect
+
+### Step 4: Restart & Verify
+
+1. Restart VS Code
+2. Health check:
+   ```bash
+   curl -s http://localhost:3003/health
+   ```
+
+   Healthy response:
+   ```json
+   {"pluginConnected":true,"mcpServerActive":true}
+   ```
+
+---
+
+## Running Both Servers
+
+You can run both simultaneously:
+
+| Server | Port | Tools Prefix |
+|--------|------|--------------|
+| Official | (stdio) | `mcp__roblox-studio__` |
+| boshyxd | 3003 | `mcp__robloxstudio__` |
+
+---
 
 ## Troubleshooting
 
-| Issue | Fix |
-|-------|-----|
-| Plugin not showing | Restart Studio, check Plugins folder path |
-| "Not connected" | Enable HTTP Requests in Game Settings → Security |
-| Tools not appearing in Claude | Restart Claude, check MCP config syntax |
-| Commands failing | Ensure a place is open in Studio |
+### "Failed" status but server is running
+
+This happens when an existing server process is holding the port, preventing Claude Code from spawning its own.
+
+```bash
+# Kill existing processes
+lsof -ti :3003 | xargs kill 2>/dev/null
+
+# Restart VS Code
+```
+
+### NVM: "npx not found" or MCP fails to start
+
+Claude Code doesn't load your `.zshrc`/`.bashrc`, so NVM's npx isn't in PATH.
+
+**Fix:** Use the full path to npx (see Step 1 of boshyxd setup).
+
+### Port already in use
+
+```bash
+# Find what's using the port
+lsof -i :3003
+
+# Kill it
+lsof -ti :3003 | xargs kill
+```
+
+### Plugin stuck on "Retrying"
+
+1. Restart VS Code (this restarts the MCP server)
+2. Reconnect the Studio plugin
+
+### Tools work then stop after Studio restart
+
+The Studio plugin disconnects when you close/reopen Studio. Just reconnect the plugin.
+
+### Official MCP: No plugin visible in Studio
+
+The plugin auto-installs when you first run the MCP. If missing:
+1. Close Studio
+2. Run the MCP app manually once
+3. Reopen Studio
+
+---
+
+## Quick Reference
+
+| Task | Server | Command/Tool |
+|------|--------|--------------|
+| Run Luau code in Studio | Official | `run_code` |
+| Insert marketplace model | Official | `insert_model` |
+| Get project hierarchy | boshyxd | `get_project_structure` |
+| Search objects by name/class | boshyxd | `search_objects` |
+| Read script source | boshyxd | `get_script_source` |
+| Bulk property changes | boshyxd | `mass_set_property` |
+
+---
 
 ## Security Notes
 
 - MCP allows AI to read and modify your open place
 - Only enable when actively using AI assistance
-- Toggle plugin off when not needed
-- Review any actions before confirming in Claude
-
-## Which to Choose?
-
-| Need | Choose |
-|------|--------|
-| Script editing, bulk operations | Community (Option A) |
-| Simple model insertion, code execution | Official (Option B) |
-| Easiest setup | Community (npx install) |
-| Minimal dependencies | Official (if Rust already installed) |
-
-For most developers, **Option A (Community MCP)** provides the best experience with more tools and easier setup.
+- Review actions before confirming
+- The official MCP shows a warning: *"This MCP server will be accessed by third-party tools, allowing them to modify and read the contents of your opened place."*

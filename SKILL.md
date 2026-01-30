@@ -139,21 +139,32 @@ wally install
 ### Step 9: Optional — MCP Setup
 
 **Ask the user:**
-> "Do you have Roblox Studio MCP configured? (Lets AI control Studio directly)"
+> "Do you have Roblox Studio MCP configured? (Lets AI run code and insert models in Studio)"
 
 If no and they want it:
 
-**Quick setup (recommended):**
+**Official Roblox MCP (recommended):**
 
-1. Download Studio plugin from [robloxstudio-mcp releases](https://github.com/boshyxd/robloxstudio-mcp/releases)
-2. Copy to Plugins folder (`%LOCALAPPDATA%\Roblox\Plugins\` on Windows)
-3. In Studio: Game Settings → Security → Enable HTTP Requests
-4. Add to Claude Code:
+1. Download from [GitHub releases](https://github.com/Roblox/studio-rust-mcp-server/releases):
+   - macOS: `macOS-rbx-studio-mcp.zip`
+   - Windows: `rbx-studio-mcp.exe`
+
+2. Move to a global location:
+   - macOS: `/Applications/RobloxStudioMCP.app`
+   - Windows: `C:\Program Files\RobloxStudioMCP\`
+
+3. Add to Claude Code:
    ```bash
-   claude mcp add robloxstudio -- npx -y robloxstudio-mcp
+   # macOS
+   claude mcp add roblox-studio -- "/Applications/RobloxStudioMCP.app/Contents/MacOS/rbx-studio-mcp" --stdio
+
+   # Windows
+   claude mcp add roblox-studio -- "C:\Program Files\RobloxStudioMCP\rbx-studio-mcp.exe" --stdio
    ```
 
-See `references/mcp-setup.md` for detailed options and troubleshooting.
+4. Restart VS Code, then open Studio — check Output for "MCP Studio plugin is ready"
+
+**Want more tools?** The boshyxd MCP adds script reading and bulk operations. See `references/mcp-setup.md` for setup (note: NVM users must use full path to npx).
 
 ### Step 10: Verify & Commit
 

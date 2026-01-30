@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-SKILL_NAME="roblox-project"
+SKILL_NAME="roblox-dev"
 REPO_URL="https://github.com/undeadpickle/roblox-project-skill"
 
 # Detect install location
@@ -14,7 +14,7 @@ else
 fi
 
 echo "╔════════════════════════════════════════╗"
-echo "║   Roblox Project Skill Installer       ║"
+echo "║   Roblox Development Skill Installer   ║"
 echo "╚════════════════════════════════════════╝"
 echo ""
 echo "Installing to: $SKILL_DIR"

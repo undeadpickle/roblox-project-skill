@@ -1,19 +1,19 @@
 <#
 .SYNOPSIS
-    Installs the Roblox Project Skill for Claude Code
+    Installs the Roblox Development Skill for Claude Code
 .DESCRIPTION
-    Downloads and installs the skill to ~/.claude/skills/roblox-project/
+    Downloads and installs the skill to ~/.claude/skills/roblox-dev/
 #>
 
 $ErrorActionPreference = "Stop"
 
-$SkillName = "roblox-project"
+$SkillName = "roblox-dev"
 $RepoUrl = "https://github.com/undeadpickle/roblox-project-skill"
 $SkillDir = "$env:USERPROFILE\.claude\skills\$SkillName"
 
 Write-Host ""
 Write-Host "╔════════════════════════════════════════╗" -ForegroundColor Cyan
-Write-Host "║   Roblox Project Skill Installer       ║" -ForegroundColor Cyan
+Write-Host "║   Roblox Development Skill Installer   ║" -ForegroundColor Cyan
 Write-Host "╚════════════════════════════════════════╝" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Installing to: $SkillDir"

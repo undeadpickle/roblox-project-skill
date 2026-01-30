@@ -1,6 +1,8 @@
 # Roblox Project Setup Skill
 
-A Claude skill for initializing professional Roblox projects with Rojo, Wally, and modern tooling.
+A Claude skill for initializing professional Roblox game projects with Rojo, Wally, and modern tooling.
+
+> **Note:** Currently supports game projects only. Library/plugin support planned for future versions.
 
 ## What It Does
 
@@ -56,13 +58,14 @@ Use the roblox-project skill to initialize my project
 ```
 
 The skill will:
-1. Ask project name, type (game/library/plugin), and language (Luau/roblox-ts)
+1. Ask project name and language (Luau/roblox-ts)
 2. Create the folder structure
 3. Initialize and verify tools (Rojo, Wally, Selene, StyLua)
 4. Copy config files and starter code
 5. Optionally add common Wally packages
-6. Run linting to verify setup
-7. Show checkpoint and make initial commit
+6. Optionally set up MCP for AI-assisted Studio control
+7. Run linting to verify setup
+8. Show checkpoint and make initial commit
 
 ## What Gets Created
 
@@ -105,6 +108,7 @@ The skill includes reference docs for deeper guidance. These are read on-demand,
 | `luau-patterns.md` | Validation, tweening, error handling |
 | `asset-pipeline.md` | Images, sounds, models workflows |
 | `tool-versions.md` | Version pinning strategies |
+| `mcp-setup.md` | MCP server setup for AI-assisted Studio control |
 
 ## After Setup
 

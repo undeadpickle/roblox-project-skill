@@ -1,6 +1,6 @@
 ---
 name: roblox-project
-description: Initialize a Roblox project with professional tooling. Creates folder structure, config files (Rojo, Wally, Selene, StyLua), starter code, VS Code settings, and CLAUDE.md. Works for games, libraries, or plugins. Use when starting a new Roblox project or setting up Rojo workflow.
+description: Initialize a Roblox game project with professional tooling. Creates folder structure, config files (Rojo, Wally, Selene, StyLua), starter code, VS Code settings, and CLAUDE.md. Use when starting a new Roblox game or setting up Rojo workflow.
 ---
 
 # Roblox Project Setup
@@ -25,40 +25,23 @@ irm https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.ps1 | 
 
 ## Workflow
 
-### Step 1: Gather Requirements
+### Step 1: Gather Project Info
 
 **Ask the user:**
 
 1. **Project name?** — Default: folder name in PascalCase
 
-2. **Project type?**
-   - Game (default) — Full client/server structure
-   - Library — Shared modules only, publishable to Wally
-   - Plugin — Studio plugin structure
-
-3. **Language?**
+2. **Language?**
    - Luau (default)
-   - roblox-ts (TypeScript) — Requires additional setup
+   - roblox-ts (TypeScript)
 
-If roblox-ts selected, inform user this skill sets up Luau projects. Point them to [roblox-ts docs](https://roblox-ts.com/) for TypeScript setup.
+If roblox-ts selected, inform user this skill sets up Luau projects only. Point them to [roblox-ts docs](https://roblox-ts.com/) for TypeScript setup.
 
 ### Step 2: Create Folder Structure
 
-**For Game projects:**
 ```bash
 mkdir -p src/client/modules src/server/modules src/shared Packages .vscode .claude/rules
 touch Packages/.gitkeep
-```
-
-**For Library projects:**
-```bash
-mkdir -p src Packages .vscode .claude/rules
-touch Packages/.gitkeep
-```
-
-**For Plugin projects:**
-```bash
-mkdir -p src .vscode .claude/rules
 ```
 
 ### Step 3: Initialize Git & Tools
@@ -101,11 +84,9 @@ Copy `assets/vscode/` contents to `.vscode/`:
 - `settings.json`
 - `extensions.json`
 
-**For Library/Plugin projects:** Modify `default.project.json` tree structure appropriately.
-
 ### Step 5: Copy Starter Code
 
-**For Game projects**, copy from `assets/starter-code/`:
+Copy from `assets/starter-code/`:
 
 | Source File | Destination | Notes |
 |-------------|-------------|-------|
@@ -114,10 +95,6 @@ Copy `assets/vscode/` contents to `.vscode/`:
 | `GameConfig.luau` | `src/shared/GameConfig.luau` | Replace `PROJECT_NAME` |
 | `Remotes.luau` | `src/shared/Remotes.luau` | Remote event helpers |
 | `Logger.luau` | `src/shared/Logger.luau` | Logging utility |
-
-**For Library projects:** Copy only `Logger.luau` to `src/`, create `init.luau` as main module.
-
-**For Plugin projects:** Create `src/init.server.luau` with basic plugin scaffold.
 
 ### Step 6: Create Project Files
 
@@ -143,21 +120,42 @@ realm = "shared"
 ### Step 8: Optional — Add Common Packages
 
 **Ask the user:**
-> "Want me to add any common Wally packages?"
+> "Want me to add any common Wally packages? (Promise, Signal, Trove)"
 
-Suggestions based on project type:
+If yes, add to `wally.toml` under `[dependencies]`:
 
-**Games:**
-- `Promise` — Async handling
-- `Signal` — Custom events
-- `Trove` — Cleanup management
+```toml
+[dependencies]
+Promise = "evaera/promise@4.0.0"
+Signal = "sleitnick/signal@2.0.1"
+Trove = "sleitnick/trove@1.1.0"
+```
 
-**Libraries:**
-- `TestEZ` — Unit testing
+Then run:
+```bash
+wally install
+```
 
-If yes, add to `wally.toml` under `[dependencies]` and run `wally install`.
+### Step 9: Optional — MCP Setup
 
-### Step 9: Verify & Commit
+**Ask the user:**
+> "Do you have Roblox Studio MCP configured? (Lets AI control Studio directly)"
+
+If no and they want it:
+
+**Quick setup (recommended):**
+
+1. Download Studio plugin from [robloxstudio-mcp releases](https://github.com/boshyxd/robloxstudio-mcp/releases)
+2. Copy to Plugins folder (`%LOCALAPPDATA%\Roblox\Plugins\` on Windows)
+3. In Studio: Game Settings → Security → Enable HTTP Requests
+4. Add to Claude Code:
+   ```bash
+   claude mcp add robloxstudio -- npx -y robloxstudio-mcp
+   ```
+
+See `references/mcp-setup.md` for detailed options and troubleshooting.
+
+### Step 10: Verify & Commit
 
 **Run linting to verify starter code:**
 ```bash
@@ -182,7 +180,7 @@ git add .
 git commit -m "Initial project setup"
 ```
 
-### Step 10: Final Instructions
+### Step 11: Final Instructions
 
 Tell user:
 
@@ -192,7 +190,7 @@ Tell user:
 
 3. **Connect Studio:** Open Roblox Studio → Rojo plugin → Connect
 
-4. **Save place file:** File → Save to File As → `game.rbxl` (for games)
+4. **Save place file:** File → Save to File As → `game.rbxl`
 
 5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
 
@@ -206,3 +204,4 @@ Available on-demand for deeper guidance:
 - `references/luau-patterns.md` — Common patterns (validation, tweening, error handling)
 - `references/tool-versions.md` — Version pinning strategies
 - `references/asset-pipeline.md` — Images, sounds, models workflows
+- `references/mcp-setup.md` — MCP server setup for AI-assisted Studio control

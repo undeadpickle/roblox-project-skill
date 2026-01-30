@@ -1,11 +1,11 @@
 ---
-name: new-roblox-project
-description: Initialize a new Roblox game project with professional tooling. Optionally captures game concept (pillars, core loop, MVP scope) during setup. Creates folder structure, config files (Rojo, Wally, Selene, StyLua), starter Luau modules, VS Code settings, and CLAUDE.md. Use when user wants to start a new Roblox project, set up Rojo workflow, or initialize a game from scratch. Run in an empty project folder.
+name: roblox-project
+description: Initialize a Roblox project with professional tooling. Creates folder structure, config files (Rojo, Wally, Selene, StyLua), starter code, VS Code settings, and CLAUDE.md. Works for games, libraries, or plugins. Use when starting a new Roblox project or setting up Rojo workflow.
 ---
 
-# New Roblox Project Setup
+# Roblox Project Setup
 
-Set up a complete Roblox game project with professional tooling and best practices.
+Set up a Roblox project with professional tooling and best practices.
 
 ## Prerequisites
 
@@ -13,9 +13,6 @@ Verify before starting:
 - **Rokit** installed (`rokit --version`)
 - **VS Code** with project folder open
 - **Roblox Studio** installed
-
-Optional but recommended:
-- **MCP servers** for AI-assisted development (see `references/mcp-setup.md`)
 
 If Rokit missing:
 ```bash
@@ -28,35 +25,43 @@ irm https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.ps1 | 
 
 ## Workflow
 
-### Step 1: Capture Game Concept
+### Step 1: Gather Requirements
 
 **Ask the user:**
-> "Want to capture your game concept now, or skip straight to project setup?"
 
-**If they want to capture it:**
+1. **Project name?** — Default: folder name in PascalCase
 
-Get project basics. If they've already described the game, extract from their message. Otherwise, ask:
-- What's the game about? (becomes the pitch)
-- What genre/type? (obby, tycoon, simulator, horror, etc.)
-- What's the core activity? (what players do repeatedly)
-- Any reference games? ("like X but with Y")
+2. **Project type?**
+   - Game (default) — Full client/server structure
+   - Library — Shared modules only, publishable to Wally
+   - Plugin — Studio plugin structure
 
-Use responses to pre-fill `docs/game-concept.md` during Step 6. Even partial info helps—a filled-in pitch and genre beats a blank template.
+3. **Language?**
+   - Luau (default)
+   - roblox-ts (TypeScript) — Requires additional setup
 
-**If they skip:**
-Just get project name and move on. Copy blank template in Step 6.
-
-**Required either way:**
-- **Project name** — Default: folder name in PascalCase
+If roblox-ts selected, inform user this skill sets up Luau projects. Point them to [roblox-ts docs](https://roblox-ts.com/) for TypeScript setup.
 
 ### Step 2: Create Folder Structure
 
+**For Game projects:**
 ```bash
-mkdir -p src/client/modules src/server/modules src/shared Packages docs .vscode .claude/rules
+mkdir -p src/client/modules src/server/modules src/shared Packages .vscode .claude/rules
 touch Packages/.gitkeep
 ```
 
-### Step 3: Initialize Tools
+**For Library projects:**
+```bash
+mkdir -p src Packages .vscode .claude/rules
+touch Packages/.gitkeep
+```
+
+**For Plugin projects:**
+```bash
+mkdir -p src .vscode .claude/rules
+```
+
+### Step 3: Initialize Git & Tools
 
 ```bash
 git init
@@ -65,29 +70,42 @@ rokit add rojo-rbx/rojo
 rokit add UpliftGames/wally
 rokit add JohnnyMorganz/StyLua
 rokit add Kampfkarren/selene
+```
+
+**Verify tools installed:**
+```bash
+rojo --version
+wally --version
+stylua --version
+selene --version
+```
+
+If any command fails, check Rokit installation and retry `rokit add`.
+
+Initialize Wally:
+```bash
 wally init
 ```
 
-Rokit automatically installs the latest stable release when no version is specified.
-
-To pin specific versions for reproducible builds, use `tool@version` syntax (e.g., `rojo-rbx/rojo@7.6.1`). See `references/tool-versions.md` for version pinning strategies.
-
 ### Step 4: Copy Config Files
 
-Copy all files from `assets/config/` to project root:
+Copy from `assets/config/` to project root:
 - `default.project.json` → Replace `PROJECT_NAME` with user's project name
 - `selene.toml`
 - `stylua.toml`
 - `.luaurc` (from `luaurc.json`)
 - `.gitignore` (from `gitignore.txt`)
+- `.gitattributes` (from `gitattributes.txt`)
 
 Copy `assets/vscode/` contents to `.vscode/`:
 - `settings.json`
 - `extensions.json`
 
+**For Library/Plugin projects:** Modify `default.project.json` tree structure appropriately.
+
 ### Step 5: Copy Starter Code
 
-Copy all files from `assets/starter-code/` to appropriate locations:
+**For Game projects**, copy from `assets/starter-code/`:
 
 | Source File | Destination | Notes |
 |-------------|-------------|-------|
@@ -97,31 +115,23 @@ Copy all files from `assets/starter-code/` to appropriate locations:
 | `Remotes.luau` | `src/shared/Remotes.luau` | Remote event helpers |
 | `Logger.luau` | `src/shared/Logger.luau` | Logging utility |
 
-### Step 6: Create CLAUDE.md and Game Concept
+**For Library projects:** Copy only `Logger.luau` to `src/`, create `init.luau` as main module.
+
+**For Plugin projects:** Create `src/init.server.luau` with basic plugin scaffold.
+
+### Step 6: Create Project Files
 
 Copy `assets/claude-template/CLAUDE.md` to project root. Replace `PROJECT_NAME`.
 
-Optionally copy convention files to `.claude/rules/`:
+Copy `assets/docs/README.md` to project root. Replace `PROJECT_NAME`.
+
+Copy convention files to `.claude/rules/`:
 - `references/luau-conventions.md` → `.claude/rules/luau-conventions.md`
 - `references/luau-patterns.md` → `.claude/rules/luau-patterns.md`
 
-**Create game concept doc:**
-Copy `assets/docs/game-concept.md` → `docs/game-concept.md`
-
-If user provided game info in Step 1, pre-fill relevant sections:
-- **The Pitch**: From their description
-- **Game Pillars**: Infer 2-3 from genre/description (mark as drafts)
-- **Core Loop**: If they described the main activity
-- **Inspirations**: Any reference games they mentioned
-
-Leave unfilled sections as template placeholders—partial doc > blank doc.
-
-Optionally copy other reference docs:
-- `references/mcp-setup.md` → `docs/mcp-setup.md`
-
 ### Step 7: Update wally.toml
 
-Edit the generated `wally.toml` to set the package name:
+Edit the generated `wally.toml`:
 ```toml
 [package]
 name = "username/project-name"
@@ -130,32 +140,69 @@ registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
 ```
 
-### Step 8: Final Instructions
+### Step 8: Optional — Add Common Packages
+
+**Ask the user:**
+> "Want me to add any common Wally packages?"
+
+Suggestions based on project type:
+
+**Games:**
+- `Promise` — Async handling
+- `Signal` — Custom events
+- `Trove` — Cleanup management
+
+**Libraries:**
+- `TestEZ` — Unit testing
+
+If yes, add to `wally.toml` under `[dependencies]` and run `wally install`.
+
+### Step 9: Verify & Commit
+
+**Run linting to verify starter code:**
+```bash
+selene src/
+stylua --check src/
+```
+
+Fix any issues before proceeding.
+
+**Show checkpoint:**
+> "Here's what I've created:"
+> - List folder structure
+> - List config files
+> - List starter code files
+> - Note any packages added
+
+**Ask:** "Does this look correct before I commit?"
+
+**If confirmed, make initial commit:**
+```bash
+git add .
+git commit -m "Initial project setup"
+```
+
+### Step 10: Final Instructions
 
 Tell user:
 
-1. **Install VS Code extensions** — Command Palette → "Extensions: Show Recommended Extensions" → Install all 4
+1. **Install VS Code extensions** — Command Palette → "Extensions: Show Recommended Extensions" → Install all
 
-2. **Start Rojo**: `rojo serve`
+2. **Start Rojo:** `rojo serve`
 
-3. **Connect Studio**: Open Roblox Studio → Rojo plugin → Connect
+3. **Connect Studio:** Open Roblox Studio → Rojo plugin → Connect
 
-4. **Save place file**: File → Save to File As → `game.rbxl`
+4. **Save place file:** File → Save to File As → `game.rbxl` (for games)
 
-5. **Test**: Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
+5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
+
+**Project is ready for development.**
 
 ## Reference Files
 
-**Technical:**
+Available on-demand for deeper guidance:
+
 - `references/luau-conventions.md` — Naming, file structure, task library usage
 - `references/luau-patterns.md` — Common patterns (validation, tweening, error handling)
-- `references/tool-versions.md` — Recommended tool versions and compatibility notes
-- `references/mcp-setup.md` — MCP server setup for AI-assisted development
-- `references/technical-planning.md` — Performance, data, network architecture decisions
-- `references/asset-pipeline.md` — Images, sounds, models: workflows, folder structure, Asphalt
-
-**Game Design:**
-- `assets/docs/game-concept.md` — Template: pillars, core loop, MVP definition
-- `references/scope-management.md` — Prioritization, feature creep prevention
-- `references/playtesting-guide.md` — What to observe, questions to ask
-- `references/monetization-roblox.md` — DevEx math, game passes, ethical monetization
+- `references/tool-versions.md` — Version pinning strategies
+- `references/asset-pipeline.md` — Images, sounds, models workflows

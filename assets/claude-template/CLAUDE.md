@@ -1,75 +1,40 @@
 # PROJECT_NAME
 
-Brief description of your game.
+## Overview
 
-**Stack**: Luau, Rojo, Wally, Roblox Studio
+Brief description of what this project does.
 
-## Rojo Sync
+## Architecture
 
-**Filesystem is the source of truth for scripts.**
+### Code Organization
+- `src/client/` — Client-side code (runs on player's device)
+- `src/server/` — Server-side code (runs on Roblox servers)
+- `src/shared/` — Shared modules (used by both client and server)
+- `Packages/` — Wally dependencies (auto-generated, don't edit)
 
-| Local Path | Studio Location |
-|------------|-----------------|
-| `src/server/` | `ServerScriptService.Server` |
-| `src/client/` | `StarterPlayer.StarterPlayerScripts.Client` |
-| `src/shared/` | `ReplicatedStorage.Shared` |
-| `Packages/` | `ReplicatedStorage.Packages` |
+### Key Modules
+- `GameConfig` — Central configuration values
+- `Remotes` — Client-server communication helpers
+- `Logger` — Debug logging with [Server]/[Client] prefixes
 
-## Commands
+## Development Workflow
 
-| Command | Purpose |
-|---------|---------|
-| `rojo serve` | Start sync server |
-| `wally install` | Install packages |
-| `selene src/` | Lint code |
-| `stylua src/` | Format code |
+```bash
+# Start Rojo sync
+rojo serve
 
-**Before commits:** `selene src/ && stylua src/`
+# In Studio: Rojo plugin → Connect
 
-## File Naming
-
-| Pattern | Use For |
-|---------|---------|
-| `*.server.luau` | Server scripts |
-| `*.client.luau` | Client scripts |
-| `*.luau` | Shared modules |
-
-## Key Files
-
-| File | Purpose |
-|------|---------|
-| `src/client/init.client.luau` | Client entry point |
-| `src/server/init.server.luau` | Server entry point |
-| `src/shared/GameConfig.luau` | All configuration |
-| `src/shared/Remotes.luau` | Remote event helpers |
-| `src/shared/Logger.luau` | Logging utility |
-
-## Client-Server Communication
-
-```
-Client (action) → RemoteEvent → Server (validate & process) → RemoteEvent → Client (update UI)
+# Before committing
+selene src/
+stylua --check src/
 ```
 
 ## Conventions
 
-- Use `game:GetService()` for all services
-- Use `task.wait()`, `task.spawn()`, `task.delay()` (never legacy)
-- Every file starts with `--!strict`
-- PascalCase for modules, camelCase for variables
-
-See `.claude/rules/` for detailed conventions and patterns.
-
-## MCP Integration
-
-If MCP servers are configured, Claude can:
-- **Official MCP**: Run Luau code in Studio, insert marketplace models
-- **boshyxd MCP**: Read/edit scripts, search objects, bulk operations
-
-Studio must be open for MCP tools to work. See `docs/mcp-setup.md` if available.
-
-## Game-Specific Notes
-
-<!-- Add your game-specific architecture, systems, and notes here -->
+- See `.claude/rules/` for Luau style guide
+- Use `Logger` module instead of raw `print()`
+- All remote events go through `Remotes` module
 
 ## Learnings & Gotchas
 

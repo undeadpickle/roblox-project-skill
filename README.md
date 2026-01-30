@@ -1,13 +1,15 @@
 # Roblox Project Setup Skill
 
-A Claude skill for initializing professional Roblox game projects with Rojo, Wally, and modern tooling.
+A Claude skill for initializing professional Roblox projects with Rojo, Wally, and modern tooling.
 
 ## What It Does
 
 - Creates folder structure (`src/client`, `src/server`, `src/shared`)
 - Configures tooling (Rojo, Wally, Selene, StyLua)
 - Sets up VS Code with recommended extensions
-- Optionally captures your game concept (pillars, core loop, MVP)
+- Verifies tools installed before proceeding
+- Runs linting to validate setup
+- Makes initial git commit
 - Creates CLAUDE.md for AI-assisted development
 
 ## Requirements
@@ -44,21 +46,23 @@ irm https://raw.githubusercontent.com/undeadpickle/roblox-project-skill/main/ins
 In Claude Code or claude.ai:
 
 ```
-Set up a new Roblox project for an obby game called ParkourPanic
+Set up a new Roblox project called ParkourPanic
 ```
 
 Or reference the skill directly:
 
 ```
-Use the roblox-project skill to initialize my game
+Use the roblox-project skill to initialize my project
 ```
 
 The skill will:
-1. Ask if you want to capture your game concept now or skip to setup
+1. Ask project name, type (game/library/plugin), and language (Luau/roblox-ts)
 2. Create the folder structure
-3. Initialize tools (Rojo, Wally, Selene, StyLua)
+3. Initialize and verify tools (Rojo, Wally, Selene, StyLua)
 4. Copy config files and starter code
-5. Set up CLAUDE.md with project context
+5. Optionally add common Wally packages
+6. Run linting to verify setup
+7. Show checkpoint and make initial commit
 
 ## What Gets Created
 
@@ -76,8 +80,6 @@ your-project/
 │       ├── Remotes.luau
 │       └── Logger.luau
 ├── Packages/
-├── docs/
-│   └── game-concept.md
 ├── .vscode/
 │   ├── settings.json
 │   └── extensions.json
@@ -87,8 +89,10 @@ your-project/
 ├── selene.toml
 ├── stylua.toml
 ├── .luaurc
+├── .gitignore
+├── .gitattributes
 ├── CLAUDE.md
-└── .gitignore
+└── README.md
 ```
 
 ## Reference Docs
@@ -100,11 +104,6 @@ The skill includes reference docs for deeper guidance. These are read on-demand,
 | `luau-conventions.md` | Naming, file structure, task library |
 | `luau-patterns.md` | Validation, tweening, error handling |
 | `asset-pipeline.md` | Images, sounds, models workflows |
-| `technical-planning.md` | Performance, data, networking decisions |
-| `scope-management.md` | Prioritization, feature creep prevention |
-| `playtesting-guide.md` | Observation techniques, questions to ask |
-| `monetization-roblox.md` | DevEx rates, game passes, ethical considerations |
-| `mcp-setup.md` | MCP server setup for AI-assisted Studio control |
 | `tool-versions.md` | Version pinning strategies |
 
 ## After Setup

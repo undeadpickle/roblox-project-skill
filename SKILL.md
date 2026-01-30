@@ -1,13 +1,40 @@
 ---
-name: roblox-project
-description: Initialize a Roblox game project with professional tooling. Creates folder structure, config files (Rojo, Wally, Selene, StyLua), starter code, VS Code settings, and CLAUDE.md. Use when starting a new Roblox game or setting up Rojo workflow.
+name: roblox-dev
+description: Roblox game development with professional tooling (Rojo, Wally, Luau). Use for any Roblox development question including debugging issues, package selection, code patterns, MCP setup, OR when starting a new project. Covers Luau scripting, tool configuration, and Studio workflows.
 ---
 
-# Roblox Project Setup
+# Roblox Development
 
-Set up a Roblox project with professional tooling and best practices.
+Professional Roblox game development with Rojo, Wally, and modern Luau patterns.
 
-## Prerequisites
+## Reference Routing
+
+Consult these files based on the topic:
+
+| User asks about... | Consult first |
+|-------------------|---------------|
+| Package recommendations, "what library for X", dependencies | `references/libraries.md` |
+| Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` |
+| Code style, naming conventions, file organization | `references/luau-conventions.md` |
+| How to implement patterns (services, cleanup, validation, etc.) | `references/luau-patterns.md` |
+| Tool version conflicts, Rokit pinning, compatibility | `references/tool-versions.md` |
+| MCP setup, Studio connection, AI-assisted development | `references/mcp-setup.md` |
+| Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
+| **Starting a new project** | Follow [Project Setup Workflow](#project-setup-workflow) below |
+
+**Starter code in `assets/starter-code/`** shows recommended patterns:
+- `init.client.luau` / `init.server.luau` — Entry point structure
+- `Remotes.luau` — Remote event organization
+- `DataManager.luau` — ProfileStore + Promise integration
+- `Logger.luau` — Contextual logging with prefixes
+
+---
+
+## Project Setup Workflow
+
+**Use this section when starting a new Roblox project from scratch.**
+
+### Prerequisites
 
 Verify before starting:
 - **Rokit** installed (`rokit --version`)
@@ -22,8 +49,6 @@ curl -sSf https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.
 # Windows (PowerShell)
 irm https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.ps1 | iex
 ```
-
-## Workflow
 
 ### Step 1: Gather Project Info
 
@@ -115,20 +140,38 @@ name = "username/project-name"
 version = "0.1.0"
 registry = "https://github.com/UpliftGames/wally-index"
 realm = "shared"
+private = true
 ```
+
+**Note:** `private = true` prevents accidental publishing. See `references/gotchas.md` for other Wally pitfalls.
 
 ### Step 8: Optional — Add Common Packages
 
 **Ask the user:**
-> "Want me to add any common Wally packages? (Promise, Signal, Trove)"
+> "Want me to add Wally packages? Common options:
+> - **Core utilities:** Promise, GoodSignal, Trove
+> - **Data persistence:** ProfileStore
+> - **UI framework:** Fusion (typically vendored, not via Wally)"
 
-If yes, add to `wally.toml` under `[dependencies]`:
+Based on response, add to `wally.toml`:
 
+**Core utilities (recommended):**
 ```toml
 [dependencies]
-Promise = "evaera/promise@4.0.0"
-Signal = "sleitnick/signal@2.0.1"
-Trove = "sleitnick/trove@1.1.0"
+Promise = "evaera/promise"
+GoodSignal = "stravant/goodsignal"
+Trove = "sleitnick/trove"
+```
+
+**With data persistence:**
+```toml
+[dependencies]
+Promise = "evaera/promise"
+GoodSignal = "stravant/goodsignal"
+Trove = "sleitnick/trove"
+
+[server-dependencies]
+ProfileStore = "loleris/profilestore"
 ```
 
 Then run:
@@ -136,37 +179,36 @@ Then run:
 wally install
 ```
 
+**For detailed library recommendations:** See `references/libraries.md`.
+
 ### Step 9: Optional — MCP Setup
 
 **Ask the user:**
 > "Do you have Roblox Studio MCP configured? (Lets AI run code and insert models in Studio)"
 
-If no and they want it:
+If no and they want it, see `references/mcp-setup.md` for full setup instructions.
 
-**Official Roblox MCP (recommended):**
+**Quick path (Official Roblox MCP):**
 
-1. Download from [GitHub releases](https://github.com/Roblox/studio-rust-mcp-server/releases):
-   - macOS: `macOS-rbx-studio-mcp.zip`
-   - Windows: `rbx-studio-mcp.exe`
-
-2. Move to a global location:
-   - macOS: `/Applications/RobloxStudioMCP.app`
-   - Windows: `C:\Program Files\RobloxStudioMCP\`
-
+1. Download from [GitHub releases](https://github.com/Roblox/studio-rust-mcp-server/releases)
+2. Move to global location (`/Applications/` or `C:\Program Files\`)
 3. Add to Claude Code:
    ```bash
    # macOS
    claude mcp add roblox-studio -- "/Applications/RobloxStudioMCP.app/Contents/MacOS/rbx-studio-mcp" --stdio
-
-   # Windows
-   claude mcp add roblox-studio -- "C:\Program Files\RobloxStudioMCP\rbx-studio-mcp.exe" --stdio
    ```
+4. Restart VS Code, open Studio — check Output for "MCP Studio plugin is ready"
 
-4. Restart VS Code, then open Studio — check Output for "MCP Studio plugin is ready"
+**Troubleshooting MCP issues:** See `references/gotchas.md` → MCP Servers section.
 
-**Want more tools?** The boshyxd MCP adds script reading and bulk operations. See `references/mcp-setup.md` for setup (note: NVM users must use full path to npx).
+### Step 10: Optional — Data Manager
 
-### Step 10: Verify & Commit
+If user selected ProfileStore, ask:
+> "Want me to add a DataManager starter module? (ProfileStore + Promise integration)"
+
+If yes, copy `assets/starter-code/DataManager.luau` to `src/server/modules/DataManager.luau`.
+
+### Step 11: Verify & Commit
 
 **Run linting to verify starter code:**
 ```bash
@@ -191,7 +233,7 @@ git add .
 git commit -m "Initial project setup"
 ```
 
-### Step 11: Final Instructions
+### Step 12: Final Instructions
 
 Tell user:
 
@@ -206,13 +248,3 @@ Tell user:
 5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
 
 **Project is ready for development.**
-
-## Reference Files
-
-Available on-demand for deeper guidance:
-
-- `references/luau-conventions.md` — Naming, file structure, task library usage
-- `references/luau-patterns.md` — Common patterns (validation, tweening, error handling)
-- `references/tool-versions.md` — Version pinning strategies
-- `references/asset-pipeline.md` — Images, sounds, models workflows
-- `references/mcp-setup.md` — MCP server setup for AI-assisted Studio control

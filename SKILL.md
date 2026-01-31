@@ -130,7 +130,9 @@ Copy from `assets/starter-code/`:
 
 ### Step 6: Create Project Files
 
-Copy `assets/claude-template/CLAUDE.md` to project root. Replace `PROJECT_NAME`.
+Copy `assets/claude-template/CLAUDE.md` to project root. Replace:
+- `PROJECT_NAME` with user's project name
+- `SKILL_VERSION` with the version from `VERSION` file (e.g., `1.0.0`)
 
 Copy `assets/docs/README.md` to project root. Replace `PROJECT_NAME`.
 

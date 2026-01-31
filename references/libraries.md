@@ -15,6 +15,28 @@ What to use, what to avoid, and how they work together.
 
 ---
 
+## Why This Stack?
+
+**Why Rojo over Studio's built-in editor?**
+- Version control with Git (branching, history, collaboration)
+- External tooling (Selene linting, StyLua formatting, CI/CD)
+- Use any editor (VS Code, Neovim, etc.)
+- Studio Script Sync is still in beta with fewer features
+
+**Why framework-less over Knit?**
+- Knit was archived July 2024 — the author recommends against it
+- No framework abstraction to learn or maintain
+- Explicit requires are easier to trace than service discovery
+- Individual utilities (Promise, Trove) provide what you need
+
+**Why ProfileStore over raw DataStore?**
+- Session locking prevents item duplication exploits
+- Handles throttling, retries, and edge cases automatically
+- Near-instant cross-server via MessagingService
+- Battle-tested by thousands of production games
+
+---
+
 ## Frameworks: Go Framework-less
 
 **Do not use Knit** — archived July 2024. The author recommends against it for new projects.

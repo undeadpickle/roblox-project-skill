@@ -75,4 +75,54 @@ function Remotes.getFunction(name: string): RemoteFunction
 	return newFunc
 end
 
+--[[
+	OPTIONAL: Type-safe event handling with validation (server-side only)
+
+	Usage:
+		Remotes.onEvent("Purchase", function(player, data)
+			-- data is validated, safe to use
+			processPurchase(player, data.itemId, data.quantity)
+		end, function(args)
+			-- Validator: return typed data or nil to reject
+			if typeof(args[1]) ~= "string" then return nil end
+			if typeof(args[2]) ~= "number" then return nil end
+			if args[2] < 1 or args[2] > 100 then return nil end -- sanity check
+			return { itemId = args[1], quantity = args[2] }
+		end)
+]]
+
+--- Connect to a RemoteEvent with validation (server-side)
+--- Invalid requests are silently ignored to avoid giving exploiters feedback
+function Remotes.onEvent<T>(
+	name: string,
+	handler: (player: Player, data: T) -> (),
+	validator: (args: { any }) -> T?
+)
+	local event = Remotes.getEvent(name)
+	event.OnServerEvent:Connect(function(player, ...)
+		local data = validator({ ... })
+		if data == nil then
+			return -- Invalid args, silently ignore
+		end
+		handler(player, data)
+	end)
+end
+
+--- Connect to a RemoteFunction with validation (server-side)
+--- Returns nil to client on validation failure
+function Remotes.onInvoke<T, R>(
+	name: string,
+	handler: (player: Player, data: T) -> R,
+	validator: (args: { any }) -> T?
+)
+	local func = Remotes.getFunction(name)
+	func.OnServerInvoke = function(player, ...)
+		local data = validator({ ... })
+		if data == nil then
+			return nil -- Invalid args
+		end
+		return handler(player, data)
+	end
+end
+
 return Remotes

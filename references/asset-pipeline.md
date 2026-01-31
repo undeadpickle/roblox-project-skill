@@ -81,6 +81,25 @@ assets/
 ```
 
 
+## Roblox Studio Packages (Alternative for Asset-Heavy Teams)
+
+Roblox Studio has a built-in **Packages** feature for reusable assets (models, UI kits, rigs). This is separate from Wally packages (which are code libraries).
+
+**When to consider Studio Packages:**
+- Large teams sharing prefabs across multiple places
+- Asset-heavy games with lots of reusable models
+- Using Feature Packages (Roblox's pre-built game features)
+
+**When to skip:**
+- Code-focused projects (Wally + Rojo is better)
+- Solo developers (overkill)
+- You want everything in Git (Studio Packages are cloud-only)
+
+Learn more: [Roblox Packages Documentation](https://create.roblox.com/docs/studio/packages)
+
+This skill focuses on code-first workflows, so Studio Packages aren't covered in depth. Use them alongside Rojo if your team needs asset versioning.
+
+
 ## Asset Tools
 
 ### Asphalt (Recommended)

@@ -4,6 +4,8 @@
 
 Brief description of what this project does.
 
+> Generated with [roblox-dev skill](https://github.com/undeadpickle/roblox-project-skill) vSKILL_VERSION
+
 ## Architecture
 
 ### Code Organization

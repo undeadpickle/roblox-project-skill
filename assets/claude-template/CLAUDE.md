@@ -31,6 +31,17 @@ selene src/
 stylua --check src/
 ```
 
+## Documentation
+
+**Primary (Context7 MCP):**
+- `/websites/create_roblox` — Tutorials, guides, best practices
+- `/websites/create_roblox_reference_engine` — Engine API reference
+
+**Fallback (if Context7 unavailable):**
+- Engine API: https://create.roblox.com/docs/reference/engine
+- Guides: https://create.roblox.com/docs
+- Use WebSearch/WebFetch with `site:create.roblox.com` for specific lookups
+
 ## Conventions
 
 - See `.claude/rules/` for Luau style guide

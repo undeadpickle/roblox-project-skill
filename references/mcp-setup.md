@@ -8,8 +8,9 @@ MCP (Model Context Protocol) servers let Claude see and interact with Roblox Stu
 |--------|---------|-------|
 | **Official Roblox MCP** | Run Luau code, insert models | `run_code`, `insert_model` |
 | **boshyxd MCP** | Read scripts, bulk operations, project analysis | 18+ tools |
+| **Context7** | Live Roblox documentation lookup | `resolve-library-id`, `query-docs` |
 
-**Recommendation:** Start with the Official MCP—it covers most use cases. Add boshyxd later if you need script reading or bulk operations.
+**Recommendation:** Start with the Official MCP—it covers most use cases. Add boshyxd later if you need script reading or bulk operations. Context7 is useful for API lookups without leaving the editor.
 
 ---
 
@@ -175,6 +176,43 @@ The plugin auto-installs when you first run the MCP. If missing:
 | Search objects by name/class | boshyxd | `search_objects` |
 | Read script source | boshyxd | `get_script_source` |
 | Bulk property changes | boshyxd | `mass_set_property` |
+| Look up Roblox API docs | Context7 | `query-docs` |
+| Find library ID for docs | Context7 | `resolve-library-id` |
+
+---
+
+## Context7 MCP (Documentation)
+
+Context7 provides live documentation lookup—no need to leave the editor or search the web.
+
+### Step 1: Get API Key
+
+Sign up at [context7.com](https://context7.com) and get your API key.
+
+### Step 2: Add to Claude Code
+
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+```
+
+### Step 3: Restart & Verify
+
+1. Restart VS Code
+2. Ask Claude to look up Roblox docs
+3. Should see `context7` in `/mcp` status
+
+### Roblox Library IDs
+
+Use these when querying:
+- `/websites/create_roblox` — Tutorials, guides, best practices (22k+ snippets)
+- `/websites/create_roblox_reference_engine` — Engine API reference (7k+ snippets)
+
+### Fallback (No Context7)
+
+If Context7 is unavailable or you're out of credits, use WebSearch/WebFetch with these URLs:
+- **Engine API:** https://create.roblox.com/docs/reference/engine
+- **Guides & Tutorials:** https://create.roblox.com/docs
+- **Tip:** Add `site:create.roblox.com` to WebSearch queries for official docs only
 
 ---
 

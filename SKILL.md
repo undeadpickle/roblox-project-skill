@@ -13,6 +13,8 @@ Consult these files based on the topic:
 
 | User asks about... | Consult first |
 |-------------------|---------------|
+| Roblox API, engine classes, how does X work | Context7: `/websites/create_roblox_reference_engine` → fallback: `create.roblox.com/docs/reference/engine` |
+| Tutorials, guides, best practices, "how to" | Context7: `/websites/create_roblox` → fallback: `create.roblox.com/docs` |
 | Package recommendations, "what library for X", dependencies | `references/libraries.md` |
 | Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` then `references/debugging.md` |
 | Code style, naming conventions, file organization | `references/luau-conventions.md` |
@@ -205,6 +207,15 @@ If no and they want it, see `references/mcp-setup.md` for full setup instruction
 4. Restart VS Code, open Studio — check Output for "MCP Studio plugin is ready"
 
 **Troubleshooting MCP issues:** See `references/gotchas.md` → MCP Servers section.
+
+**Context7 MCP (documentation lookup):**
+If not already configured, add for live Roblox docs:
+```bash
+claude mcp add context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
+```
+Get API key at [context7.com](https://context7.com). Use library IDs:
+- `/websites/create_roblox` — Tutorials & guides
+- `/websites/create_roblox_reference_engine` — Engine API reference
 
 ### Step 10: Optional — Data Manager
 

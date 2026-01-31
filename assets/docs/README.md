@@ -5,6 +5,8 @@ A Roblox project built with Rojo.
 ## About
 
 - **Game type:** PROJECT_GAME_LOOP
+- **Session format:** PROJECT_SESSION_FORMAT
+- **Platform:** PROJECT_PLATFORM
 - **Architecture:** PROJECT_STRUCTURE structure
 - **Authority model:** PROJECT_AUTHORITY_MODEL
 - **Persistence:** PROJECT_PERSISTENCE_SUMMARY

@@ -147,6 +147,8 @@ Copy `assets/claude-template/CLAUDE.md` to project root. Replace:
 - `PROJECT_SOURCE_OF_TRUTH` with source of truth (e.g., "Git + Rojo", "Studio-first")
 - `PROJECT_TEAM_SHAPE` with team info (e.g., "Solo, no PRs", "Small team with PRs")
 - `PROJECT_GAME_LOOP` with game loop categories (e.g., "Economy/building (tycoon)")
+- `PROJECT_SESSION_FORMAT` with session format (e.g., "Continuous world", "Rounds/matches", "Runs/attempts", "Instanced levels")
+- `PROJECT_PLATFORM` with platform target (e.g., "Cross-platform", "Mobile-first", "PC-first", "Gamepad important")
 - `PROJECT_EXPLOIT_SENSITIVITY` with sensitivity and implication (e.g., "High → server-authoritative for value changes")
 - `PROJECT_PERSISTENCE` with persistence level and implication (e.g., "Core economy → DataManager with schema versioning")
 - `PROJECT_STRUCTURE` with structure choice (e.g., "Layered")
@@ -155,6 +157,8 @@ Copy `assets/claude-template/CLAUDE.md` to project root. Replace:
 Copy `assets/docs/README.md` to project root. Replace:
 - `PROJECT_NAME` with user's project name
 - `PROJECT_GAME_LOOP` with game loop categories (e.g., "Economy/building (tycoon)")
+- `PROJECT_SESSION_FORMAT` with session format (e.g., "Continuous world", "Rounds/matches")
+- `PROJECT_PLATFORM` with platform target (e.g., "Cross-platform", "Mobile-first")
 - `PROJECT_STRUCTURE` with structure choice (e.g., "Layered")
 - `PROJECT_AUTHORITY_MODEL` with authority posture (e.g., "Server-authoritative for value changes", "Hybrid", "Client-trusted")
 - `PROJECT_PERSISTENCE_SUMMARY` with brief persistence description (e.g., "Core economy with ProfileStore", "Light (settings only)", "None")

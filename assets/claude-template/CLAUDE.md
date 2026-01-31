@@ -14,6 +14,8 @@ Brief description of what this project does.
 - **Source of truth:** PROJECT_SOURCE_OF_TRUTH
 - **Team:** PROJECT_TEAM_SHAPE
 - **Core loop:** PROJECT_GAME_LOOP
+- **Session format:** PROJECT_SESSION_FORMAT
+- **Platform:** PROJECT_PLATFORM
 - **Exploit sensitivity:** PROJECT_EXPLOIT_SENSITIVITY
 - **Persistence:** PROJECT_PERSISTENCE
 - **Structure:** PROJECT_STRUCTURE

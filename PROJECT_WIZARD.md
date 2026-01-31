@@ -8,7 +8,7 @@ This wizard asks foundation questions FIRST, then generates a scaffold tailored 
 
 ## How to Use This Wizard
 
-1. **Ask the foundation questions** (Phase 1) — 7 required + 1 optional
+1. **Ask the foundation questions** (Phase 1) — 9 required + 1 optional
 2. **Adapt as you go** — clarify freeform answers, skip irrelevant questions, frame based on context
 3. **Summarize what the answers imply** — speak this, don't write to a file
 4. **Auto-select modules** based on the profile
@@ -87,7 +87,37 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ---
 
-### Question 5: Exploit Sensitivity
+### Question 5: Session Format
+
+**Ask:**
+> How do players experience your game?
+> - **(A) Continuous world** — players join an ongoing world, no distinct start/end
+> - **(B) Rounds/matches** — discrete games with clear start, end, and winners
+> - **(C) Runs/attempts** — roguelike, obby attempts, or "try until you win" loops
+> - **(D) Instanced levels** — dungeons, story chapters, or separate play areas
+
+**Why it matters:** Session format determines whether you need RoundService/MatchService, spawn handling, join-in-progress logic, lobby systems, and how you structure game state.
+
+**Records:** `sessionFormat` = `continuous` | `rounds` | `runs` | `instanced`
+
+---
+
+### Question 6: Platform Target
+
+**Ask:**
+> What's your primary platform?
+> - **(A) Mobile-first** — touch controls, smaller UI, performance-sensitive
+> - **(B) PC-first** — keyboard/mouse, larger UI, more complex controls
+> - **(C) Cross-platform** — both equally important
+> - **(D) Gamepad important** — console or controller players are a priority
+
+**Why it matters:** Platform choice affects UI constraints, camera/input conventions, performance budgets, and what your "MVP slice" should look like. Mobile-first means bigger buttons, simpler menus, and more aggressive optimization.
+
+**Records:** `platform` = `mobile` | `pc` | `cross-platform` | `gamepad`
+
+---
+
+### Question 7: Exploit Sensitivity
 
 **Ask:**
 > If someone cheats on their client, how bad is it?
@@ -101,7 +131,7 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ---
 
-### Question 6: Persistence Needs
+### Question 8: Persistence Needs
 
 **Ask:**
 > Do you need to save player data between sessions right away?
@@ -115,7 +145,7 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ---
 
-### Question 7: Project Structure
+### Question 9: Project Structure
 
 **Ask:**
 > How do you want code organized?
@@ -129,7 +159,7 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ---
 
-### Question 8: Anything Else? (Optional)
+### Question 10: Anything Else? (Optional)
 
 **Ask:**
 > Anything else I should know about this project? Special requirements, constraints, or things you've already decided?
@@ -138,7 +168,7 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 **Why it matters:** Catches edge cases the structured questions missed. Users might mention:
 - Specific packages they want (or want to avoid)
-- Platform constraints (mobile-first, VR)
+- VR support
 - Existing code they're migrating
 - Specific features they know they'll need
 
@@ -158,6 +188,8 @@ After all questions are answered, **speak a summary** (don't write to a file):
 > - **Source of truth:** [Git + Rojo / Studio-first]
 > - **Team:** [solo / small team / large team], [with/without] PR workflow
 > - **Core loop:** [categories]
+> - **Session format:** [continuous/rounds/runs/instanced]
+> - **Platform:** [mobile/PC/cross-platform/gamepad]
 > - **Exploit sensitivity:** [low/medium/high] → [authority implication]
 > - **Persistence:** [none/light/core] → [data implication]
 > - **Structure:** [simple/layered/feature-based]
@@ -170,13 +202,21 @@ After all questions are answered, **speak a summary** (don't write to a file):
 > - **Source of truth:** Git + Rojo (VS Code as primary editor)
 > - **Team:** 2-5 people with PR workflow
 > - **Core loop:** Economy/building + Progression
+> - **Session format:** Continuous world
+> - **Platform:** Cross-platform (mobile + PC)
 > - **Exploit sensitivity:** High → server-authoritative for all value changes
 > - **Persistence:** Core economy → DataManager with schema versioning
 > - **Structure:** Layered (shared/server/client)
 >
 > Based on this, I'll set up the full Rokit toolchain with strict linting, include DataManager and RateLimiter, and scaffold a layered project structure. Sound good?
 
-Wait for confirmation before proceeding.
+### Confirmation Behavior
+
+**For prototypes and MVPs:** Proceed by default unless the user objects.
+> "I'll start setting this up. Let me know if you want to change anything."
+
+**For long-lived projects or teams with PRs:** Ask for explicit confirmation before proceeding.
+> "Does this look right? I want to make sure the foundation is solid before I scaffold."
 
 ---
 
@@ -208,6 +248,24 @@ Use these rules to determine what the profile implies:
 | Light | DataManager optional, simple schema |
 | Core | DataManager required, schema versioning, migration stubs |
 
+### Session Architecture
+
+| Session Format | Architecture Implications |
+|----------------|---------------------------|
+| Continuous | Simple player join/leave, world state persists |
+| Rounds/matches | RoundService/MatchService, lobby system, join-in-progress handling |
+| Runs/attempts | Run state management, checkpoint systems, attempt tracking |
+| Instanced | Instance management, level loading, isolated game states |
+
+### Platform Considerations
+
+| Platform | Considerations |
+|----------|----------------|
+| Mobile-first | Larger touch targets, simplified UI, aggressive optimization, no hover states |
+| PC-first | Keyboard shortcuts, smaller UI elements, mouse interactions |
+| Cross-platform | Responsive UI, input abstraction layer, test on both |
+| Gamepad | Button prompts, radial menus, no mouse-dependent UI |
+
 ---
 
 ## Auto-Selected Modules
@@ -222,6 +280,7 @@ Based on the profile, auto-suggest these modules (don't ask individually):
 | `intent` = `long-lived` | ErrorReporter |
 | `intent` = `long-lived` AND `persistence` != `none` | Analytics |
 | `teamSize` != `solo` AND `usePRs` = `true` | Stricter lint/format defaults |
+| `sessionFormat` = `rounds` | Suggest RoundService pattern in architecture notes |
 
 **When presenting the scaffold plan, list what will be included:**
 > I'll include these modules based on your profile:
@@ -308,6 +367,8 @@ After the profile is confirmed, proceed to the **Project Setup Workflow** in `SK
 | Source of Truth | Whether to set up Rojo at all |
 | Team Shape | Linting enforcement, version pinning strictness |
 | Game Loop | Package recommendations, architecture hints |
+| Session Format | Round/match services, lobby systems, state management |
+| Platform | UI constraints, input handling, performance budget |
 | Exploit Sensitivity | Authority posture, RateLimiter inclusion |
 | Persistence | DataManager inclusion, schema setup |
 | Structure | Folder layout, Rojo project mapping |
@@ -345,11 +406,13 @@ Later questions should acknowledge and build on earlier answers. This makes the 
 | Previous Answer | How to Adapt Next Questions |
 |-----------------|----------------------------|
 | Game loop = tycoon/economy | Persistence Q: "Tycoons usually need to save building state and currency — are you thinking full persistence, or keeping it lighter for now?" |
-| Game loop = obby/skill | Persistence Q: "Pure skill games often don't need persistence beyond checkpoints. Do you need to save anything?" |
+| Game loop = obby/skill | Persistence Q: "Pure skill games often don't need persistence beyond checkpoints. Do you need to save anything?" Session Q: "Obbies are usually runs/attempts — is that right, or is it a continuous checkpoint world?" |
+| Game loop = arena/combat | Session Q: "Arena games are usually round-based. Do you have matches with a lobby, or is it drop-in continuous?" |
 | Intent = prototype | Compress later Qs: "Since this is a prototype, I'll assume light persistence and skip strict tooling. Let me know if that's wrong." |
 | Exploit sensitivity = high | Structure Q: "Given exploit concerns, I'd lean toward layered structure with clear server/client boundaries. Sound good, or prefer feature-based?" |
 | Team = solo, no PRs | De-emphasize strictness: "Since it's just you, I'll keep linting optional. You can always enforce it later." |
 | Source of truth = Studio-first | Simplify remaining Qs: "With Studio as source of truth, tooling options are limited anyway. Let's focus on game architecture." |
+| Platform = mobile-first | Note implications: "Mobile-first means we'll want bigger UI elements and touch-friendly controls. I'll keep that in mind for any UI recommendations." |
 
 ---
 
@@ -363,13 +426,18 @@ Some questions become irrelevant based on earlier answers. Skip or compress them
 | `sourceOfTruth` = `studio-first` | Skip tooling strictness Qs — limited options anyway |
 | `teamSize` = `solo` AND `usePRs` = `false` | Skip linting enforcement discussion |
 | `gameLoop` = pure skill (obby, racing) AND no economy mentioned | Ask persistence Q but expect "none" — don't belabor it |
+| `gameLoop` = obby | Default `sessionFormat` to `runs` unless they say otherwise |
+| `gameLoop` = arena/shooter | Default `sessionFormat` to `rounds` unless they say otherwise |
+| `gameLoop` = tycoon/social | Default `sessionFormat` to `continuous` unless they say otherwise |
 | User already mentioned specifics (e.g., "with ProfileStore") | Skip questions that are already answered — acknowledge what you inferred |
+| User mentions "mobile game" | Set `platform` = `mobile` and skip the platform question |
 
 **Example — User provides context upfront:**
 > User: "Set up a competitive PvP arena game with ranked matchmaking"
 >
 > Claude: "Got it — competitive PvP with ranked. I'm inferring:
 > - Exploit sensitivity: High (ranked = integrity matters)
+> - Session format: Rounds/matches
 > - Persistence: At least light (ranks, stats)
 > - Authority: Server-authoritative for match outcomes
 >
@@ -391,6 +459,8 @@ Even with freeform input and adaptive skipping, the wizard should still cover th
 **Can be inferred or defaulted:**
 - Intent (default to MVP if unclear)
 - Team shape (default to solo if not mentioned)
+- Session format (infer from game loop if not asked)
+- Platform (default to cross-platform if not mentioned)
 - Structure (default to layered)
 
 **If the conversation goes off track:** Gently redirect:

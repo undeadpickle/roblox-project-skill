@@ -218,7 +218,7 @@ Verify the skill works correctly:
 ./scripts/smoke-test.sh
 ```
 
-**Full manual walkthrough:** See [docs/testing-guide.md](docs/testing-guide.md)
+**Full manual walkthrough:** See [TESTING.md](TESTING.md)
 
 ---
 

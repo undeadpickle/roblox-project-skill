@@ -129,6 +129,107 @@ end)
 
 ---
 
+## Remote Function Pattern
+
+RemoteFunctions return values to the client. Use for request-response patterns.
+
+```luau
+-- Server: Return data to client
+local GetInventory = Remotes.getFunction("GetInventory")
+
+GetInventory.OnServerInvoke = function(player: Player): { string }?
+    local data = DataManager.getData(player)
+    if not data then
+        return nil
+    end
+    return data.Inventory
+end
+
+-- Client: Request data from server
+local GetInventory = Remotes.getFunction("GetInventory")
+
+local inventory = GetInventory:InvokeServer()
+if inventory then
+    for _, item in inventory do
+        print("Has item:", item)
+    end
+end
+```
+
+**When to use which:**
+- **RemoteEvent**: Fire-and-forget (damage dealt, sound played, UI update)
+- **RemoteFunction**: Need a response (get data, validate purchase, check permission)
+
+**Warning:** RemoteFunctions can yield indefinitely if server doesn't respond. Consider timeouts:
+
+```luau
+local Promise = require(Packages.Promise)
+
+local function invokeWithTimeout(remote: RemoteFunction, timeout: number, ...: any)
+    return Promise.race({
+        Promise.new(function(resolve)
+            resolve(remote:InvokeServer(...))
+        end),
+        Promise.delay(timeout):andThen(function()
+            return Promise.reject("Request timed out")
+        end),
+    })
+end
+
+-- Usage
+invokeWithTimeout(GetInventory, 5)
+    :andThen(function(inventory)
+        print("Got inventory:", inventory)
+    end)
+    :catch(function(err)
+        warn("Failed:", err)
+    end)
+```
+
+---
+
+## Rate Limiting Remotes
+
+Protect your RemoteEvents from exploit spam using the RateLimiter module.
+
+```luau
+local RateLimiter = require(ServerModules.RateLimiter)
+
+-- Create limiters for different actions
+local attackLimiter = RateLimiter.new({
+    rate = 5,       -- 5 attacks per second max
+    capacity = 8,   -- Allow short bursts of 8
+})
+
+local chatLimiter = RateLimiter.new({
+    rate = 2,       -- 2 messages per second
+    capacity = 5,   -- Burst of 5 messages
+})
+
+-- Use in RemoteEvent handlers
+AttackRemote.OnServerEvent:Connect(function(player, ...)
+    if not attackLimiter:check(player) then
+        -- Player is spamming - silently ignore or warn
+        return
+    end
+
+    -- Process legitimate attack
+    processAttack(player, ...)
+end)
+```
+
+**Recommended limits by action type:**
+
+| Action | Rate | Capacity | Notes |
+|--------|------|----------|-------|
+| Combat/attacks | 5-10/s | 10-15 | Match animation speed |
+| UI interactions | 10/s | 20 | Clicks, hovers |
+| Chat messages | 2/s | 5 | Prevent spam |
+| Data requests | 1/s | 3 | GetInventory, GetStats |
+| Purchases | 0.5/s | 2 | Slow, important actions |
+
+---
+
 ## Instance Patterns
 
 ```luau

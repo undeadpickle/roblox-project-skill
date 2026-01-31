@@ -29,6 +29,9 @@ Consult these files based on the topic:
 - `Remotes.luau` — Remote event organization
 - `DataManager.luau` — ProfileStore + Promise integration
 - `Logger.luau` — Contextual logging with prefixes
+- `RateLimiter.luau` — Protect remotes from exploit spam
+- `Analytics.luau` — Track player events for engagement metrics
+- `ErrorReporter.luau` — Capture and report unhandled errors
 
 ---
 
@@ -209,6 +212,33 @@ If user selected ProfileStore, ask:
 > "Want me to add a DataManager starter module? (ProfileStore + Promise integration)"
 
 If yes, copy `assets/starter-code/DataManager.luau` to `src/server/modules/DataManager.luau`.
+
+### Step 10b: Optional — Rate Limiting
+
+Ask:
+> "Want me to add rate limiting for RemoteEvents? (Recommended for exploit protection)"
+
+If yes, copy `assets/starter-code/RateLimiter.luau` to `src/server/modules/RateLimiter.luau`.
+
+### Step 10c: Optional — Error Reporting
+
+Ask:
+> "Want me to add global error reporting? (Captures unhandled errors)"
+
+If yes:
+1. Copy `assets/starter-code/ErrorReporter.luau` to `src/server/modules/ErrorReporter.luau`
+2. Add to `init.server.luau` after requires:
+```luau
+local ErrorReporter = require(ServerModules.ErrorReporter)
+ErrorReporter.init()
+```
+
+### Step 10d: Optional — Analytics
+
+Ask:
+> "Want me to add player analytics tracking? (Session, purchase, level events)"
+
+If yes, copy `assets/starter-code/Analytics.luau` to `src/server/modules/Analytics.luau`.
 
 ### Step 11: Verify & Commit
 

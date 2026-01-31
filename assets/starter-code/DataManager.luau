@@ -36,6 +36,7 @@ local log = Logger.new("DataManager")
 
 -- Types
 export type PlayerData = {
+	DataVersion: number,
 	Coins: number,
 	Inventory: { string },
 	Stats: {
@@ -52,6 +53,7 @@ export type Profile = ProfileStore.Profile<PlayerData>
 
 -- Default data template for new players
 local DEFAULT_DATA: PlayerData = {
+	DataVersion = 1,
 	Coins = 0,
 	Inventory = {},
 	Stats = {
@@ -63,6 +65,23 @@ local DEFAULT_DATA: PlayerData = {
 		SFXEnabled = true,
 	},
 }
+
+--[[
+	Migrate data from older versions to current schema.
+	Called automatically when loading player data.
+]]
+local function migrateData(data: PlayerData)
+	-- v0 -> v1: Added DataVersion field
+	if data.DataVersion == nil then
+		data.DataVersion = 1
+	end
+
+	-- Future migrations go here:
+	-- if data.DataVersion == 1 then
+	--     data.NewField = defaultValue
+	--     data.DataVersion = 2
+	-- end
+end
 
 -- Module
 local DataManager = {}
@@ -112,6 +131,9 @@ function DataManager.loadDataAsync(player: Player): any
 		if profile.Data.Stats.JoinDate == 0 then
 			profile.Data.Stats.JoinDate = os.time()
 		end
+
+		-- Migrate data from older versions
+		migrateData(profile.Data)
 
 		-- Handle session end (player leaving, server shutdown, etc.)
 		profile.OnSessionEnd:Connect(function()

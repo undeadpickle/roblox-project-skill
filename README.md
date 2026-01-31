@@ -91,6 +91,8 @@ Don't worry if you don't have Rokit yet — when you ask Claude to set up a proj
 - "How do I validate RemoteEvent arguments?"
 - "Show me a debounce pattern for Roblox"
 - "What's the right way to clean up connections?"
+- "How do I rate limit RemoteEvents?"
+- "What's the best way to migrate player data schemas?"
 
 ---
 
@@ -106,15 +108,25 @@ your-project/
 │   ├── shared/          ← Code used by both
 │   └── replicatedFirst/ ← Early client code (loading screens)
 ├── Packages/            ← Wally dependencies
-├── .vscode/             ← Editor settings
+├── .vscode/             ← Editor settings + task shortcuts
 ├── default.project.json ← Rojo config
-├── wally.toml           ← Package manager config
+├── wally.toml           ← Package manager config (pre-filled with common packages)
 ├── selene.toml          ← Linter config
 ├── CLAUDE.md            ← Project notes for AI
 └── README.md
 ```
 
-Plus starter code for logging, remote events, and game config.
+**Starter code included:**
+- Entry points with error boundaries
+- Logger with context prefixes
+- RemoteEvent/RemoteFunction helpers
+- Game config with `table.freeze()`
+
+**Optional modules** (Claude will ask if you want them):
+- `DataManager` — ProfileStore integration with data versioning
+- `RateLimiter` — Protect RemoteEvents from exploit spam
+- `Analytics` — Track player engagement (sessions, purchases, levels)
+- `ErrorReporter` — Capture unhandled errors globally
 
 ---
 
@@ -180,10 +192,13 @@ The skill includes guides that Claude reads when relevant:
 ## After Your Project Is Set Up
 
 1. **Install VS Code extensions** — Claude will remind you, but: Command Palette → "Show Recommended Extensions" → Install all
-2. **Start the sync:** Run `rojo serve` in your terminal
-3. **Connect Studio:** Open Roblox Studio → Rojo plugin → Connect
-4. **Save your place:** File → Save to File As → `game.rbxl`
-5. **Test:** Press F5, check Output for "[Client] Ready" and "[Server] Ready"
+2. **Install packages:** Run `wally install` (or use Cmd+Shift+P → "Tasks: Run Task" → "Wally Install")
+3. **Start the sync:** Run `rojo serve` (or use the "Rojo Serve" task)
+4. **Connect Studio:** Open Roblox Studio → Rojo plugin → Connect
+5. **Save your place:** File → Save to File As → `game.rbxl`
+6. **Test:** Press F5, check Output for "[Client] Ready" and "[Server] Ready"
+
+**VS Code tasks included:** Rojo Serve, Wally Install, Lint (Selene), Format (StyLua) — access via Cmd+Shift+P → "Tasks: Run Task"
 
 ---
 

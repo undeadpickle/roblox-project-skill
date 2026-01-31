@@ -91,7 +91,7 @@ rokit self-update
 ## Tool Overview
 
 ### Rokit
-- Toolchain manager for Roblox projects (successor to Aftman)
+- Toolchain manager for Roblox projects
 - Config: `rokit.toml`
 - Installs and manages all other tools (Rojo, Wally, StyLua, Selene)
 - Run `rokit install` to install tools from config

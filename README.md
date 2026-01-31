@@ -209,6 +209,19 @@ The skill includes guides that Claude reads when relevant:
 
 ---
 
+## Testing
+
+Verify the skill works correctly:
+
+**Quick automated check:**
+```bash
+./scripts/smoke-test.sh
+```
+
+**Full manual walkthrough:** See [docs/testing-guide.md](docs/testing-guide.md)
+
+---
+
 ## Questions?
 
 - **Issues with this skill?** [Open an issue](https://github.com/undeadpickle/roblox-project-skill/issues)

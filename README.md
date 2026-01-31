@@ -94,6 +94,12 @@ Don't worry if you don't have Rokit yet — when you ask Claude to set up a proj
 - "How do I rate limit RemoteEvents?"
 - "What's the best way to migrate player data schemas?"
 
+**Testing:**
+- "Set up Jest Lua for testing"
+- "Write tests for my InventoryManager module"
+- "How do I mock RemoteEvents in tests?"
+- "Run my tests"
+
 ---
 
 ## What Gets Created
@@ -127,6 +133,7 @@ your-project/
 - `RateLimiter` — Protect RemoteEvents from exploit spam
 - `Analytics` — Track player engagement (sessions, purchases, levels)
 - `ErrorReporter` — Capture unhandled errors globally
+- `Jest Lua` — Unit testing framework for your modules
 
 ---
 
@@ -183,7 +190,7 @@ The skill includes guides that Claude reads when relevant:
 | **tool-versions.md** | Rokit, version pinning, team setup |
 | **asset-pipeline.md** | Working with images, sounds, and models |
 | **mcp-setup.md** | Connecting Claude directly to Roblox Studio |
-| **testing.md** | Unit testing with TestEZ |
+| **testing.md** | Unit testing with Jest Lua |
 | **debugging.md** | Finding and fixing bugs in Studio |
 | **quick-reference.md** | Cheat sheet for common Luau patterns |
 
@@ -198,7 +205,7 @@ The skill includes guides that Claude reads when relevant:
 5. **Save your place:** File → Save to File As → `game.rbxl`
 6. **Test:** Press F5, check Output for "[Client] Ready" and "[Server] Ready"
 
-**VS Code tasks included:** Rojo Serve, Wally Install, Lint (Selene), Format (StyLua) — access via Cmd+Shift+P → "Tasks: Run Task"
+**VS Code tasks included:** Rojo Serve, Wally Install, Lint (Selene), Format (StyLua), Run Tests (Lune/Studio) — access via Cmd+Shift+P → "Tasks: Run Task"
 
 ---
 

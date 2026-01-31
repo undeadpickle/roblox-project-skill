@@ -4,7 +4,7 @@ How to find and fix issues in your Roblox game.
 
 ## Studio Output Window
 
-The Output window is your primary debugging tool. Open it via **View → Output** or press **F9**.
+The Output window is your primary debugging tool. Open it via **Window → Output** or the **Script tab toolbar**.
 
 ### Output Types
 
@@ -273,7 +273,7 @@ end)
 
 ### MicroProfiler
 
-Press **Ctrl+F6** in Studio to open the MicroProfiler. Shows:
+Press **Ctrl+Alt+F6** (Windows) or **⌘⌥F6** (Mac) in Studio to open the MicroProfiler. Shows:
 - Frame time breakdown
 - Script execution time
 - Rendering performance

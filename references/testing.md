@@ -2,16 +2,17 @@
 
 Unit testing and integration testing patterns for Roblox games.
 
-## TestEZ
+## Jest Lua
 
-**TestEZ** is the standard testing framework for Roblox, created by Roblox engineers. It uses a BDD-style syntax similar to Jest/Mocha.
+**Jest Lua** is the standard testing framework for Roblox, maintained by jsdotlua and used internally by Roblox. It uses a BDD-style syntax identical to JavaScript Jest.
 
 ### Installation
 
 ```toml
 # wally.toml
 [dev-dependencies]
-TestEZ = "roblox/testez@0.4"
+Jest = "jsdotlua/jest@3.10.0"
+JestGlobals = "jsdotlua/jest-globals@3.10.0"
 ```
 
 Then `wally install`.
@@ -40,65 +41,89 @@ The `default.project.json` already excludes spec files from production builds:
 
 ```luau
 --!strict
+local JestGlobals = require("@DevPackages/JestGlobals")
+local describe = JestGlobals.describe
+local expect = JestGlobals.expect
+local it = JestGlobals.it
+
 local MathUtils = require(script.Parent.MathUtils)
 
 return function()
     describe("MathUtils", function()
         describe("add", function()
             it("should add two positive numbers", function()
-                expect(MathUtils.add(2, 3)).to.equal(5)
+                expect(MathUtils.add(2, 3)).toBe(5)
             end)
 
             it("should handle negative numbers", function()
-                expect(MathUtils.add(-1, 1)).to.equal(0)
+                expect(MathUtils.add(-1, 1)).toBe(0)
             end)
         end)
 
         describe("clamp", function()
             it("should clamp values within range", function()
-                expect(MathUtils.clamp(5, 0, 10)).to.equal(5)
-                expect(MathUtils.clamp(-5, 0, 10)).to.equal(0)
-                expect(MathUtils.clamp(15, 0, 10)).to.equal(10)
+                expect(MathUtils.clamp(5, 0, 10)).toBe(5)
+                expect(MathUtils.clamp(-5, 0, 10)).toBe(0)
+                expect(MathUtils.clamp(15, 0, 10)).toBe(10)
             end)
         end)
     end)
 end
 ```
 
-### Common Assertions
+### Common Matchers
 
 ```luau
 -- Equality
-expect(value).to.equal(expected)
-expect(value).to.never.equal(unexpected)
+expect(value).toBe(expected)          -- strict equality
+expect(value).toEqual(expected)       -- deep equality for tables
+expect(value).never.toBe(unexpected)  -- negation
 
 -- Truthiness
-expect(value).to.be.ok()           -- truthy
-expect(value).to.never.be.ok()     -- falsy
+expect(value).toBeTruthy()            -- truthy
+expect(value).toBeFalsy()             -- falsy (nil or false)
+expect(value).toBeNil()               -- nil check
 
--- Type checking
-expect(value).to.be.a("string")
-expect(value).to.be.a("table")
+-- Numbers
+expect(value).toBeGreaterThan(3)
+expect(value).toBeGreaterThanOrEqual(3)
+expect(value).toBeLessThan(5)
+expect(value).toBeLessThanOrEqual(5)
+expect(0.1 + 0.2).toBeCloseTo(0.3)    -- float comparison
 
--- Near equality (for floats)
-expect(1.0001).to.be.near(1, 0.001)
+-- Strings
+expect("Christoph").toMatch("stop")   -- pattern match
+expect("Christoph").toContain("stop") -- substring
+
+-- Arrays/Tables
+expect({"a", "b"}).toContain("a")
+expect({1, 2, 3}).toHaveLength(3)
 
 -- Error throwing
 expect(function()
     errorFunction()
-end).to.throw()
+end).toThrow()
+
+expect(function()
+    errorFunction()
+end).toThrow("specific error message")
 
 expect(function()
     safeFunction()
-end).to.never.throw()
-
--- Table contents
-expect({"a", "b"}).to.contain("a")
+end).never.toThrow()
 ```
 
 ### Setup and Teardown
 
 ```luau
+local JestGlobals = require("@DevPackages/JestGlobals")
+local describe = JestGlobals.describe
+local it = JestGlobals.it
+local beforeAll = JestGlobals.beforeAll
+local afterAll = JestGlobals.afterAll
+local beforeEach = JestGlobals.beforeEach
+local afterEach = JestGlobals.afterEach
+
 return function()
     describe("PlayerManager", function()
         local manager
@@ -130,14 +155,19 @@ end
 
 ### Async Testing
 
+Jest Lua supports async operations by returning promises:
+
 ```luau
-local Promise = require(Packages.Promise)
+local JestGlobals = require("@DevPackages/JestGlobals")
+local it = JestGlobals.it
+local expect = JestGlobals.expect
 
 return function()
     describe("async operations", function()
-        itFIXME("should handle promises", function()
-            -- TestEZ doesn't have great Promise support
-            -- Consider using SKIP or manual synchronization
+        it("should handle promises", function()
+            return someAsyncFunction():andThen(function(result)
+                expect(result).toBe("expected")
+            end)
         end)
 
         it("should work with task.wait", function()
@@ -153,7 +183,7 @@ return function()
                 task.wait()
             end
 
-            expect(completed).to.equal(true)
+            expect(completed).toBe(true)
         end)
     end)
 end
@@ -163,14 +193,19 @@ end
 
 ```luau
 -- Skip a test (won't run)
-itSKIP("broken test", function() end)
+it.skip("broken test", function() end)
+xit("also skipped", function() end)
 
 -- Focus on specific tests (only focused tests run)
-itFOCUS("important test", function() end)
+it.only("important test", function() end)
+fit("also focused", function() end)
 
 -- Same for describe blocks
-describeSKIP("skipped suite", function() end)
-describeFOCUS("focused suite", function() end)
+describe.skip("skipped suite", function() end)
+xdescribe("also skipped suite", function() end)
+
+describe.only("focused suite", function() end)
+fdescribe("also focused suite", function() end)
 ```
 
 ---
@@ -182,14 +217,29 @@ describeFOCUS("focused suite", function() end)
 Create a test runner script:
 
 ```luau
--- ServerScriptService/RunTests.server.luau (don't commit to prod)
-local TestEZ = require(game.ReplicatedStorage.Packages.TestEZ)
+-- scripts/run-tests.luau (don't commit to prod)
+local runCLI = require("@DevPackages/Jest").runCLI
 
--- Run all tests in a container
-TestEZ.TestBootstrap:run({
-    game.ReplicatedStorage.Shared,
-    game.ServerScriptService.Server.modules,
-})
+local processServiceExists, ProcessService = pcall(function()
+    return game:GetService("ProcessService")
+end)
+
+local status, result = runCLI(game.ReplicatedStorage.Shared, {
+    verbose = false,
+    ci = false
+}, { game.ReplicatedStorage.Shared }):awaitStatus()
+
+if status == "Rejected" then
+    print(result)
+end
+
+if processServiceExists then
+    if status == "Resolved" and result.results.numFailedTestSuites == 0 and result.results.numFailedTests == 0 then
+        ProcessService:ExitAsync(0)
+    else
+        ProcessService:ExitAsync(1)
+    end
+end
 ```
 
 ### Option 2: run-in-roblox (CI/CD)
@@ -201,7 +251,7 @@ TestEZ.TestBootstrap:run({
 rokit add rojo-rbx/run-in-roblox
 
 # Run tests
-run-in-roblox --place game.rbxl --script tests/run-tests.luau
+run-in-roblox --place test-place.rbxl --script scripts/run-tests.luau
 ```
 
 ### Option 3: Lune (Faster, Limited)
@@ -235,18 +285,25 @@ end
 return MathUtils
 
 -- MathUtils.spec.luau
+local JestGlobals = require("@DevPackages/JestGlobals")
+local describe = JestGlobals.describe
+local it = JestGlobals.it
+local expect = JestGlobals.expect
+
+local MathUtils = require(script.Parent.MathUtils)
+
 return function()
     describe("lerp", function()
         it("returns start value at t=0", function()
-            expect(MathUtils.lerp(0, 100, 0)).to.equal(0)
+            expect(MathUtils.lerp(0, 100, 0)).toBe(0)
         end)
 
         it("returns end value at t=1", function()
-            expect(MathUtils.lerp(0, 100, 1)).to.equal(100)
+            expect(MathUtils.lerp(0, 100, 1)).toBe(100)
         end)
 
         it("interpolates at t=0.5", function()
-            expect(MathUtils.lerp(0, 100, 0.5)).to.equal(50)
+            expect(MathUtils.lerp(0, 100, 0.5)).toBe(50)
         end)
     end)
 end
@@ -272,6 +329,13 @@ end
 return NotificationService
 
 -- NotificationService.spec.luau
+local JestGlobals = require("@DevPackages/JestGlobals")
+local describe = JestGlobals.describe
+local it = JestGlobals.it
+local expect = JestGlobals.expect
+
+local NotificationService = require(script.Parent.NotificationService)
+
 return function()
     describe("NotificationService", function()
         it("fires remote with correct arguments", function()
@@ -288,9 +352,9 @@ return function()
 
             service:send(mockPlayer, "Hello!")
 
-            expect(firedArgs).to.be.ok()
-            expect(firedArgs.player).to.equal(mockPlayer)
-            expect(firedArgs.message).to.equal("Hello!")
+            expect(firedArgs).toBeTruthy()
+            expect(firedArgs.player).toBe(mockPlayer)
+            expect(firedArgs.message).toBe("Hello!")
         end)
     end)
 end
@@ -299,6 +363,14 @@ end
 ### Testing State Changes
 
 ```luau
+local JestGlobals = require("@DevPackages/JestGlobals")
+local describe = JestGlobals.describe
+local it = JestGlobals.it
+local expect = JestGlobals.expect
+local beforeEach = JestGlobals.beforeEach
+
+local Inventory = require(script.Parent.Inventory)
+
 return function()
     describe("Inventory", function()
         local inventory
@@ -308,18 +380,18 @@ return function()
         end)
 
         it("starts empty", function()
-            expect(#inventory:getItems()).to.equal(0)
+            expect(#inventory:getItems()).toBe(0)
         end)
 
         it("adds items", function()
             inventory:addItem("sword")
-            expect(inventory:hasItem("sword")).to.equal(true)
+            expect(inventory:hasItem("sword")).toBe(true)
         end)
 
         it("removes items", function()
             inventory:addItem("sword")
             inventory:removeItem("sword")
-            expect(inventory:hasItem("sword")).to.equal(false)
+            expect(inventory:hasItem("sword")).toBe(false)
         end)
     end)
 end
@@ -356,6 +428,6 @@ Testing everything isn't practical. Skip these:
 
 ## Further Reading
 
-- [TestEZ Documentation](https://roblox.github.io/testez/)
+- [Jest Lua Documentation](https://jsdotlua.github.io/jest-lua/)
 - [run-in-roblox](https://github.com/rojo-rbx/run-in-roblox)
 - [Lune](https://lune-org.github.io/docs)

@@ -22,7 +22,7 @@ Consult these files based on the topic:
 | Tool version conflicts, Rokit pinning, compatibility | `references/tool-versions.md` |
 | MCP setup, Studio connection, AI-assisted development | `references/mcp-setup.md` |
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
-| Testing, TestEZ, writing tests | `references/testing.md` |
+| Testing, Jest Lua, writing tests | `references/testing.md` |
 | Quick syntax lookup, common APIs | `references/quick-reference.md` |
 | **Starting a new project** | Follow [Project Setup Workflow](#project-setup-workflow) below |
 
@@ -251,6 +251,26 @@ Ask:
 
 If yes, copy `assets/starter-code/Analytics.luau` to `src/server/modules/Analytics.luau`.
 
+### Step 10e: Optional — Testing Setup
+
+Ask:
+> "Want me to set up Jest Lua for unit testing?"
+
+If yes:
+1. Add to `wally.toml`:
+```toml
+[dev-dependencies]
+Jest = "jsdotlua/jest@3.10.0"
+JestGlobals = "jsdotlua/jest-globals@3.10.0"
+```
+
+2. Run `wally install`
+
+3. Create `scripts/run-tests.luau` with the test runner (see `references/testing.md`)
+
+4. Inform user:
+> "Testing is set up! Create test files with `.spec.luau` suffix next to your modules. Run tests in Studio or via `run-in-roblox`."
+
 ### Step 11: Verify & Commit
 
 **Run linting to verify starter code:**
@@ -291,3 +311,71 @@ Tell user:
 5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
 
 **Project is ready for development.**
+
+---
+
+## Testing Guidelines
+
+### When to Suggest Testing
+
+Proactively offer to write tests when:
+
+1. **Creating a new module with business logic** — After writing `InventoryManager.luau`, offer:
+   > "Want me to add tests for this module?"
+
+2. **User asks about testing** — Consult `references/testing.md` for full patterns
+
+3. **Bug fixes** — After fixing a bug, suggest:
+   > "Want me to add a regression test so this doesn't break again?"
+
+4. **Complex calculations or state machines** — These benefit most from tests
+
+### When NOT to Suggest Testing
+
+Don't push tests for:
+- Simple getters/setters
+- UI layout code
+- Direct Roblox API wrappers
+- Quick prototypes (unless user asks)
+
+### How to Write Tests
+
+1. **Create test file** next to the module:
+   ```
+   src/shared/MathUtils.luau
+   src/shared/MathUtils.spec.luau  ← Test file
+   ```
+
+2. **Follow Jest Lua syntax** (see `references/testing.md`):
+   ```luau
+   local JestGlobals = require("@DevPackages/JestGlobals")
+   local describe = JestGlobals.describe
+   local it = JestGlobals.it
+   local expect = JestGlobals.expect
+
+   return function()
+       describe("ModuleName", function()
+           it("should do the expected thing", function()
+               expect(result).toBe(expected)
+           end)
+       end)
+   end
+   ```
+
+3. **Test behavior, not implementation** — Focus on inputs/outputs
+
+### How to Run Tests
+
+**In Studio:**
+- Run the test runner script (usually `scripts/run-tests.luau`)
+- Check Output window for results
+
+**From CLI (CI/CD):**
+```bash
+run-in-roblox --place test-place.rbxl --script scripts/run-tests.luau
+```
+
+**Pure logic tests (no Roblox APIs):**
+```bash
+lune run tests/math-utils.spec.luau
+```

@@ -29,6 +29,37 @@ local ContextActionService = game:GetService("ContextActionService")
 
 ---
 
+## Collision Groups
+
+```luau
+local PhysicsService = game:GetService("PhysicsService")
+
+-- Register collision groups (server-side, typically in game initialization)
+PhysicsService:RegisterCollisionGroup("Players")
+PhysicsService:RegisterCollisionGroup("Projectiles")
+PhysicsService:RegisterCollisionGroup("NPC")
+
+-- Configure which groups collide with each other
+PhysicsService:CollisionGroupSetCollidable("Players", "Projectiles", false)  -- Players ignore own projectiles
+PhysicsService:CollisionGroupSetCollidable("Projectiles", "Projectiles", false)  -- Projectiles pass through each other
+
+-- Assign parts to groups
+local function assignCollisionGroup(part: BasePart, groupName: string)
+    part.CollisionGroup = groupName
+end
+
+-- Example: Set player character to "Players" group
+local function onCharacterAdded(character: Model)
+    for _, part in character:GetDescendants() do
+        if part:IsA("BasePart") then
+            part.CollisionGroup = "Players"
+        end
+    end
+end
+```
+
+---
+
 ## Task Library (Use These, Not Legacy)
 
 ```luau
@@ -48,9 +79,10 @@ task.delay(2, function()
 end)
 -- NOT: delay(2, fn)
 
--- Defer (runs next frame)
+-- Defer (runs next resumption cycle)
 task.defer(function()
-    -- Runs next resumption cycle
+    -- Runs after current thread yields; cleaner than task.spawn()
+    -- for fire-and-forget operations where immediate execution isn't required
 end)
 
 -- Cancel a thread
@@ -115,6 +147,7 @@ Remote.OnServerEvent:Connect(function(player: Player, ...: unknown)
     -- 3. Numeric bounds
     if typeof(args[2]) ~= "number" then return end
     local amount: number = args[2]
+    if amount ~= amount then return end  -- NaN check (NaN ~= NaN is true)
     if amount < 1 or amount > 100 or amount ~= math.floor(amount) then
         return
     end
@@ -301,17 +334,17 @@ trove:Destroy()  -- Cleans everything
 ## Iteration
 
 ```luau
--- Arrays (use generalized iteration)
+-- Arrays (generalized iteration preferred)
 for index, value in myArray do
     print(index, value)
 end
--- NOT: for i, v in ipairs(myArray)
+-- Also valid: for i, v in ipairs(myArray)
 
 -- Dictionaries
 for key, value in myDict do
     print(key, value)
 end
--- NOT: for k, v in pairs(myDict)
+-- Also valid: for k, v in pairs(myDict)
 
 -- Instances
 for _, child in parent:GetChildren() do

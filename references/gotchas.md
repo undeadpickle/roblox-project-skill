@@ -106,6 +106,9 @@ Roblox released **Studio Script Sync** (beta, Nov 2025) which syncs scripts to l
 
 ### Rojo Deletes Studio-Created Assets (`$ignoreUnknownInstances`)
 
+> **What is `$ignoreUnknownInstances`?**
+> A Rojo setting that tells it to leave Studio-created objects alone. Without it, Rojo deletes anything it doesn't recognize in the filesystem—including your hand-placed models and particles.
+
 By default, Rojo deletes any instances in Studio that don't exist in your filesystem. This means particles, models, sounds, and other Studio-created assets disappear on sync.
 
 ```json
@@ -155,6 +158,9 @@ Most common Rojo complaint. Checklist:
 5. **Check port conflicts:** `lsof -i :34872` (default Rojo port)
 
 ### Two-Way Sync Crashes ("Access Denied")
+
+> **What is two-way sync?**
+> Normally, Rojo syncs one direction: files → Studio. Two-way sync is an experimental feature that also syncs Studio → files, so changes you make in Studio appear in your code files. It's useful but can be unstable.
 
 Two-way sync (experimental) can crash with permission errors:
 

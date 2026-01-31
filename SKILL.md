@@ -7,6 +7,14 @@ description: Roblox game development with professional tooling (Rojo, Wally, Lua
 
 Professional Roblox game development with Rojo, Wally, and modern Luau patterns.
 
+## Quick Navigation
+
+- [Reference Routing](#reference-routing) — Which docs answer which questions
+- [Project Setup](#project-setup-workflow) — Create a new project from scratch
+- [Testing Guidelines](#testing-guidelines) — When and how to write tests
+
+---
+
 ## Reference Routing
 
 Consult these files based on the topic:
@@ -193,31 +201,25 @@ wally install
 ### Step 9: Optional — MCP Setup
 
 **Ask the user:**
-> "Do you have Roblox Studio MCP configured? (Lets AI run code and insert models in Studio)"
+> "Do you have Roblox Studio MCP configured? (Lets Claude run code and inspect objects in Studio)"
 
-If no and they want it, see `references/mcp-setup.md` for full setup instructions.
+If no and they want it, follow `references/mcp-setup.md` for complete setup instructions.
 
-**Quick path (Official Roblox MCP):**
+MCP is optional but powerful—skip for now if you just want to start coding.
 
-1. Download from [GitHub releases](https://github.com/Roblox/studio-rust-mcp-server/releases)
-2. Move to global location (`/Applications/` or `C:\Program Files\`)
-3. Add to Claude Code:
-   ```bash
-   # macOS
-   claude mcp add roblox-studio -- "/Applications/RobloxStudioMCP.app/Contents/MacOS/rbx-studio-mcp" --stdio
-   ```
-4. Restart VS Code, open Studio — check Output for "MCP Studio plugin is ready"
+### Choosing Optional Modules
 
-**Troubleshooting MCP issues:** See `references/gotchas.md` → MCP Servers section.
+Before asking about each module, provide context:
 
-**Context7 MCP (documentation lookup):**
-If not already configured, add for live Roblox docs:
-```bash
-claude mcp add context7 -- npx -y @upstash/context7-mcp --api-key YOUR_API_KEY
-```
-Get API key at [context7.com](https://context7.com). Use library IDs:
-- `/websites/create_roblox` — Tutorials & guides
-- `/websites/create_roblox_reference_engine` — Engine API reference
+| Module | Add if your game... |
+|--------|---------------------|
+| DataManager | Saves player progress (inventory, levels, currency) |
+| RateLimiter | Has combat, trading, or player-triggered server actions |
+| ErrorReporter | Will have live players (catches production bugs) |
+| Analytics | Needs player behavior tracking |
+| Jest Lua | Has complex logic worth unit testing |
+
+**For most games:** Start with DataManager + ErrorReporter. Add others as needed.
 
 ### Step 10: Optional — Data Manager
 
@@ -297,6 +299,18 @@ Fix any issues before proceeding.
 git add .
 git commit -m "Initial project setup"
 ```
+
+### What You've Built
+
+Your project now has:
+- **Folder structure** mirroring Roblox services (`server/`, `client/`, `shared/`)
+- **Entry points** with error handling (bugs won't crash silently)
+- **Logger utility** with context prefixes (`[Server]`, `[Client]`)
+- **Remote helpers** for type-safe client-server communication
+- **Git integration** for version control
+- **Linting/formatting** configs ready to use
+
+Everything below is optional setup. You can run `rojo serve` and start building now.
 
 ### Step 12: Final Instructions
 

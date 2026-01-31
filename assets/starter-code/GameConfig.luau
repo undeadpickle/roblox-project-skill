@@ -5,8 +5,11 @@
 	Keep all tunable values here so they're easy to find and adjust.
 	Use nested tables to organize by system/feature.
 
-	Note: Config tables are frozen with table.freeze() to prevent
-	accidental mutation at runtime. This catches bugs early.
+	Why table.freeze()?
+	Config tables are frozen to prevent accidental mutation. If you
+	later write `GameConfig.PLAYER.WALK_SPEED = 30`, you'll get an
+	error instead of silently changing the value. This catches typos
+	and unintended side effects early.
 ]]
 
 local GameConfig = {}

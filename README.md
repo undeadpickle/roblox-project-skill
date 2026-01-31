@@ -155,13 +155,15 @@ This skill sets up professional Roblox development using modern tools. Here's wh
 
 ### Development Tools
 
-| Tool | What it does |
-|------|--------------|
-| **[Rokit](https://github.com/rojo-rbx/rokit)** | Installs and manages the other tools. Like a toolbox that keeps everything organized. |
-| **[Rojo](https://rojo.space/)** | Syncs your code files to Roblox Studio. Edit in VS Code → changes appear in Studio instantly. |
-| **[Wally](https://wally.run/)** | Package manager. Downloads libraries (like npm for JavaScript). |
-| **[Selene](https://kampfkarren.github.io/selene/)** | Linter. Catches bugs and bad patterns before you run your code. |
-| **[StyLua](https://github.com/JohnnyMorganz/StyLua)** | Formatter. Auto-formats your code so it's consistent and readable. |
+> **Why use a tool manager?** You *could* install Rojo, Wally, and Selene separately—but they'd drift out of sync over time. Rokit is like Homebrew for Roblox development: one `rokit install` command keeps your whole toolchain updated and consistent.
+
+| Tool | What it does | Need it? |
+|------|--------------|----------|
+| **[Rokit](https://github.com/rojo-rbx/rokit)** | Installs and manages the other tools. | Yes |
+| **[Rojo](https://rojo.space/)** | Syncs your code files to Roblox Studio. Edit in VS Code → changes appear in Studio instantly. | Yes |
+| **[Wally](https://wally.run/)** | Package manager. Downloads libraries (like npm for JavaScript). | Yes |
+| **[Selene](https://kampfkarren.github.io/selene/)** | Linter. Catches bugs and bad patterns before you run your code. | Recommended |
+| **[StyLua](https://github.com/JohnnyMorganz/StyLua)** | Formatter. Auto-formats your code so it's consistent and readable. | Optional |
 
 ### Recommended Libraries
 

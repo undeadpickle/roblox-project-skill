@@ -64,6 +64,9 @@ ProfileStore is the successor to ProfileService by the same author (loleris):
 - **Session locking:** Prevents item duplication exploits
 - **Luau types:** Built-in type checking support
 
+> **What is session locking?**
+> When a player joins, ProfileStore "locks" their data so only one server can write to it. If the player joins another server before the first releases the lock, the new server waits. This prevents the classic exploit where a player duplicates items by joining two servers simultaneously and trading in both.
+
 ### When ProfileService is fine
 
 - Existing projects already using it

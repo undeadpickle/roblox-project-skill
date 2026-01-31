@@ -62,7 +62,7 @@ Check that these exist in `~/.claude/skills/roblox-dev/`:
 1. Open VS Code in an empty folder
 2. Open Claude Code (click the Claude icon)
 3. Type: `Set up a new Roblox project called TestGame`
-4. Answer Claude's questions (language, packages, etc.)
+4. Answer Claude's foundation questions (project intent, source of truth, game type, exploit sensitivity, persistence needs, etc.)
 
 ### Verify the project structure
 

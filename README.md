@@ -55,7 +55,7 @@ Open Claude Code (click the Claude icon in VS Code) and try:
 Set up a new Roblox project called MyGame
 ```
 
-Claude will ask a few questions, then create everything for you.
+Claude will walk you through a few foundation questions (what kind of game, how exploit-sensitive, persistence needs, etc.), then create a tailored project for you.
 
 ---
 
@@ -128,12 +128,12 @@ your-project/
 - RemoteEvent/RemoteFunction helpers
 - Game config with `table.freeze()`
 
-**Optional modules** (Claude will ask if you want them):
-- `DataManager` — ProfileStore integration with data versioning
-- `RateLimiter` — Protect RemoteEvents from exploit spam
-- `Analytics` — Track player engagement (sessions, purchases, levels)
-- `ErrorReporter` — Capture unhandled errors globally
-- `Jest Lua` — Unit testing framework for your modules
+**Optional modules** (auto-selected based on your project profile):
+- `DataManager` — ProfileStore integration with data versioning (included if you need persistence)
+- `RateLimiter` — Protect RemoteEvents from exploit spam (included for high exploit sensitivity)
+- `Analytics` — Track player engagement (included for long-lived projects)
+- `ErrorReporter` — Capture unhandled errors globally (included for long-lived projects)
+- `Jest Lua` — Unit testing framework (available on request)
 
 ---
 

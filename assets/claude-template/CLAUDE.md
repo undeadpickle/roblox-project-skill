@@ -6,6 +6,20 @@ Brief description of what this project does.
 
 > Generated with [roblox-dev skill](https://github.com/undeadpickle/roblox-project-skill) vSKILL_VERSION
 
+## Project Profile
+
+> Captured during initial setup — informs architecture decisions.
+
+- **Intent:** PROJECT_INTENT
+- **Source of truth:** PROJECT_SOURCE_OF_TRUTH
+- **Team:** PROJECT_TEAM_SHAPE
+- **Core loop:** PROJECT_GAME_LOOP
+- **Exploit sensitivity:** PROJECT_EXPLOIT_SENSITIVITY
+- **Persistence:** PROJECT_PERSISTENCE
+- **Structure:** PROJECT_STRUCTURE
+
+**Auto-included modules:** PROJECT_AUTO_MODULES
+
 ## Architecture
 
 ### Code Organization

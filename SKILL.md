@@ -32,7 +32,7 @@ Consult these files based on the topic:
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
 | Testing, Jest Lua, writing tests | `references/testing.md` |
 | Quick syntax lookup, common APIs | `references/quick-reference.md` |
-| **Starting a new project** | Follow [Project Setup Workflow](#project-setup-workflow) below |
+| **Starting a new project** | Start with [PROJECT_WIZARD.md](PROJECT_WIZARD.md) for foundation questions, then [Project Setup Workflow](#project-setup-workflow) |
 
 **Starter code in `assets/starter-code/`** shows recommended patterns:
 - `init.client.luau` / `init.server.luau` — Entry point structure
@@ -48,6 +48,8 @@ Consult these files based on the topic:
 ## Project Setup Workflow
 
 **Use this section when starting a new Roblox project from scratch.**
+
+> **Start with the wizard:** Before running these steps, complete the [Foundation Questions in PROJECT_WIZARD.md](PROJECT_WIZARD.md). The wizard determines your project profile (intent, authority model, persistence needs) which informs what gets generated below. If you've already completed the wizard, proceed to Step 2.
 
 ### Prerequisites
 
@@ -141,6 +143,14 @@ Copy from `assets/starter-code/`:
 Copy `assets/claude-template/CLAUDE.md` to project root. Replace:
 - `PROJECT_NAME` with user's project name
 - `SKILL_VERSION` with the version from `VERSION` file (e.g., `1.0.0`)
+- `PROJECT_INTENT` with the intent (e.g., "MVP", "Prototype", "Long-lived")
+- `PROJECT_SOURCE_OF_TRUTH` with source of truth (e.g., "Git + Rojo", "Studio-first")
+- `PROJECT_TEAM_SHAPE` with team info (e.g., "Solo, no PRs", "Small team with PRs")
+- `PROJECT_GAME_LOOP` with game loop categories (e.g., "Economy/building (tycoon)")
+- `PROJECT_EXPLOIT_SENSITIVITY` with sensitivity and implication (e.g., "High → server-authoritative for value changes")
+- `PROJECT_PERSISTENCE` with persistence level and implication (e.g., "Core economy → DataManager with schema versioning")
+- `PROJECT_STRUCTURE` with structure choice (e.g., "Layered")
+- `PROJECT_AUTO_MODULES` with list of auto-included modules (e.g., "DataManager, RateLimiter") or "None" if none
 
 Copy `assets/docs/README.md` to project root. Replace `PROJECT_NAME`.
 

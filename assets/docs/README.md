@@ -2,6 +2,13 @@
 
 A Roblox project built with Rojo.
 
+## About
+
+- **Game type:** PROJECT_GAME_LOOP
+- **Architecture:** PROJECT_STRUCTURE structure
+- **Authority model:** PROJECT_AUTHORITY_MODEL
+- **Persistence:** PROJECT_PERSISTENCE_SUMMARY
+
 ## Setup
 
 ### Prerequisites

@@ -152,7 +152,12 @@ Copy `assets/claude-template/CLAUDE.md` to project root. Replace:
 - `PROJECT_STRUCTURE` with structure choice (e.g., "Layered")
 - `PROJECT_AUTO_MODULES` with list of auto-included modules (e.g., "DataManager, RateLimiter") or "None" if none
 
-Copy `assets/docs/README.md` to project root. Replace `PROJECT_NAME`.
+Copy `assets/docs/README.md` to project root. Replace:
+- `PROJECT_NAME` with user's project name
+- `PROJECT_GAME_LOOP` with game loop categories (e.g., "Economy/building (tycoon)")
+- `PROJECT_STRUCTURE` with structure choice (e.g., "Layered")
+- `PROJECT_AUTHORITY_MODEL` with authority posture (e.g., "Server-authoritative for value changes", "Hybrid", "Client-trusted")
+- `PROJECT_PERSISTENCE_SUMMARY` with brief persistence description (e.g., "Core economy with ProfileStore", "Light (settings only)", "None")
 
 Copy convention files to `.claude/rules/`:
 - `references/luau-conventions.md` → `.claude/rules/luau-conventions.md`

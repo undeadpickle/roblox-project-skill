@@ -73,6 +73,12 @@ else
     fail "README.md missing" "Add project documentation"
 fi
 
+if [ -f "$PROJECT_ROOT/PROJECT_WIZARD.md" ]; then
+    pass "PROJECT_WIZARD.md exists"
+else
+    fail "PROJECT_WIZARD.md missing" "This is the project setup wizard"
+fi
+
 echo ""
 
 # ----------------------------------------

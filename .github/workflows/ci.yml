@@ -69,7 +69,7 @@ jobs:
           done
 
           # Check that core files exist
-          for file in SKILL.md VERSION; do
+          for file in SKILL.md PROJECT_WIZARD.md VERSION; do
             if [ ! -f "$file" ]; then
               echo "❌ Missing core file: $file"
               errors=$((errors + 1))

@@ -5,7 +5,7 @@ Common issues and their solutions, sourced from DevForum, GitHub issues, and com
 ## Contents
 
 - [Memory Leaks](#memory-leaks) — Connection circular references, PlayerAdded nesting
-- [Rojo](#rojo) — `$ignoreUnknownInstances`, sync issues, two-way sync crashes, Team Create conflicts
+- [Rojo](#rojo) — Script Sync vs Rojo, `$ignoreUnknownInstances`, sync issues, Team Create conflicts
 - [Wally](#wally) — Private flag, realm separation, dependency resolution
 - [RemoteEvents / Security](#remoteevents--security) — Client validation, server-side checks
 - [DataStores](#datastores) — Throttling, pcall usage, UpdateAsync
@@ -90,6 +90,19 @@ When a Player leaves, Roblox destroys the Player instance, which disconnects all
 ---
 
 ## Rojo
+
+### Studio Script Sync vs Rojo
+
+Roblox released **Studio Script Sync** (beta, Nov 2025) which syncs scripts to local files without Rojo. Should you switch?
+
+| Use Case | Recommendation |
+|----------|----------------|
+| Solo dev, simple project, staying in Studio | Script Sync may work |
+| Team project, Git workflow, CI/CD | **Rojo** (more mature, full ecosystem) |
+| External tooling (Selene, StyLua, Wally) | **Rojo** (Script Sync doesn't integrate) |
+| Full project structure control | **Rojo** (Script Sync is script-only) |
+
+**Bottom line:** Script Sync is promising but still beta with limitations. Rojo remains the production-grade choice for serious projects. This skill defaults to Rojo.
 
 ### Rojo Deletes Studio-Created Assets (`$ignoreUnknownInstances`)
 
@@ -413,13 +426,17 @@ The old setting `luau-lsp.types.roblox: true` shows a deprecation warning. Use t
 }
 ```
 
-### New Type Solver Changes (Nov 2025)
+### New Type Solver (Default as of Nov 2025)
 
-Roblox released a new type solver. Some patterns that worked before may now show warnings:
+Roblox's new type solver is now **out of beta and enabled by default**. Some patterns that worked before may show warnings:
 - `__call` metamethods may cause "Cannot call non-function" warnings
 - `coroutine.wrap` iterators may show "next() does not return enough values"
+- Some generic type inference behaves differently
 
-**Workaround:** Use `:: any` type assertions temporarily, or disable the new solver in Studio settings.
+**Workarounds:**
+- Use `:: any` type assertions for problematic patterns
+- Toggle solver in Studio: File → Studio Settings → Script Analysis → Type Check Mode
+- The new solver is stricter but catches more real bugs — worth adapting to
 
 ### Project-level strict vs per-file strict
 

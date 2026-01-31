@@ -1,0 +1,134 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-installers:
+    name: Lint Installers
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: ShellCheck install.sh
+        uses: ludeeus/action-shellcheck@master
+        with:
+          scandir: '.'
+          additional_files: 'install.sh'
+
+  lint-powershell:
+    name: Lint PowerShell
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: |
+          Install-Module -Name PSScriptAnalyzer -Force -Scope CurrentUser
+          $results = Invoke-ScriptAnalyzer -Path install.ps1 -Severity Error,Warning
+          if ($results) {
+            $results | Format-Table -AutoSize
+            exit 1
+          }
+          Write-Host "PSScriptAnalyzer passed - no issues found"
+
+  verify-references:
+    name: Verify File References
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check referenced files exist
+        run: |
+          echo "Checking that all referenced asset and reference files exist..."
+
+          errors=0
+
+          # Check assets/ references in SKILL.md
+          for path in $(grep -oE 'assets/[^`"'\''[:space:]]+' SKILL.md | sort -u); do
+            if [ ! -e "$path" ]; then
+              echo "❌ Missing: $path"
+              errors=$((errors + 1))
+            else
+              echo "✓ Found: $path"
+            fi
+          done
+
+          # Check references/ mentions in SKILL.md
+          for path in $(grep -oE 'references/[^`"'\''[:space:]]+' SKILL.md | sort -u); do
+            if [ ! -e "$path" ]; then
+              echo "❌ Missing: $path"
+              errors=$((errors + 1))
+            else
+              echo "✓ Found: $path"
+            fi
+          done
+
+          # Check that core files exist
+          for file in SKILL.md VERSION; do
+            if [ ! -f "$file" ]; then
+              echo "❌ Missing core file: $file"
+              errors=$((errors + 1))
+            else
+              echo "✓ Core file exists: $file"
+            fi
+          done
+
+          # Check asset directories exist
+          for dir in assets/starter-code assets/config assets/claude-template assets/vscode references; do
+            if [ ! -d "$dir" ]; then
+              echo "❌ Missing directory: $dir"
+              errors=$((errors + 1))
+            else
+              echo "✓ Directory exists: $dir"
+            fi
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "Found $errors missing file(s) or directory(ies)"
+            exit 1
+          fi
+
+          echo ""
+          echo "All referenced files verified!"
+
+  markdown-links:
+    name: Check Markdown Links
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check internal markdown links
+        run: |
+          echo "Checking markdown links in references/..."
+
+          errors=0
+
+          # Find all markdown files and check internal links
+          for md in references/*.md; do
+            # Extract relative links like [text](other-file.md) or [text](../path)
+            links=$(grep -oE '\]\([^http][^)]+\.md\)' "$md" 2>/dev/null | sed 's/\](\(.*\))/\1/' || true)
+
+            for link in $links; do
+              # Resolve relative to the markdown file's directory
+              dir=$(dirname "$md")
+              target="$dir/$link"
+
+              if [ ! -f "$target" ]; then
+                echo "❌ Broken link in $md: $link"
+                errors=$((errors + 1))
+              fi
+            done
+          done
+
+          if [ $errors -gt 0 ]; then
+            echo "Found $errors broken link(s)"
+            exit 1
+          fi
+
+          echo "All markdown links valid!"

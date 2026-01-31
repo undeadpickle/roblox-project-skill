@@ -80,6 +80,7 @@ tar -xzf "$TMP_DIR/repo.tar.gz" -C "$TMP_DIR"
 
 echo "→ Installing..."
 cp "$TMP_DIR/$EXTRACT_DIR/SKILL.md" "$SKILL_DIR/"
+cp "$TMP_DIR/$EXTRACT_DIR/PROJECT_WIZARD.md" "$SKILL_DIR/"
 cp -r "$TMP_DIR/$EXTRACT_DIR/assets" "$SKILL_DIR/"
 cp -r "$TMP_DIR/$EXTRACT_DIR/references" "$SKILL_DIR/"
 

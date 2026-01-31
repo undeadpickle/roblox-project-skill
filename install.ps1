@@ -69,6 +69,7 @@ try {
     Write-Host "→ Installing..." -ForegroundColor Yellow
 
     Copy-Item -Path "$ExtractedDir\SKILL.md" -Destination $SkillDir -Force
+    Copy-Item -Path "$ExtractedDir\PROJECT_WIZARD.md" -Destination $SkillDir -Force
     Copy-Item -Path "$ExtractedDir\assets" -Destination $SkillDir -Recurse -Force
     Copy-Item -Path "$ExtractedDir\references" -Destination $SkillDir -Recurse -Force
 

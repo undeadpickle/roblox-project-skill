@@ -34,7 +34,7 @@ src/
 │       └── DataManager.spec.luau
 ```
 
-The `default.project.json` already excludes spec files from production builds:
+Test files sync to Studio alongside your modules. For production builds where you want to exclude tests, add to your build config:
 ```json
 "globIgnorePaths": ["**/*.spec.luau", "**/*.test.luau"]
 ```
@@ -219,7 +219,7 @@ fdescribe("also focused suite", function() end)
 Create a test runner script:
 
 ```luau
--- scripts/run-tests.luau (don't commit to prod)
+-- scripts/run-tests.luau
 local runCLI = require("@DevPackages/Jest").runCLI
 
 local processServiceExists, ProcessService = pcall(function()

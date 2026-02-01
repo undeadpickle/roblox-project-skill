@@ -10,7 +10,6 @@ Packages/
 !Packages/.gitkeep
 ServerPackages/
 !ServerPackages/.gitkeep
-wally.lock
 node_modules/
 
 # Build artifacts

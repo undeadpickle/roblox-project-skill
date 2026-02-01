@@ -1,6 +1,5 @@
 {
   "name": "PROJECT_NAME",
-  "globIgnorePaths": ["**/*.spec.luau", "**/*.test.luau"],
   "servePlaceIds": [],
   "tree": {
     "$className": "DataModel",

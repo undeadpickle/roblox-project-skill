@@ -55,7 +55,7 @@ mkdir -p "$SKILL_DIR"
 
 # Download and extract
 TMP_DIR=$(mktemp -d)
-trap "rm -rf $TMP_DIR" EXIT
+trap 'rm -rf "$TMP_DIR"' EXIT
 
 echo "→ Downloading..."
 if [ "$VERSION" = "main" ]; then

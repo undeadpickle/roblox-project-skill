@@ -2,6 +2,8 @@
 
 Unit testing and integration testing patterns for Roblox games.
 
+**Example files:** See `assets/starter-code/MathUtils.luau` and `MathUtils.spec.luau` for a complete working example of a testable module with tests.
+
 ## Jest Lua
 
 **Jest Lua** is the standard testing framework for Roblox, maintained by jsdotlua and used internally by Roblox. It uses a BDD-style syntax identical to JavaScript Jest.

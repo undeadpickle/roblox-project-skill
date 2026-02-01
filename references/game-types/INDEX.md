@@ -16,6 +16,7 @@ Quick-start profiles for common Roblox game genres. Each profile documents:
 | [Obby](obby.md) | Platformers, skill games | Checkpoints, attempts, leaderboards, minimal persistence |
 | [Simulator](simulator.md) | Collection/progression games | Pets, eggs, rebirths, heavy progression systems |
 | [Combat Arena](combat-arena.md) | PvP, competitive games | Rounds, matchmaking, ranked systems, high exploit sensitivity |
+| [Horror/Exploration](horror-exploration.md) | Survival horror, story games | Chapters, AI pursuers, atmosphere, medium-high exploit sensitivity |
 
 ## How to Use These Profiles
 
@@ -44,12 +45,12 @@ The MVP checklist gives users a clear "build these 5 things first" roadmap. This
 | "obby", "parkour", "platformer", "racing" | `obby.md` |
 | "simulator", "pet game", "clicker", "idle" | `simulator.md` |
 | "arena", "pvp", "shooter", "fighting", "competitive" | `combat-arena.md` |
+| "horror", "escape", "piggy", "granny", "doors", "story game", "survival horror" | `horror-exploration.md` |
 | Hybrid or unclear | Ask clarifying questions, may combine patterns |
 
 ## Not Covered (Yet)
 
 These genres aren't profiled but can be approximated:
 
-- **Horror/Story** — Use obby profile for structure + add atmosphere/narrative concerns
 - **Social/Roleplay** — Use tycoon profile (continuous world) with lower exploit sensitivity
 - **Sandbox/Creative** — Unique enough to need custom discussion

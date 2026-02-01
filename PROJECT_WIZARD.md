@@ -8,13 +8,37 @@ This wizard asks foundation questions FIRST, then generates a scaffold tailored 
 
 ## How to Use This Wizard
 
-1. **Ask the foundation questions** (Phase 1) — 9 required + 1 optional
-2. **Adapt as you go** — clarify freeform answers, skip irrelevant questions, frame based on context
-3. **Summarize what the answers imply** — speak this, don't write to a file
-4. **Auto-select modules** based on the profile
-5. **Proceed to scaffolding** (Phase 2 in SKILL.md)
+1. **Use the `AskUserQuestion` tool** to gather input at each decision point (see format below)
+2. **Ask in clusters of 2-3 questions** — don't dump all questions at once
+3. **Adapt as you go** — clarify freeform answers, skip irrelevant questions, frame based on context
+4. **Summarize what the answers imply** — speak this, don't write to a file
+5. **Auto-select modules** based on the profile
+6. **Proceed to scaffolding** (Phase 2 in SKILL.md)
 
-Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. See [Adaptive Flow Guidelines](#adaptive-flow-guidelines) for how to make the conversation feel natural.
+See [Adaptive Flow Guidelines](#adaptive-flow-guidelines) for how to make the conversation feel natural.
+
+---
+
+## Using AskUserQuestion Tool
+
+**Always use the `AskUserQuestion` tool** to collect user input. This provides a better UX than asking users to type answers.
+
+**Tool constraints:**
+- 1-4 questions per call
+- 2-4 options per question (users can always type "Other" for custom input)
+- `header`: short label, max 12 characters
+- `multiSelect: true` for questions where multiple selections make sense (e.g., game loop)
+
+**Suggested question clusters:**
+
+| Cluster | Questions | Notes |
+|---------|-----------|-------|
+| 1 | Intent, Source of Truth | Core decisions that affect everything else |
+| 2 | Team Shape, Game Loop | Team affects tooling; game loop affects architecture |
+| 3 | Session Format, Platform | How players experience the game |
+| 4 | Exploit Sensitivity, Persistence, Structure | Security and data decisions |
+
+Adapt clusters based on context — if earlier answers make some questions irrelevant, skip them.
 
 ---
 
@@ -22,11 +46,19 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 1: Project Intent
 
-**Ask:**
-> What are we optimizing for right now?
-> - **(A) Prototype** — experimenting, might throw this away
-> - **(B) MVP** — shipping something real with a small team
-> - **(C) Long-lived** — building a project that will grow and be maintained
+**AskUserQuestion format:**
+```json
+{
+  "question": "What are we optimizing for right now?",
+  "header": "Intent",
+  "options": [
+    { "label": "Prototype", "description": "Experimenting, might throw this away" },
+    { "label": "MVP", "description": "Shipping something real with a small team" },
+    { "label": "Long-lived", "description": "Building a project that will grow and be maintained" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** Determines how strict the tooling setup should be. Prototypes don't need CI and strict linting; long-lived projects do.
 
@@ -36,10 +68,18 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 2: Source of Truth
 
-**Ask:**
-> What should be the "source of truth" for your project?
-> - **(A) Git repo + Rojo** — VS Code edits, Studio syncs/builds from files
-> - **(B) Studio-first** — work primarily in Studio, external tools optional
+**AskUserQuestion format:**
+```json
+{
+  "question": "What should be the source of truth for your project?",
+  "header": "Source",
+  "options": [
+    { "label": "Git + Rojo", "description": "VS Code edits, Studio syncs/builds from files" },
+    { "label": "Studio-first", "description": "Work primarily in Studio, external tools optional" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** This is the single most important decision. Retroactively converting a Studio-first project to Rojo is painful.
 
@@ -51,13 +91,32 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 3: Team Shape
 
-**Ask:**
-> How many people will touch the code in the next month?
-> - **(A) Just me**
-> - **(B) 2-5 people**
-> - **(C) 5+ people**
->
-> And do you want code review / PR workflow? (yes/no)
+**AskUserQuestion format (ask both in one call):**
+```json
+{
+  "questions": [
+    {
+      "question": "How many people will touch the code in the next month?",
+      "header": "Team size",
+      "options": [
+        { "label": "Just me", "description": "Solo development" },
+        { "label": "2-5 people", "description": "Small team collaboration" },
+        { "label": "5+ people", "description": "Larger team with coordination needs" }
+      ],
+      "multiSelect": false
+    },
+    {
+      "question": "Do you want code review / PR workflow?",
+      "header": "PRs",
+      "options": [
+        { "label": "Yes", "description": "Changes go through pull requests" },
+        { "label": "No", "description": "Direct commits to main branch" }
+      ],
+      "multiSelect": false
+    }
+  ]
+}
+```
 
 **Why it matters:** Solo devs can be looser. Teams need formatting/linting enforced, and version pinning matters fast.
 
@@ -67,17 +126,25 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 4: Game Loop Category
 
-**Ask:**
-> What's the core loop? Pick 1-2 that fit best, or just describe your game and I'll figure it out:
-> - **Skill/movement** — obby, platformer, racing
-> - **Combat/competition** — arena, shooter, sports, fighting
-> - **Economy/building** — tycoon, builder, factory
-> - **Progression/collection** — pets, simulator, RPG-lite, idle
-> - **Story/exploration** — horror, adventure, mystery
-> - **Social/roleplay** — hangout, RP, social deduction
-> - **Creation/sandbox** — building tools, user-generated content
->
-> Or describe it your own way — "horror tycoon with trading" works too.
+**AskUserQuestion format:**
+```json
+{
+  "question": "What's the core loop? Pick 1-2 that fit best (or type your own description):",
+  "header": "Game loop",
+  "options": [
+    { "label": "Skill/movement", "description": "Obby, platformer, racing" },
+    { "label": "Combat/competition", "description": "Arena, shooter, sports, fighting" },
+    { "label": "Economy/building", "description": "Tycoon, builder, factory" },
+    { "label": "Progression/collection", "description": "Pets, simulator, RPG-lite, idle" }
+  ],
+  "multiSelect": true
+}
+```
+
+**Note:** Tool only supports 4 options. If user selects "Other", they can type freeform (e.g., "horror tycoon with trading"). Additional categories to recognize from freeform input:
+- **Story/exploration** — horror, adventure, mystery
+- **Social/roleplay** — hangout, RP, social deduction
+- **Creation/sandbox** — building tools, user-generated content
 
 **Why it matters:** Different loops have different architecture needs. Combat games need tight server authority. Tycoons need heavy persistence. Social games can be more client-trusted.
 
@@ -89,12 +156,20 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 5: Session Format
 
-**Ask:**
-> How do players experience your game?
-> - **(A) Continuous world** — players join an ongoing world, no distinct start/end
-> - **(B) Rounds/matches** — discrete games with clear start, end, and winners
-> - **(C) Runs/attempts** — roguelike, obby attempts, or "try until you win" loops
-> - **(D) Instanced levels** — dungeons, story chapters, or separate play areas
+**AskUserQuestion format:**
+```json
+{
+  "question": "How do players experience your game?",
+  "header": "Session",
+  "options": [
+    { "label": "Continuous world", "description": "Players join an ongoing world, no distinct start/end" },
+    { "label": "Rounds/matches", "description": "Discrete games with clear start, end, and winners" },
+    { "label": "Runs/attempts", "description": "Roguelike, obby attempts, or 'try until you win' loops" },
+    { "label": "Instanced levels", "description": "Dungeons, story chapters, or separate play areas" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** Session format determines whether you need RoundService/MatchService, spawn handling, join-in-progress logic, lobby systems, and how you structure game state.
 
@@ -104,12 +179,20 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 6: Platform Target
 
-**Ask:**
-> What's your primary platform?
-> - **(A) Mobile-first** — touch controls, smaller UI, performance-sensitive
-> - **(B) PC-first** — keyboard/mouse, larger UI, more complex controls
-> - **(C) Cross-platform** — both equally important
-> - **(D) Gamepad important** — console or controller players are a priority
+**AskUserQuestion format:**
+```json
+{
+  "question": "What's your primary platform?",
+  "header": "Platform",
+  "options": [
+    { "label": "Mobile-first", "description": "Touch controls, smaller UI, performance-sensitive" },
+    { "label": "PC-first", "description": "Keyboard/mouse, larger UI, more complex controls" },
+    { "label": "Cross-platform", "description": "Both mobile and PC equally important" },
+    { "label": "Gamepad important", "description": "Console or controller players are a priority" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** Platform choice affects UI constraints, camera/input conventions, performance budgets, and what your "MVP slice" should look like. Mobile-first means bigger buttons, simpler menus, and more aggressive optimization.
 
@@ -119,11 +202,19 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 7: Exploit Sensitivity
 
-**Ask:**
-> If someone cheats on their client, how bad is it?
-> - **(A) Not a big deal** — it's a casual/single-player experience
-> - **(B) Annoying but survivable** — leaderboards exist but aren't critical
-> - **(C) Catastrophic** — ranked PvP, trading, real-money value, or competitive integrity matters
+**AskUserQuestion format:**
+```json
+{
+  "question": "If someone cheats on their client, how bad is it?",
+  "header": "Exploits",
+  "options": [
+    { "label": "Not a big deal", "description": "Casual/single-player experience" },
+    { "label": "Annoying but survivable", "description": "Leaderboards exist but aren't critical" },
+    { "label": "Catastrophic", "description": "Ranked PvP, trading, real-money value, competitive integrity" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** Determines authority posture. High sensitivity = server-authoritative everything, validation patterns from day 1, transaction logging.
 
@@ -133,11 +224,19 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 8: Persistence Needs
 
-**Ask:**
-> Do you need to save player data between sessions right away?
-> - **(A) No** — pure arcade experience, nothing persists
-> - **(B) Light** — cosmetics, settings, high scores, unlocks
-> - **(C) Core economy** — inventory, currency, progression, building state
+**AskUserQuestion format:**
+```json
+{
+  "question": "Do you need to save player data between sessions right away?",
+  "header": "Persistence",
+  "options": [
+    { "label": "No", "description": "Pure arcade experience, nothing persists" },
+    { "label": "Light", "description": "Cosmetics, settings, high scores, unlocks" },
+    { "label": "Core economy", "description": "Inventory, currency, progression, building state" }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** If persistence is needed, you want the data schema and server-authority patterns in place BEFORE content work begins. Adding them later means painful migrations.
 
@@ -147,11 +246,19 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 9: Project Structure
 
-**Ask:**
-> How do you want code organized?
-> - **(A) Simple** — flat Scripts folder, shared modules, minimal structure (good for prototypes)
-> - **(B) Layered** — `shared/`, `server/`, `client/` boundaries (recommended default)
-> - **(C) Feature-based** — `features/combat/`, `features/inventory/`, etc. (good for large projects)
+**AskUserQuestion format:**
+```json
+{
+  "question": "How do you want code organized?",
+  "header": "Structure",
+  "options": [
+    { "label": "Simple", "description": "Flat Scripts folder, shared modules, minimal structure" },
+    { "label": "Layered", "description": "shared/, server/, client/ boundaries (recommended)" },
+    { "label": "Feature-based", "description": "features/combat/, features/inventory/, etc." }
+  ],
+  "multiSelect": false
+}
+```
 
 **Why it matters:** Structure determines where modules live and how future systems plug in. Layered is the safest default; feature-based scales better but requires more discipline.
 
@@ -161,8 +268,18 @@ Ask questions in clusters of 2-3 at a time. Don't dump all questions at once. Se
 
 ### Question 10: Anything Else? (Optional)
 
-**Ask:**
-> Anything else I should know about this project? Special requirements, constraints, or things you've already decided?
+**AskUserQuestion format:**
+```json
+{
+  "question": "Anything else I should know? (Special requirements, packages, constraints)",
+  "header": "Notes",
+  "options": [
+    { "label": "No, let's go", "description": "Ready to proceed with setup" },
+    { "label": "Yes", "description": "I have additional requirements (type in 'Other')" }
+  ],
+  "multiSelect": false
+}
+```
 
 **This is optional.** Skip if the conversation has already covered everything, or if the user seems eager to proceed.
 

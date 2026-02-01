@@ -82,8 +82,8 @@ If roblox-ts selected, inform user this skill sets up Luau projects only. Point 
 ### Step 2: Create Folder Structure
 
 ```bash
-mkdir -p src/client/modules src/server/modules src/shared src/replicatedFirst Packages .vscode .claude/rules
-touch Packages/.gitkeep
+mkdir -p src/client/modules src/server/modules src/shared src/replicatedFirst Packages ServerPackages .vscode .claude/rules
+touch Packages/.gitkeep ServerPackages/.gitkeep
 ```
 
 ### Step 3: Initialize Git & Tools

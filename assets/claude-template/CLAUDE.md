@@ -22,6 +22,23 @@ Brief description of what this project does.
 
 **Auto-included modules:** PROJECT_AUTO_MODULES
 
+## Build Roadmap
+
+> Suggested build order based on your game type. Tackle Phase 1 first for a playable vertical slice.
+
+### Phase 1: Core Loop
+PROJECT_ROADMAP_PHASE1
+
+### Phase 2: Depth
+PROJECT_ROADMAP_PHASE2
+
+### Phase 3: Engagement
+PROJECT_ROADMAP_PHASE3
+
+**Current focus:** Phase 1 — get the core loop working first.
+
+> Ask Claude: "Help me implement [next item]" to continue.
+
 ## Architecture
 
 ### Code Organization

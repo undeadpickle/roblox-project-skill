@@ -33,12 +33,70 @@ See [Adaptive Flow Guidelines](#adaptive-flow-guidelines) for how to make the co
 
 | Cluster | Questions | Notes |
 |---------|-----------|-------|
+| 0 | Game Type (if detected) | Front-load inference when user mentions a genre |
 | 1 | Intent, Source of Truth | Core decisions that affect everything else |
-| 2 | Team Shape, Game Loop | Team affects tooling; game loop affects architecture |
+| 2 | Team Shape | Team affects tooling and strictness |
 | 3 | Session Format, Platform | How players experience the game |
 | 4 | Exploit Sensitivity, Persistence, Structure | Security and data decisions |
 
 Adapt clusters based on context — if earlier answers make some questions irrelevant, skip them.
+
+---
+
+## Quick-Start: Game Type Detection
+
+**When a user mentions a game type up front** (e.g., "Set up a tycoon," "I want to make an obby"), front-load the inference instead of asking detailed questions first.
+
+### Detecting Game Type
+
+| User says... | Load profile... |
+|--------------|-----------------|
+| "tycoon", "factory", "base builder" | `references/game-types/tycoon.md` |
+| "obby", "parkour", "platformer", "racing" | `references/game-types/obby.md` |
+| "simulator", "pet game", "clicker", "idle" | `references/game-types/simulator.md` |
+| "arena", "pvp", "shooter", "fighting", "competitive" | `references/game-types/combat-arena.md` |
+
+### Quick-Start Flow
+
+1. **Read the matching profile** from `references/game-types/`
+2. **Present the implied decisions** from the profile:
+   > "Tycoons typically need:
+   > - Continuous world (players return to their plot)
+   > - Core economy persistence (plots, currency, upgrades save)
+   > - Medium-high exploit sensitivity (currency exploits break the game)
+   > - Server-authoritative purchases
+   >
+   > Sound right, or do you want to adjust any of these?"
+
+3. **If they confirm**, use profile defaults and skip to remaining questions (Intent, Source of Truth, Team)
+4. **If they want changes**, ask targeted follow-ups only for what differs
+
+This reduces cognitive load — users thinking "I want a tycoon" shouldn't have to answer "What's your exploit sensitivity?" without context.
+
+### Example Quick-Start Conversation
+
+```
+User: "Set up a tycoon game"
+
+Claude: "Tycoons typically need continuous-world persistence, server-authoritative
+purchases, and medium-high exploit protection. I'll set those as defaults.
+
+A few quick questions to customize:
+- What are we optimizing for? (Prototype / MVP / Long-lived)
+- Git+Rojo or Studio-first workflow?
+- Just you or a team?"
+
+User: "MVP, Git+Rojo, just me"
+
+Claude: "Got it. Here's what I'll create: [profile summary]. Starting setup..."
+```
+
+### When Quick-Start Doesn't Apply
+
+If the user's request is:
+- **Ambiguous** ("Set up a Roblox project") — Use the full wizard
+- **Hybrid** ("horror tycoon with trading") — Ask clarifying questions, may combine patterns
+- **Not a recognized type** — Use the full wizard, may need custom discussion
 
 ---
 
@@ -334,6 +392,56 @@ After all questions are answered, **speak a summary** (don't write to a file):
 
 **For long-lived projects or teams with PRs:** Ask for explicit confirmation before proceeding.
 > "Does this look right? I want to make sure the foundation is solid before I scaffold."
+
+### Generating the Build Roadmap
+
+The CLAUDE.md template includes `PROJECT_ROADMAP_PHASE1`, `PROJECT_ROADMAP_PHASE2`, and `PROJECT_ROADMAP_PHASE3` placeholders. Fill these based on the game type profile.
+
+**If a game type profile was used** (tycoon, obby, simulator, combat-arena):
+1. Read the MVP Checklist from `references/game-types/{type}.md`
+2. Copy the phase items as markdown task lists
+
+**Example for tycoon:**
+```markdown
+PROJECT_ROADMAP_PHASE1:
+- [ ] Plot claiming — Player joins → gets assigned a plot
+- [ ] Basic dropper/collector — One income source that works
+- [ ] Currency + UI — Show the number going up
+- [ ] One purchasable upgrade — Button that costs currency
+- [ ] Data persistence — Progress saves when player leaves
+
+PROJECT_ROADMAP_PHASE2:
+- [ ] Multiple dropper types or tiers
+- [ ] Upgrade paths (faster droppers, better collectors)
+- [ ] Offline income calculation (optional)
+- [ ] Plot expansion or new areas
+
+PROJECT_ROADMAP_PHASE3:
+- [ ] Rebirth/prestige system
+- [ ] Daily rewards or login bonuses
+- [ ] Quests or achievements
+- [ ] Social features (visiting other plots)
+```
+
+**If no game type profile applies** (generic project):
+```markdown
+PROJECT_ROADMAP_PHASE1:
+- [ ] Core gameplay mechanic working
+- [ ] Basic UI showing game state
+- [ ] One complete player flow (join → play → result)
+
+PROJECT_ROADMAP_PHASE2:
+- [ ] Additional content/variety
+- [ ] Polish and feedback (sounds, effects)
+- [ ] Edge case handling
+
+PROJECT_ROADMAP_PHASE3:
+- [ ] Progression systems
+- [ ] Social features
+- [ ] Monetization hooks (if applicable)
+```
+
+The roadmap is advisory, not prescriptive — users can reorder or skip items based on their vision.
 
 ---
 

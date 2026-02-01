@@ -73,7 +73,13 @@ Don't worry if you don't have Rokit yet — when you ask Claude to set up a proj
 
 ## What You Can Ask
 
-**Starting a project:**
+**Starting a project by game type (quick-start):**
+- "Set up a tycoon game" → Uses tycoon profile with smart defaults
+- "Create an obby project" → Platformer defaults, minimal persistence
+- "Make a pet simulator" → Heavy persistence, inventory systems
+- "Set up a PvP arena game" → Round-based, high exploit protection
+
+**Starting a generic project:**
 - "Set up a new Roblox project called ParkourPanic"
 - "Initialize a Roblox game with data persistence"
 
@@ -118,7 +124,7 @@ your-project/
 ├── default.project.json ← Rojo config
 ├── wally.toml           ← Package manager config (pre-filled with common packages)
 ├── selene.toml          ← Linter config
-├── CLAUDE.md            ← Project notes for AI
+├── CLAUDE.md            ← Project notes for AI + build roadmap
 └── README.md
 ```
 
@@ -134,6 +140,14 @@ your-project/
 - `Analytics` — Track player engagement (included for long-lived projects)
 - `ErrorReporter` — Capture unhandled errors globally (included for long-lived projects)
 - `Jest Lua` — Unit testing framework (available on request)
+
+**Build roadmap included:**
+If you use a game type profile (tycoon, obby, etc.), your `CLAUDE.md` includes a phased build roadmap:
+- Phase 1: Core loop (playable vertical slice)
+- Phase 2: Depth (more content, features)
+- Phase 3: Engagement (progression, social)
+
+Ask Claude "What should I build next?" and it'll reference your roadmap.
 
 ---
 
@@ -185,6 +199,7 @@ The skill includes guides that Claude reads when relevant:
 
 | Guide | What it covers |
 |-------|----------------|
+| **game-types/** | Genre-specific profiles (tycoon, obby, simulator, arena) with implied decisions, MVP checklists, and common patterns |
 | **libraries.md** | Which packages to use and migration paths |
 | **gotchas.md** | Common mistakes and how to fix them |
 | **luau-conventions.md** | Code style and naming conventions |

@@ -47,9 +47,11 @@ irm https://raw.githubusercontent.com/undeadpickle/roblox-project-skill/main/ins
 Check that these exist in `~/.claude/skills/roblox-dev/`:
 
 - [ ] `SKILL.md` — The main skill file Claude reads
-- [ ] `VERSION` — Version number (e.g., `1.0.0`)
+- [ ] `PROJECT_WIZARD.md` — Foundation questions and quick-start flow
+- [ ] `VERSION` — Version number (e.g., `1.1.0`)
 - [ ] `assets/` folder — Templates and starter code
 - [ ] `references/` folder — Guide documents
+- [ ] `references/game-types/` folder — Genre profiles (tycoon.md, obby.md, etc.)
 
 > **What this checks:** The installer downloaded everything to the right place.
 
@@ -57,7 +59,17 @@ Check that these exist in `~/.claude/skills/roblox-dev/`:
 
 ## 3. Test Project Creation
 
-### Create a test project
+### Test game-type quick-start (recommended)
+
+1. Open VS Code in an empty folder
+2. Open Claude Code (click the Claude icon)
+3. Type: `Set up a tycoon game called TestTycoon`
+4. Claude should:
+   - [ ] Present implied decisions for tycoons (continuous world, core persistence, etc.)
+   - [ ] Ask only remaining questions (intent, source of truth, team)
+   - [ ] Skip questions already answered by the tycoon profile
+
+### Test generic project creation
 
 1. Open VS Code in an empty folder
 2. Open Claude Code (click the Claude icon)
@@ -73,9 +85,18 @@ After Claude finishes, you should see:
 - [ ] `wally.toml` — Package manager config
 - [ ] `selene.toml` and `stylua.toml` — Linter and formatter configs
 - [ ] `.vscode/` folder with settings and recommended extensions
-- [ ] `CLAUDE.md` — Project notes for AI
+- [ ] `CLAUDE.md` — Project notes for AI with build roadmap
 
-> **What this checks:** Claude can read the skill and create a complete project structure.
+### Verify build roadmap (if using game-type quick-start)
+
+Open `CLAUDE.md` and check:
+
+- [ ] "Build Roadmap" section exists
+- [ ] Phase 1, 2, 3 have game-type-specific tasks (not placeholders)
+- [ ] For tycoon: mentions plot claiming, droppers, currency
+- [ ] For obby: mentions checkpoints, timer, death handling
+
+> **What this checks:** Claude can read the skill and create a complete project structure with game-type-specific guidance.
 
 ---
 
@@ -146,13 +167,17 @@ Claude should give accurate answers based on the reference documents.
 
 | Ask Claude... | Should reference... |
 |---------------|---------------------|
+| "Set up a tycoon" | `references/game-types/tycoon.md` → quick-start with implied decisions |
+| "What's the MVP for an obby?" | `references/game-types/obby.md` → Phase 1 checklist |
 | "What library should I use for saving data?" | `references/libraries.md` → recommends ProfileStore |
 | "My Rojo plugin won't connect" | `references/gotchas.md` → troubleshooting steps |
 | "How do I clean up connections?" | `references/luau-patterns.md` → Trove pattern |
 | "What's the naming convention for modules?" | `references/luau-conventions.md` → PascalCase |
+| "What should I build next?" | Project's `CLAUDE.md` → build roadmap |
 
 - [ ] Claude gives relevant, accurate answers
 - [ ] Answers match what's in the reference files
+- [ ] Game type requests trigger quick-start flow with implied decisions
 
 ### Test Context7 (live Roblox docs)
 

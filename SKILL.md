@@ -21,6 +21,11 @@ Consult these files based on the topic:
 
 | User asks about... | Consult first |
 |-------------------|---------------|
+| "Set up a tycoon", "make a tycoon game" | `references/game-types/tycoon.md` → then [PROJECT_WIZARD.md](PROJECT_WIZARD.md) quick-start flow |
+| "Set up an obby", "parkour game", "platformer" | `references/game-types/obby.md` → then [PROJECT_WIZARD.md](PROJECT_WIZARD.md) quick-start flow |
+| "Pet simulator", "simulator game", "clicker" | `references/game-types/simulator.md` → then [PROJECT_WIZARD.md](PROJECT_WIZARD.md) quick-start flow |
+| "Arena game", "PvP", "shooter", "competitive" | `references/game-types/combat-arena.md` → then [PROJECT_WIZARD.md](PROJECT_WIZARD.md) quick-start flow |
+| **Starting a new project** (generic) | Start with [PROJECT_WIZARD.md](PROJECT_WIZARD.md) for foundation questions, then [Project Setup Workflow](#project-setup-workflow) |
 | Roblox API, engine classes, how does X work | Context7: `/websites/create_roblox_reference_engine` → fallback: `create.roblox.com/docs/reference/engine` |
 | Tutorials, guides, best practices, "how to" | Context7: `/websites/create_roblox` → fallback: `create.roblox.com/docs` |
 | Package recommendations, "what library for X", dependencies | `references/libraries.md` |
@@ -32,7 +37,7 @@ Consult these files based on the topic:
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
 | Testing, Jest Lua, writing tests | `references/testing.md` |
 | Quick syntax lookup, common APIs | `references/quick-reference.md` |
-| **Starting a new project** | Start with [PROJECT_WIZARD.md](PROJECT_WIZARD.md) for foundation questions, then [Project Setup Workflow](#project-setup-workflow) |
+| "What should I build next?", progress guidance | Check project's `CLAUDE.md` roadmap section |
 
 **Starter code in `assets/starter-code/`** shows recommended patterns:
 - `init.client.luau` / `init.server.luau` — Entry point structure

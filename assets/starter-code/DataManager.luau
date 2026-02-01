@@ -21,9 +21,12 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local ServerStorage = game:GetService("ServerStorage")
 
 local Packages = ReplicatedStorage:WaitForChild("Packages")
-local ProfileStore = require(Packages.ProfileStore)
+local ServerPackages = ServerStorage:WaitForChild("ServerPackages")
+
+local ProfileStore = require(ServerPackages.ProfileStore)
 local Promise = require(Packages.Promise)
 local Trove = require(Packages.Trove)
 local GoodSignal = require(Packages.GoodSignal)

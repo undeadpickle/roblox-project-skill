@@ -24,6 +24,9 @@
       "$ignoreUnknownInstances": true
     },
     "ServerStorage": {
+      "ServerPackages": {
+        "$path": "ServerPackages"
+      },
       "$ignoreUnknownInstances": true
     },
     "StarterPlayer": {

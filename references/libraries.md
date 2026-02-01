@@ -407,7 +407,7 @@ GoodSignal = "stravant/goodsignal"
 Trove = "sleitnick/trove"
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore"
+ProfileStore = "lm-loleris/profilestore"
 ```
 
 **Notes:**

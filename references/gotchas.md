@@ -262,7 +262,7 @@ Bug: When a server-only package depends on a shared package, Wally may install t
 Promise = "evaera/promise@4"  # Explicitly add shared deps
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore@1"  # Uses Promise internally
+ProfileStore = "lm-loleris/profilestore"  # Uses Promise internally
 ```
 
 ### Realm Separation

@@ -31,7 +31,7 @@ GoodSignal = "stravant/goodsignal" # Custom events
 Trove = "sleitnick/trove"         # Cleanup management
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore"  # Data persistence (required for tycoons)
+ProfileStore = "lm-loleris/profilestore"  # Data persistence (required for tycoons)
 ```
 
 **Optional but common:**

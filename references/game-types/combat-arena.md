@@ -31,7 +31,7 @@ GoodSignal = "stravant/goodsignal" # Custom events (critical for match events)
 Trove = "sleitnick/trove"         # Cleanup between rounds
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore"  # For persistent stats/ranks
+ProfileStore = "lm-loleris/profilestore"  # For persistent stats/ranks
 ```
 
 **Consider adding:**

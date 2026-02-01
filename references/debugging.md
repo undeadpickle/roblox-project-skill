@@ -308,6 +308,79 @@ collectgarbage("collect")
 
 ---
 
+## Production Error Reporting
+
+The `ErrorReporter` module captures errors automatically but needs a destination in production. Discord webhooks are the simplest option for indie/hobby projects.
+
+### Setting Up a Discord Webhook
+
+1. **Create a webhook** in your Discord server:
+   - Server Settings → Integrations → Webhooks → New Webhook
+   - Copy the webhook URL (looks like `https://discord.com/api/webhooks/...`)
+
+2. **Create a proxy** — Roblox can't call Discord directly (domain not allowed). Use a free service:
+   - [Hyra](https://hyra.io/) — Roblox-focused, free tier
+   - [Guilded webhook proxy](https://github.com/lewisakura/webhook-proxy) — Self-hostable
+   - Any serverless function (Cloudflare Workers, Vercel)
+
+3. **Configure ErrorReporter** in your server init:
+
+```luau
+local ErrorReporter = require(ServerModules.ErrorReporter)
+
+-- Point to your proxy (which forwards to Discord)
+ErrorReporter.config.mode = "production"
+ErrorReporter.config.endpoint = "https://your-proxy.example.com/webhook"
+
+ErrorReporter.init()
+```
+
+### Proxy Example (Cloudflare Worker)
+
+```javascript
+// Simple proxy that forwards to Discord
+export default {
+  async fetch(request) {
+    const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/YOUR_ID/YOUR_TOKEN";
+
+    const data = await request.json();
+    const errors = data.errors || [];
+
+    // Format for Discord embed
+    const embeds = errors.slice(0, 5).map(err => ({
+      title: `🔴 ${err.message.slice(0, 100)}`,
+      description: `\`\`\`\n${err.stack?.slice(0, 500) || "No stack"}\n\`\`\``,
+      fields: [
+        { name: "Script", value: err.script || "Unknown", inline: true },
+        { name: "Count", value: String(err.count), inline: true },
+      ],
+      color: 0xff4444,
+      timestamp: new Date(err.timestamp * 1000).toISOString(),
+    }));
+
+    await fetch(DISCORD_WEBHOOK, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ embeds }),
+    });
+
+    return new Response("OK");
+  }
+};
+```
+
+### Alternative: Sentry
+
+For larger projects, [Sentry](https://sentry.io/) provides:
+- Error grouping and deduplication
+- Release tracking
+- Performance monitoring
+- Free tier (5K errors/month)
+
+Same pattern — point `ErrorReporter.config.endpoint` at Sentry's API or a proxy.
+
+---
+
 ## Quick Reference
 
 ```luau

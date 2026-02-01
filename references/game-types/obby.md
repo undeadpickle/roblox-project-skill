@@ -34,7 +34,7 @@ Trove = "sleitnick/trove"         # Cleanup management
 **Optional:**
 ```toml
 [server-dependencies]
-ProfileStore = "loleris/profilestore"  # Only if saving progress/unlocks
+ProfileStore = "lm-loleris/profilestore"  # Only if saving progress/unlocks
 ```
 
 **Often not needed:** Heavy data persistence, rate limiters (unless competitive)

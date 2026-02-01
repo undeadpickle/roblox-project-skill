@@ -31,7 +31,7 @@ GoodSignal = "stravant/goodsignal" # Custom events
 Trove = "sleitnick/trove"         # Cleanup management
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore"  # Required - heavy data needs
+ProfileStore = "lm-loleris/profilestore"  # Required - heavy data needs
 ```
 
 **Consider adding:**

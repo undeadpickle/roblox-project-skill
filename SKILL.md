@@ -212,7 +212,7 @@ GoodSignal = "stravant/goodsignal"
 Trove = "sleitnick/trove"
 
 [server-dependencies]
-ProfileStore = "loleris/profilestore"
+ProfileStore = "lm-loleris/profilestore"
 ```
 
 Then run:
@@ -271,6 +271,8 @@ If yes:
 local ErrorReporter = require(ServerModules.ErrorReporter)
 ErrorReporter.init()
 ```
+
+**For production:** The module runs in "development" mode by default (logs to Output). For live games, configure an endpoint to receive errors — see `references/debugging.md` → "Production Error Reporting" for Discord webhook setup.
 
 ### Step 10d: Optional — Analytics
 

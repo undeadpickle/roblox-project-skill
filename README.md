@@ -199,7 +199,8 @@ The skill includes guides that Claude reads when relevant:
 
 | Guide | What it covers |
 |-------|----------------|
-| **game-types/** | Genre-specific profiles (tycoon, obby, simulator, arena) with implied decisions, MVP checklists, and common patterns |
+| **game-types/** | Genre-specific profiles (tycoon, obby, simulator, arena, horror) with implied decisions, MVP checklists, and common patterns |
+| **patterns/** | Reusable code patterns: AI systems, audio, camera effects, multiplayer, anti-exploit, triggers |
 | **libraries.md** | Which packages to use and migration paths |
 | **gotchas.md** | Common mistakes and how to fix them |
 | **luau-conventions.md** | Code style and naming conventions |

@@ -32,6 +32,12 @@ Consult these files based on the topic:
 | Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` then `references/debugging.md` |
 | Code style, naming conventions, file organization | `references/luau-conventions.md` |
 | How to implement patterns (services, cleanup, validation, etc.) | `references/luau-patterns.md` |
+| AI behavior, state machines, pathfinding, detection | `references/patterns/ai-systems.md` |
+| Audio, dynamic music, 3D sound | `references/patterns/audio-systems.md` |
+| Camera shake, post-processing, screen effects | `references/patterns/camera-effects.md` |
+| Spectate, revive, multiplayer sync | `references/patterns/multiplayer-systems.md` |
+| Anti-exploit, movement validation, rate limiting | `references/patterns/anti-exploit.md` |
+| Proximity triggers, interactables, cooldowns | `references/patterns/trigger-systems.md` |
 | Tool version conflicts, Rokit pinning, compatibility | `references/tool-versions.md` |
 | MCP setup, Studio connection, AI-assisted development | `references/mcp-setup.md` |
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |

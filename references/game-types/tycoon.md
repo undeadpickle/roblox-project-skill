@@ -67,6 +67,18 @@ Build these in order for a playable vertical slice:
 
 ---
 
+## Reusable Patterns
+
+See [patterns/](../patterns/INDEX.md) for code that applies across game types.
+
+| Pattern | Use in Tycoons |
+|---------|----------------|
+| [Anti-Exploit](../patterns/anti-exploit.md) | Purchase validation, currency tampering prevention, rate limiting |
+| [Trigger Systems](../patterns/trigger-systems.md) | Plot boundary detection, dropper/collector triggers, button interactions |
+| [Audio Systems](../patterns/audio-systems.md) | Purchase confirmation sounds, ambient factory/business sounds |
+
+---
+
 ## Common Patterns
 
 ### Architecture Overview

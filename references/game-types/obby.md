@@ -68,6 +68,19 @@ Build these in order for a playable vertical slice:
 
 ---
 
+## Reusable Patterns
+
+See [patterns/](../patterns/INDEX.md) for code that applies across game types.
+
+| Pattern | Use in Obby Games |
+|---------|-------------------|
+| [Trigger Systems](../patterns/trigger-systems.md) | Checkpoint triggers, finish line detection, kill zones |
+| [Anti-Exploit](../patterns/anti-exploit.md) | Completion time validation, movement sanity checks |
+| [Audio Systems](../patterns/audio-systems.md) | Checkpoint sounds, completion fanfare, ambient music |
+| [Camera Effects](../patterns/camera-effects.md) | Screen shake on death, completion effects |
+
+---
+
 ## Common Patterns
 
 ### Architecture Overview

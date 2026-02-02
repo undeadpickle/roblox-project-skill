@@ -18,6 +18,21 @@ Quick-start profiles for common Roblox game genres. Each profile documents:
 | [Combat Arena](combat-arena.md) | PvP, competitive games | Rounds, matchmaking, ranked systems, high exploit sensitivity |
 | [Horror/Exploration](horror-exploration.md) | Survival horror, story games | Chapters, AI pursuers, atmosphere, medium-high exploit sensitivity |
 
+## Reusable Patterns
+
+Many code patterns apply across multiple game types. See [patterns/](../patterns/INDEX.md) for:
+
+- **AI Systems** — State machines, pathfinding, detection
+- **Audio Systems** — New Audio API, dynamic music, 3D sound
+- **Camera Effects** — Shake, post-processing, vignette
+- **Multiplayer Systems** — Spectate, revive, event sync
+- **Anti-Exploit** — Movement validation, action validation
+- **Trigger Systems** — Proximity triggers, interactables
+
+Each game-type profile links to the patterns it commonly uses.
+
+---
+
 ## How to Use These Profiles
 
 ### During Project Setup

@@ -67,6 +67,20 @@ Build these in order for a playable vertical slice:
 
 ---
 
+## Reusable Patterns
+
+See [patterns/](../patterns/INDEX.md) for code that applies across game types.
+
+| Pattern | Use in Combat Arena |
+|---------|---------------------|
+| [Anti-Exploit](../patterns/anti-exploit.md) | Hit validation, movement validation, rate limiting for abilities |
+| [Multiplayer Systems](../patterns/multiplayer-systems.md) | Spectate mode for eliminated players, team coordination |
+| [Audio Systems](../patterns/audio-systems.md) | Combat feedback sounds, victory/defeat music |
+| [Camera Effects](../patterns/camera-effects.md) | Hit feedback shake, death effects, kill cam |
+| [AI Systems](../patterns/ai-systems.md) | State machine pattern for match states (already shown below) |
+
+---
+
 ## Common Patterns
 
 ### Architecture Overview

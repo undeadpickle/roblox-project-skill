@@ -69,6 +69,19 @@ Build these in order for a playable vertical slice:
 
 ---
 
+## Reusable Patterns
+
+See [patterns/](../patterns/INDEX.md) for code that applies across game types.
+
+| Pattern | Use in Simulators |
+|---------|-------------------|
+| [Anti-Exploit](../patterns/anti-exploit.md) | Rate limiting purchases, validating collection, stat validation |
+| [Trigger Systems](../patterns/trigger-systems.md) | Area triggers for collection zones, unlock zone detection |
+| [Audio Systems](../patterns/audio-systems.md) | Collection sounds, egg hatching audio, area ambient music |
+| [AI Systems](../patterns/ai-systems.md) | Pet AI for following player, combat pet behavior |
+
+---
+
 ## Common Patterns
 
 ### Architecture Overview

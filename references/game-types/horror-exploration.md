@@ -2,7 +2,19 @@
 
 Story-driven games with survival elements, chase mechanics, and atmospheric exploration.
 
-**Examples:** Piggy, Granny, Flee the Facility, Doors, The Mimic, Rainbow Friends
+**Examples:** Doors, The Mimic, Apeirophobia, Piggy, Flee the Facility, Rainbow Friends, Evade, 3008, Identity Fraud, Dead Silence, The Backrooms, Pressure
+
+---
+
+## Quick Reference
+
+| Sub-Genre | Examples | Core Mechanic | Key Systems |
+|-----------|----------|---------------|-------------|
+| Chase Horror | Doors, Evade | Outrun/hide from pursuers | AI state machine, hiding spots, stamina |
+| Puzzle Horror | Identity Fraud, Apeirophobia | Solve puzzles while avoiding threats | Encryption puzzles, item collection, safe zones |
+| Survival Horror | 3008, Pressure | Survive waves/cycles | Day/night cycles, resource management, base building |
+| Story-Driven | The Mimic, Dead Silence | Progress through narrative chapters | Cutscenes, dialogue, chapter unlocks |
+| Asymmetric | Piggy, Flee the Facility | Survivors vs player-controlled hunter | Role systems, infection mechanics, team coordination |
 
 ---
 
@@ -22,6 +34,195 @@ When you say "horror," "escape," or "story game," you're usually implying:
 
 ---
 
+## Genre Variations
+
+### Chase Horror (Doors, Evade)
+
+**Core Loop:** Navigate environments while being pursued by entities with learnable patterns.
+
+**Key Mechanics:**
+- **Entity patterns** — Each monster has exploitable behavior (hide from Seek, don't look at Figure, run from Rush)
+- **Audio cues** — Heartbeat/sound warnings before entity appears
+- **Procedural layouts** — Randomized rooms prevent memorization
+- **Limited resources** — Hiding spots, stamina, healing items
+
+**Pacing:** Sustained tension with brief safe moments between entity encounters. Players learn patterns through repeated deaths.
+
+**Key Patterns:** [AI Systems](../patterns/ai-systems.md) (state machine, detection), [Audio Systems](../patterns/audio-systems.md) (intensity layers)
+
+---
+
+### Puzzle Horror (Identity Fraud, Apeirophobia)
+
+**Core Loop:** Solve environmental puzzles while avoiding intermittent threats.
+
+**Key Mechanics:**
+- **Encryption puzzles** — Morse code, base64, hexadecimal, color codes
+- **Item collection** — Find keys, codes, tools to progress
+- **Safe vs danger zones** — Puzzles in safe areas, entities patrol between
+- **Difficulty scaling** — Later puzzles require multiple steps
+
+**Pacing:** Calm puzzle-solving interrupted by entity presence. Tension comes from time pressure and fear of interruption.
+
+**Key Patterns:** [Trigger Systems](../patterns/trigger-systems.md) (zones, pickups), [AI Systems](../patterns/ai-systems.md) (patrol routes)
+
+---
+
+### Survival Horror (3008, Pressure)
+
+**Core Loop:** Survive escalating threats through resource management and environmental mastery.
+
+**Key Mechanics:**
+- **Day/night cycles** — Safe gathering phase, dangerous survival phase
+- **Resource management** — Food, health, stamina, crafting materials
+- **Base building** — Construct defenses, safe zones
+- **Wave escalation** — Each cycle more dangerous than the last
+- **Procedural elements** — Random spawns, layouts, enemy types
+
+**Pacing:** Cyclical tension (safe → danger → safe). Players develop strategies over multiple runs.
+
+**Key Patterns:** [AI Systems](../patterns/ai-systems.md) (AI Director for difficulty), [Trigger Systems](../patterns/trigger-systems.md) (damage zones)
+
+---
+
+### Story-Driven Horror (The Mimic, Dead Silence)
+
+**Core Loop:** Progress through narrative chapters, experiencing curated scares and story beats.
+
+**Key Mechanics:**
+- **Chapter structure** — Linear progression with unlocks
+- **Cutscenes** — Story delivery between gameplay
+- **Environmental storytelling** — Lore through exploration
+- **Unique chapter mechanics** — Each chapter introduces new rules
+- **Multiple endings** — Choices or secrets affect outcome
+
+**Pacing:** Cinematic with clear peaks and valleys. Quiet exploration → tension build → scare → release → story beat.
+
+**Key Patterns:** [Trigger Systems](../patterns/trigger-systems.md) (cutscene triggers), [Camera Effects](../patterns/camera-effects.md) (atmosphere)
+
+---
+
+### Asymmetric Horror (Piggy, Flee the Facility)
+
+**Core Loop:** Survivors complete objectives while one or more players hunt them.
+
+**Key Mechanics:**
+- **Role asymmetry** — Survivors escape, hunters capture
+- **Objective completion** — Hack computers, find keys, unlock exits
+- **Infection** — Caught survivors become hunters (Piggy)
+- **Time pressure** — Escape before time runs out
+- **Team coordination** — Survivors must cooperate
+
+**Pacing:** Constant threat from unpredictable human player. Tension from social dynamics, not just AI.
+
+**Key Patterns:** [Multiplayer Systems](../patterns/multiplayer-systems.md) (spectate, teams), [Anti-Exploit](../patterns/anti-exploit.md) (validation)
+
+---
+
+## Design Principles
+
+### Psychology of Fear
+
+**Types of Fear:**
+
+| Type | Trigger | Duration | Example |
+|------|---------|----------|---------|
+| **Jump Scare** | Sudden loud/visual shock | Instant (0.5s) | Entity appears with loud noise |
+| **Tension** | Anticipation of threat | Sustained (minutes) | Hearing footsteps, not seeing source |
+| **Dread** | Knowing something bad will happen | Long-term | Walking toward known danger |
+| **Unease** | Something feels "off" | Ambient | Slightly wrong geometry, off-key music |
+
+**The Fear Curve:**
+- Build tension → deliver scare → provide relief → repeat with escalation
+- Never deliver scares when players expect them — subvert anticipation
+- Too many scares = habituation (players stop being scared)
+- Too few = boredom
+
+**Safe vs Unsafe Spaces:**
+- Players need perceived safety to appreciate danger
+- Safe rooms (like Resident Evil) create contrast
+- Even brief safe moments matter (hallways between rooms)
+
+**Player Agency:**
+- Helplessness is scary, but total helplessness is frustrating
+- Give players options: hide, run, distract, outmaneuver
+- Pattern-based enemies let skilled players feel competent
+- Death should feel fair, not random
+
+---
+
+### Atmosphere Building
+
+**Lighting Design:**
+- Darkness obscures both threats AND escape routes
+- Flickering lights create uncertainty and visual discomfort
+- Use pools of light as navigation landmarks
+- Sudden blackouts before scares amplify impact
+- Use "Future is Bright" technology (Lighting.Technology = "Future")
+
+**Audio Design (Most Important Element):**
+- Sound design has stronger effect on horror than visuals
+- Layer ambient sounds: base drone + random creaks + distant events
+- Crescendo scores telegraph rising threat
+- Silence is equally powerful — absence of expected sound raises anxiety
+- Use new Audio API — see [Audio Systems](../patterns/audio-systems.md)
+
+**Environmental Storytelling:**
+- Tell stories through environment, not exposition
+- Broken objects, cryptic symbols, ominous stains
+- Notes/journals for optional lore
+- Less explicit = more imagination = more fear
+
+**Camera Manipulation:**
+- See [Camera Effects](../patterns/camera-effects.md) for shake, post-processing, vignette
+- Tight corners and obscured sightlines increase stress
+- Lock camera during jumpscares for maximum impact
+
+---
+
+### Monster/Antagonist Design
+
+**AI Behavior Principles:**
+- Monsters should feel intelligent, not scripted
+- Learnable patterns reward player skill
+- Unpredictability within boundaries (randomized patrol routes, varied speeds)
+- See [AI Systems](../patterns/ai-systems.md) for state machine and AI Director patterns
+
+**Telegraphing:**
+- Players should sense danger before seeing it
+- Audio cues: footsteps, breathing, growls
+- Visual cues: shadows, flickering lights, environmental changes
+- Give enough warning to feel fair, not enough to feel safe
+
+**Pattern-Based Behavior:**
+- Each entity should have distinct, learnable rules
+- Examples from Doors: Rush (hide), Seek (run), Figure (sound-based), Screech (look at it)
+- Learning mechanics = progress feeling (not just luck)
+- Document patterns in-game through notes or death messages
+
+---
+
+### Level Design
+
+**Sightlines and Corridors:**
+- Long corridors create dread (you see the monster coming)
+- Tight corners create jump scares (you don't see it coming)
+- Mix both for variety
+- Slightly off-symmetry triggers subconscious unease
+
+**Safe Rooms:**
+- Place between intense sequences
+- Should feel visually distinct (different lighting, music)
+- Often contain save points, resources, story elements
+
+**Navigation:**
+- Players should feel lost without being stuck
+- Landmarks help orientation
+- Breadcrumb items guide progression
+- Backtracking through "cleared" areas with new threats
+
+---
+
 ## Recommended Packages
 
 ```toml
@@ -34,10 +235,12 @@ Trove = "sleitnick/trove"         # Cleanup between chapters
 ProfileStore = "lm-loleris/profilestore"  # Chapter progress, unlocks
 ```
 
-**Consider adding:**
-- Custom state machine module — Essential for NPC AI behavior (idle/patrol/chase/search)
-- Audio layering system — Atmosphere depends on dynamic soundscapes
-- Camera manipulation utilities — For cutscenes and jump scares
+**Custom modules to build** (see [patterns/](../patterns/INDEX.md)):
+- **NPCManager** — Use [AI Systems](../patterns/ai-systems.md) state machine
+- **AtmosphereController** — Use [Audio Systems](../patterns/audio-systems.md) + [Camera Effects](../patterns/camera-effects.md)
+- **TriggerManager** — Use [Trigger Systems](../patterns/trigger-systems.md)
+- **ChapterManager** — Progression and save states
+- **SpectateController** — Use [Multiplayer Systems](../patterns/multiplayer-systems.md)
 
 ---
 
@@ -47,10 +250,10 @@ Build these in order for a playable vertical slice:
 
 ### Phase 1: Core Loop (build first)
 - [ ] **One playable map** — Escape-room scale, 3-5 rooms minimum
-- [ ] **Working AI pursuer** — PathfindingService, basic chase behavior
+- [ ] **Working AI pursuer** — Use [AI Systems](../patterns/ai-systems.md) state machine with Patrol/Chase/Search states
 - [ ] **Key/door puzzle** — Collect item → unlock path → progress
 - [ ] **Win/lose conditions** — Escape = win, caught = lose
-- [ ] **Basic atmosphere** — Dim lighting, ambient audio, footstep sounds
+- [ ] **Basic atmosphere** — Dim lighting, ambient audio using [Audio Systems](../patterns/audio-systems.md)
 
 **Milestone:** Player spawns, AI hunts them, they find a key, unlock a door, escape (or get caught). The experience feels tense.
 
@@ -62,142 +265,48 @@ Build these in order for a playable vertical slice:
 - [ ] Cutscene system for story beats
 
 ### Phase 3: Engagement
-- [ ] Multiplayer support (co-op survival)
+- [ ] Multiplayer support (co-op survival) — see [Multiplayer Systems](../patterns/multiplayer-systems.md)
 - [ ] Cosmetic unlocks (skins, effects)
-- [ ] Difficulty modes
+- [ ] Difficulty modes — use [AI Director](../patterns/ai-systems.md#ai-director-dynamic-difficulty)
 - [ ] Endless/survival mode (post-story replayability)
 - [ ] Chapter badges and achievements
 
 ---
 
-## Common Patterns
-
-### Architecture Overview
+## Architecture Overview
 
 ```
 Server                          Client
-──────                          ──────
+------                          ------
 NPCManager                      NPCController
-  ├─ state machine                ├─ visual/audio feedback
-  ├─ pathfinding logic            └─ proximity warnings
-  └─ chase/catch detection
-                    ↕ Remotes ↕
+  |- state machine                |- visual/audio feedback
+  |- pathfinding logic            |- proximity warnings
+  |- detection system             |- animation triggers
+  '- chase/catch detection
+                   <-> Remotes <->
 ChapterManager                  ChapterUI
-  ├─ chapter state                ├─ objective display
-  ├─ puzzle validation            ├─ inventory UI
-  └─ win/lose conditions          └─ cutscene player
+  |- chapter state                |- objective display
+  |- puzzle validation            |- inventory UI
+  '- win/lose conditions          '- cutscene player
 
 DataManager                     AtmosphereController
-  ├─ ProfileStore                 ├─ dynamic lighting
-  └─ chapter/unlock schema        ├─ audio layers
-                                  └─ camera effects
-PuzzleService
-  ├─ item tracking (server-side)
-  └─ door/lock states
+  |- ProfileStore                 |- dynamic lighting
+  '- chapter/unlock schema        |- audio layers (new API)
+                                  |- post-processing
+TriggerManager                    '- camera effects
+  |- proximity detection
+  '- scare/audio triggers       SpectateController
+                                  |- death detection
+AntiExploit                       |- camera switching
+  |- movement validation          '- spectate UI
+  '- position verification
 ```
 
-### NPC AI State Machine
+---
 
-```luau
--- Server: NPCManager.luau
-local PathfindingService = game:GetService("PathfindingService")
-local Players = game:GetService("Players")
+## Horror-Specific Patterns
 
-local NPCManager = {}
-
-export type NPCState = "Idle" | "Patrol" | "Chase" | "Search" | "Stunned"
-
-local npc: Model
-local npcState: NPCState = "Patrol"
-local currentTarget: Player? = nil
-local lastKnownPosition: Vector3? = nil
-
-local DETECTION_RANGE = 40
-local CHASE_SPEED = 18
-local PATROL_SPEED = 10
-
-function NPCManager.init(npcModel: Model)
-    npc = npcModel
-    NPCManager.setState("Patrol")
-end
-
-function NPCManager.setState(newState: NPCState)
-    if npcState == newState then return end
-    npcState = newState
-
-    local humanoid = npc:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
-
-    if newState == "Chase" then
-        humanoid.WalkSpeed = CHASE_SPEED
-        Remotes.NPCStateChanged:FireAllClients("Chase", currentTarget)
-    elseif newState == "Patrol" then
-        humanoid.WalkSpeed = PATROL_SPEED
-        currentTarget = nil
-        Remotes.NPCStateChanged:FireAllClients("Patrol")
-    elseif newState == "Search" then
-        humanoid.WalkSpeed = PATROL_SPEED
-        Remotes.NPCStateChanged:FireAllClients("Search", lastKnownPosition)
-    end
-end
-
-function NPCManager.update()
-    if npcState == "Stunned" then return end
-
-    local nearestPlayer, distance = findNearestPlayer()
-
-    if nearestPlayer and distance < DETECTION_RANGE then
-        if hasLineOfSight(nearestPlayer) then
-            currentTarget = nearestPlayer
-            local character = nearestPlayer.Character
-            if character then
-                lastKnownPosition = character:GetPivot().Position
-            end
-            NPCManager.setState("Chase")
-        end
-    elseif npcState == "Chase" and not currentTarget then
-        NPCManager.setState("Search")
-    end
-end
-
-function NPCManager.moveToTarget()
-    if npcState ~= "Chase" or not currentTarget then return end
-
-    local targetCharacter = currentTarget.Character
-    if not targetCharacter then return end
-
-    local npcRoot = npc.PrimaryPart
-    if not npcRoot then return end
-
-    local targetPosition = targetCharacter:GetPivot().Position
-    local path = PathfindingService:CreatePath({
-        AgentRadius = 2,
-        AgentHeight = 5,
-        AgentCanJump = false,
-    })
-
-    local success = pcall(function()
-        path:ComputeAsync(npcRoot.Position, targetPosition)
-    end)
-
-    if not success or path.Status ~= Enum.PathStatus.Success then
-        return
-    end
-
-    local waypoints = path:GetWaypoints()
-    local humanoid = npc:FindFirstChildOfClass("Humanoid")
-    if not humanoid then return end
-
-    for _, waypoint in waypoints do
-        if npcState ~= "Chase" then break end
-        humanoid:MoveTo(waypoint.Position)
-        -- Don't block — recompute path frequently instead
-        task.wait(0.1)
-    end
-end
-
-return NPCManager
-```
+These patterns build on the generic patterns for horror-specific use cases.
 
 ### Chapter Progress Data Schema
 
@@ -214,6 +323,7 @@ return {
     totalEscapes = 0,
     totalDeaths = 0,
     fastestTimes = {},  -- { chapter1 = 145.2, chapter2 = 203.8 }
+    totalPlaytime = 0,
 
     -- Unlocks
     skins = { "default" },
@@ -222,167 +332,110 @@ return {
     -- Achievements
     achievements = {},
 
+    -- Settings
+    settings = {
+        musicVolume = 0.5,
+        sfxVolume = 0.8,
+        screenShake = true,
+    },
+
     -- Timestamps
     lastPlayed = 0,
+    firstPlayed = 0,
 }
 ```
 
-### Proximity-Based Event Triggers
+### Horror AI State Configuration
+
+Configure the [AI state machine](../patterns/ai-systems.md) for horror:
 
 ```luau
--- Server: TriggerManager.luau
-local Players = game:GetService("Players")
+-- Horror-specific states
+export type HorrorNPCState = "Idle" | "Patrol" | "Investigate" | "Chase" | "Search" | "Stunned" | "Ambush"
 
-local TriggerManager = {}
+-- Horror-specific detection config
+local HORROR_DETECTION = {
+    close = { range = 15, angle = 180 },   -- Can sense behind at close range
+    medium = { range = 35, angle = 90 },   -- Normal vision
+    far = { range = 60, angle = 45 },      -- Narrow focus
+}
 
-local playerCooldowns: { [Player]: { [BasePart]: number } } = {}
-local TRIGGER_COOLDOWN = 2
-
-function TriggerManager.init()
-    for _, trigger in workspace.Triggers:GetChildren() do
-        if trigger:IsA("BasePart") then
-            setupTrigger(trigger)
-        end
-    end
-end
-
-local function setupTrigger(trigger: BasePart)
-    trigger.Touched:Connect(function(hit)
-        local player = Players:GetPlayerFromCharacter(hit.Parent)
-        if not player then return end
-
-        if isOnCooldown(player, trigger) then return end
-        setCooldown(player, trigger)
-
-        local triggerType = trigger:GetAttribute("TriggerType")
-        if typeof(triggerType) ~= "string" then return end
-
-        if triggerType == "jumpscare" then
-            Remotes.TriggerJumpscare:FireClient(player, trigger:GetAttribute("ScareId"))
-        elseif triggerType == "audio" then
-            Remotes.TriggerAudio:FireClient(player, trigger:GetAttribute("SoundId"))
-        elseif triggerType == "cutscene" then
-            Remotes.TriggerCutscene:FireClient(player, trigger:GetAttribute("CutsceneId"))
-        elseif triggerType == "checkpoint" then
-            ChapterManager.setCheckpoint(player, trigger:GetAttribute("CheckpointId"))
-        end
-    end)
-end
-
-local function isOnCooldown(player: Player, trigger: BasePart): boolean
-    local cooldowns = playerCooldowns[player]
-    if not cooldowns then return false end
-    local lastTrigger = cooldowns[trigger]
-    if not lastTrigger then return false end
-    return (os.clock() - lastTrigger) < TRIGGER_COOLDOWN
-end
-
-local function setCooldown(player: Player, trigger: BasePart)
-    if not playerCooldowns[player] then
-        playerCooldowns[player] = {}
-    end
-    playerCooldowns[player][trigger] = os.clock()
-end
-
-return TriggerManager
+-- Horror AI Director config (see patterns/ai-systems.md)
+AIDirector.configure({
+    baseDifficulty = 30,      -- Start lower for horror (build tension)
+    maxDifficulty = 90,       -- Cap below 100 (always beatable)
+    decayRate = 1,            -- Slow decay (maintain tension)
+    decayDelay = 45,          -- Long calm period before easing
+    onSuccess = 8,            -- Moderate increase on escape
+    onFailure = -25,          -- Significant mercy on death
+})
 ```
 
-### Dynamic Audio Manager
+### Jumpscare Trigger Pattern
+
+Combine [Trigger Systems](../patterns/trigger-systems.md) with [Camera Effects](../patterns/camera-effects.md):
 
 ```luau
--- Client: AudioManager.luau
-local SoundService = game:GetService("SoundService")
-
-local AudioManager = {}
-
-local layers: { [string]: Sound } = {}
-local currentIntensity: number = 0  -- 0 = calm, 1 = tense, 2 = chase
-
-local LERP_SPEED = 0.5
-
-function AudioManager.init()
-    layers.ambient = createSoundLayer("AmbientLoop", 0.3)
-    layers.tension = createSoundLayer("TensionLoop", 0)
-    layers.chase = createSoundLayer("ChaseLoop", 0)
-
-    for _, sound in layers do
-        sound:Play()
-    end
-end
-
-function AudioManager.setIntensity(targetIntensity: number)
-    currentIntensity = math.clamp(targetIntensity, 0, 2)
-end
-
-function AudioManager.update(dt: number)
-    local ambientTarget = if currentIntensity == 0 then 0.3 else 0.1
-    local tensionTarget = if currentIntensity >= 1 then 0.4 else 0
-    local chaseTarget = if currentIntensity >= 2 then 0.6 else 0
-
-    layers.ambient.Volume = lerp(layers.ambient.Volume, ambientTarget, dt * LERP_SPEED)
-    layers.tension.Volume = lerp(layers.tension.Volume, tensionTarget, dt * LERP_SPEED)
-    layers.chase.Volume = lerp(layers.chase.Volume, chaseTarget, dt * LERP_SPEED)
-end
-
-local function lerp(a: number, b: number, t: number): number
-    return a + (b - a) * math.min(1, t)
-end
-
-local function createSoundLayer(name: string, volume: number): Sound
-    local sound = Instance.new("Sound")
-    sound.Name = name
-    sound.SoundId = GameConfig.Sounds[name]
-    sound.Volume = volume
-    sound.Looped = true
-    sound.Parent = SoundService
-    return sound
-end
-
--- Respond to NPC state changes
-Remotes.NPCStateChanged.OnClientEvent:Connect(function(state: string)
-    if state == "Chase" then
-        AudioManager.setIntensity(2)
-    elseif state == "Search" then
-        AudioManager.setIntensity(1)
-    else
-        AudioManager.setIntensity(0)
-    end
+-- Server: Setup jumpscare trigger
+TriggerManager.registerHandler("jumpscare", function(player, data)
+    Remotes.TriggerJumpscare:FireClient(player, data.data.scareId)
 end)
 
-return AudioManager
+-- Client: Handle jumpscare
+Remotes.TriggerJumpscare.OnClientEvent:Connect(function(scareId)
+    local scareConfig = JumpscareConfigs[scareId]
+    if not scareConfig then return end
+
+    -- Combine all effects
+    CameraShake.jumpscare()
+    PostProcessing.flash("jumpscare", 0.2)
+    ScreenFlash.white(0.1)
+
+    -- Play scare sound
+    PositionalAudio.playAt(scareConfig.position, {
+        assetId = scareConfig.soundId,
+        volume = 1,
+    })
+
+    -- Show scare image if configured
+    if scareConfig.imageId then
+        showScareImage(scareConfig.imageId, 0.5)
+    end
+end)
 ```
 
 ---
 
 ## Pitfalls
 
-### ❌ Blocking on MoveToFinished:Wait()
-**Problem:** PathfindingService examples use `Humanoid.MoveToFinished:Wait()` which blocks the thread. If the player moves, NPC walks to stale position.
-**Fix:** Recompute path every 0.5-1 second. Don't wait for full path completion before checking target position again.
-
-### ❌ Cutscene escape exploits
-**Problem:** Players jump, reset, or teleport during cutscenes to skip content or gain unfair positioning.
-**Fix:** During cutscenes: disable controls, anchor the character, or teleport to a safe location. Validate cutscene completion server-side before unlocking progression.
-
-### ❌ Client-trusted progression
-**Problem:** Exploiter fires "I completed chapter 5" without actually playing.
-**Fix:** Server tracks all puzzle states, key pickups, and escape conditions. Chapter completion is calculated server-side, not accepted from client.
+### Horror-Specific Issues
 
 ### ❌ Over-relying on jump scares
-**Problem:** First playthrough is scary, replays become tedious.
-**Fix:** Build sustained tension through audio, lighting, and unpredictable AI. Use jump scares sparingly. Randomize some scare triggers for replayability.
+**Problem:** First playthrough is scary, replays become tedious. Players habituate quickly.
+**Fix:** Build sustained tension through audio, lighting, and unpredictable AI. Use jump scares sparingly (2-3 per chapter max). Randomize some scare triggers for replayability.
 
-### ❌ Speed/noclip exploits ruining tension
-**Problem:** Exploiters move at 100 WalkSpeed or clip through walls, trivializing the challenge.
-**Fix:** Server validates WalkSpeed (cap + kick for violations). Use invisible collision barriers at map boundaries. Raycast checks for impossible movement.
+### ❌ Predictable AI patterns
+**Problem:** After a few runs, players know exactly where monsters spawn and patrol.
+**Fix:** Randomize patrol routes. Use [AI Director](../patterns/ai-systems.md#ai-director-dynamic-difficulty) to vary behavior based on player performance. Add random delays to spawns.
 
-### ❌ NPC stuck on geometry
-**Problem:** AI gets caught on corners, stairs, or tight spaces — breaks immersion.
-**Fix:** Test pathfinding thoroughly. Add `PathfindingModifier` to problem areas. Implement "unstuck" teleport if NPC hasn't moved in X seconds.
+### ❌ Breaking immersion with UI
+**Problem:** Gamey UI elements (health bars, objective markers, score displays) undermine horror atmosphere.
+**Fix:** Use diegetic UI where possible (in-world objects). Minimize HUD. Make UI elements contextual (only show when relevant).
 
-### ❌ Audio desync in multiplayer
-**Problem:** One player triggers a sound, others don't hear it or hear it late.
-**Fix:** Positional audio should be client-side. Story-critical audio (narrator, chapter events) should fire via RemoteEvents to all clients simultaneously.
+### ❌ Multiplayer diluting tension
+**Problem:** Co-op makes the game less scary because players feel safer together.
+**Fix:** Design mechanics that split the party. Add limited resources that create tension. Consider asymmetric modes where one player is the threat.
+
+### ❌ Cutscene escape exploits
+**Problem:** Players jump, reset, or teleport during cutscenes to skip content.
+**Fix:** During cutscenes: disable controls, anchor the character. Validate cutscene completion server-side before unlocking progression.
+
+### General Issues (see pattern files for more)
+
+- **NPC stuck on geometry** — See [AI Systems pitfalls](../patterns/ai-systems.md#pitfalls)
+- **Speed/noclip exploits** — See [Anti-Exploit](../patterns/anti-exploit.md)
+- **Audio desync in multiplayer** — See [Audio Systems pitfalls](../patterns/audio-systems.md#pitfalls)
+- **Client-trusted progression** — See [Anti-Exploit action validation](../patterns/anti-exploit.md#action-validation)
 
 ---
 
@@ -394,3 +447,66 @@ Consider adjustments if:
 - **No chapter structure** — Endless/wave survival uses "runs" session format instead of chapters.
 - **Asymmetric multiplayer** — One player is the monster (like Piggy infected mode). Needs different authority model for the hunter player.
 - **Heavy story focus** — May need more cutscene infrastructure, dialogue systems, and longer session times.
+- **Casual horror** — Games like Rainbow Friends are horror for kids. Tone down intensity, use cartoonish art, simpler puzzles.
+
+---
+
+## Learning from Popular Games
+
+### Doors: Procedural Chase Horror
+
+**What works:**
+- Procedural room layouts → every run feels fresh
+- Distinct entity patterns → Rush (hide), Seek (run), Figure (sound), Screech (look)
+- Audio cues telegraph danger → players learn to "read" the game
+- Frequent checkpoints → death doesn't feel punishing
+
+**Key takeaway:** Entity patterns should be learnable but not trivial. Each monster teaches a different skill.
+
+---
+
+### The Mimic: Story-Driven Atmosphere
+
+**What works:**
+- Japanese folklore aesthetic → unique, memorable
+- Chapter structure → clear progression
+- Deep lore → rewards exploration
+- Environmental storytelling → show don't tell
+
+**Key takeaway:** Atmosphere and lore create investment. Players fear losing progress in a world they care about.
+
+---
+
+### Piggy: Asymmetric Tension
+
+**What works:**
+- Human-controlled threat → unpredictable, social
+- Infection mechanic → escalating danger
+- Simple objectives → find keys, escape
+- Short rounds → low commitment, high replayability
+
+**Key takeaway:** Human players create more tension than any AI. Social dynamics drive replayability.
+
+---
+
+### 3008: Survival Loop
+
+**What works:**
+- Day/night cycle → predictable but tense rhythm
+- Base building → players invest in defense
+- Endless mode → no "end," just survival records
+- Familiar setting (IKEA) → uncanny valley horror
+
+**Key takeaway:** Survival loops work when players build investment (bases, resources) that they fear losing.
+
+---
+
+### Apeirophobia: Puzzle Integration
+
+**What works:**
+- Varied puzzle types → codes, patterns, exploration
+- Difficulty scaling → later levels harder
+- Safe zones between puzzles → tension/release
+- Backrooms aesthetic → recognizable horror setting
+
+**Key takeaway:** Puzzles create natural pacing. Solving a puzzle feels like progress and provides relief.

@@ -33,7 +33,6 @@ local GoodSignal = require(Packages.GoodSignal)
 
 local Shared = ReplicatedStorage:WaitForChild("Shared")
 local Logger = require(Shared.Logger)
-local GameConfig = require(Shared.GameConfig)
 
 local log = Logger.new("DataManager")
 
@@ -52,7 +51,12 @@ export type PlayerData = {
 	},
 }
 
-export type Profile = ProfileStore.Profile<PlayerData>
+-- ProfileStore.Profile type (defined locally since package may not be installed)
+export type Profile = {
+	Data: PlayerData,
+	EndSession: (self: Profile) -> (),
+	OnSessionEnd: RBXScriptSignal,
+}
 
 -- Default data template for new players
 local DEFAULT_DATA: PlayerData = {

@@ -43,6 +43,14 @@ type PlayerBucket = {
 	lastRefill: number,
 }
 
+-- Internal implementation type (private fields typed here)
+type RateLimiterImpl = {
+	_rate: number,
+	_capacity: number,
+	_buckets: { [Player]: PlayerBucket },
+	_connection: RBXScriptConnection?,
+}
+
 -- Module
 local RateLimiter = {}
 RateLimiter.__index = RateLimiter
@@ -54,7 +62,7 @@ RateLimiter.__index = RateLimiter
 	@param config.capacity - Maximum tokens (burst capacity)
 ]]
 function RateLimiter.new(config: RateLimiterConfig): RateLimiter
-	local self = setmetatable({}, RateLimiter)
+	local self: RateLimiterImpl = setmetatable({} :: any, RateLimiter)
 
 	self._rate = config.rate
 	self._capacity = config.capacity
@@ -116,11 +124,12 @@ end
 --[[
 	Clean up the rate limiter.
 ]]
-function RateLimiter:destroy()
-	if self._connection then
-		self._connection:Disconnect()
-		self._connection = nil
+function RateLimiter.destroy(self: RateLimiterImpl)
+	local connection = self._connection
+	if connection then
+		connection:Disconnect()
 	end
+	self._connection = nil
 	table.clear(self._buckets)
 end
 

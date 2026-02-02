@@ -58,13 +58,13 @@ export type ErrorConfig = {
 local ErrorReporter = {}
 
 -- Configuration
-ErrorReporter.config: ErrorConfig = {
+ErrorReporter.config = {
 	mode = "development",
 	endpoint = nil,
 	dedupeWindow = 60, -- Dedupe same error for 60 seconds
 	maxQueueSize = 100,
 	flushInterval = 30,
-}
+} :: ErrorConfig
 
 -- Private state
 local errorQueue: { ErrorReport } = {}
@@ -166,12 +166,16 @@ function ErrorReporter.flush()
 
 	task.spawn(function()
 		local success, err = pcall(function()
-			HttpService:PostAsync(endpoint, HttpService:JSONEncode({
-				errors = errors,
-				gameId = game.PlaceId,
-				version = game.PlaceVersion,
-				timestamp = os.time(),
-			}), Enum.HttpContentType.ApplicationJson)
+			HttpService:PostAsync(
+				endpoint,
+				HttpService:JSONEncode({
+					errors = errors,
+					gameId = game.PlaceId,
+					version = game.PlaceVersion,
+					timestamp = os.time(),
+				}),
+				Enum.HttpContentType.ApplicationJson
+			)
 		end)
 
 		if not success then
@@ -196,7 +200,7 @@ function ErrorReporter.init()
 
 	-- Hook into ScriptContext.Error
 	ScriptContext.Error:Connect(function(message, stack, script)
-		local report = parseError(message, stack, script)
+		local report = parseError(message, stack, (script :: any) :: LuaSourceContainer?)
 		queueError(report)
 	end)
 
@@ -233,7 +237,7 @@ end
 --[[
 	Manually report an error.
 ]]
-function ErrorReporter.report(message: string, stack: string?, context: { [string]: any }?)
+function ErrorReporter.report(message: string, stack: string?, _context: { [string]: any }?)
 	queueError({
 		message = message,
 		stack = stack,

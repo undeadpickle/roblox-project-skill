@@ -12,9 +12,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- Error boundary: Catch require/init failures
 local success, err = pcall(function()
 	local Shared = ReplicatedStorage:WaitForChild("Shared")
-	local GameConfig = require(Shared.GameConfig)
 	local Logger = require(Shared.Logger)
-	local Remotes = require(Shared.Remotes)
 
 	local log = Logger.new("Server")
 

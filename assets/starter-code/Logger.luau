@@ -22,15 +22,18 @@ local Logger = {}
 Logger.__index = Logger
 
 export type LogLevel = "DEBUG" | "INFO" | "WARN" | "ERROR"
-export type Logger = typeof(setmetatable({} :: {
-	prefix: string,
-	minLevel: number,
-}, Logger))
+export type Logger = typeof(setmetatable(
+	{} :: {
+		prefix: string,
+		minLevel: number,
+	},
+	Logger
+))
 
 local IS_SERVER = RunService:IsServer()
 local CONTEXT = IS_SERVER and "Server" or "Client"
 
-local LEVELS: { [LogLevel]: number } = {
+local LEVELS = {
 	DEBUG = 1,
 	INFO = 2,
 	WARN = 3,

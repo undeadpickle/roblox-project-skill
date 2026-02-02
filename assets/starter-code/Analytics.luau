@@ -35,7 +35,6 @@
 ]]
 
 local HttpService = game:GetService("HttpService")
-local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -66,12 +65,12 @@ export type AnalyticsConfig = {
 local Analytics = {}
 
 -- Configuration (modify for your project)
-Analytics.config: AnalyticsConfig = {
+Analytics.config = {
 	mode = "development",
 	endpoint = nil, -- Set your analytics endpoint here
 	batchSize = 10,
 	flushInterval = 30,
-}
+} :: AnalyticsConfig
 
 -- Private state
 local eventQueue: { AnalyticsEvent } = {}
@@ -107,9 +106,7 @@ local function queueEvent(event: AnalyticsEvent)
 
 	-- Log in development mode
 	if Analytics.config.mode == "development" then
-		log:debug(
-			string.format("[%s] User %d: %s", event.eventName, event.userId, HttpService:JSONEncode(event.data))
-		)
+		log:debug(string.format("[%s] User %d: %s", event.eventName, event.userId, HttpService:JSONEncode(event.data)))
 	end
 end
 
@@ -141,11 +138,15 @@ function Analytics.flush()
 	-- Send to endpoint
 	task.spawn(function()
 		local success, err = pcall(function()
-			HttpService:PostAsync(endpoint, HttpService:JSONEncode({
-				events = events,
-				gameId = game.PlaceId,
-				version = game.PlaceVersion,
-			}), Enum.HttpContentType.ApplicationJson)
+			HttpService:PostAsync(
+				endpoint,
+				HttpService:JSONEncode({
+					events = events,
+					gameId = game.PlaceId,
+					version = game.PlaceVersion,
+				}),
+				Enum.HttpContentType.ApplicationJson
+			)
 		end)
 
 		if not success then

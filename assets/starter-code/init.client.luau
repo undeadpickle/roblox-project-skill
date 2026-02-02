@@ -14,7 +14,6 @@ local player = Players.LocalPlayer
 -- Error boundary: Catch require/init failures
 local success, err = pcall(function()
 	local Shared = ReplicatedStorage:WaitForChild("Shared")
-	local GameConfig = require(Shared.GameConfig)
 	local Logger = require(Shared.Logger)
 
 	local log = Logger.new("Client")
@@ -26,7 +25,7 @@ local success, err = pcall(function()
 		-- Example: require(script.modules.InputHandler).init()
 	end
 
-	local function onCharacterAdded(character: Model): ()
+	local function onCharacterAdded(_character: Model): ()
 		log:debug("Character spawned")
 
 		-- TODO: Character setup

@@ -89,4 +89,12 @@ stylua --check src/
 
 Format: `- [Category] Brief description of what doesn't work and what to do instead`
 
-<!-- Add learnings below -->
+### Luau Type Gotchas
+
+- **[Types] String unions as table keys** — `{ [MyUnion]: number }` breaks dot-access like `TABLE.KEY`. Let Luau infer instead.
+- **[Types] Type narrowing on self.field** — `if self._foo then self._foo:Method()` doesn't narrow. Assign to local first: `local foo = self._foo; if foo then foo:Method() end`
+- **[Types] Optional returns** — When a function can return nil (validation failure, etc.), explicitly type return as `T?`
+- **[Types] Module field annotations** — Use `Module.field = {} :: Type` not `Module.field: Type = {}`
+- **[Types] Private fields in classes** — Define internal impl type (`type FooImpl = { _field: T? }`) and use in constructor: `local self: FooImpl = setmetatable({} :: any, Foo)`
+
+<!-- Add project-specific learnings below -->

@@ -6,6 +6,7 @@
 	Run with: lune run scripts/run-tests.luau (or via Studio test runner)
 ]]
 
+-- selene: allow(incorrect_standard_library_use)
 local JestGlobals = require("@DevPackages/JestGlobals")
 local describe = JestGlobals.describe
 local expect = JestGlobals.expect

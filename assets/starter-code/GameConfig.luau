@@ -69,7 +69,7 @@ GameConfig.INTERACTIONS = table.freeze({
 })
 
 --- Get interaction config by type name
-function GameConfig.getInteractionConfig(typeName: string): {[string]: any}?
+function GameConfig.getInteractionConfig(typeName: string): { [string]: any }?
 	return GameConfig.INTERACTIONS[typeName]
 end
 

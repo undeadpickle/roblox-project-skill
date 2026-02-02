@@ -28,14 +28,15 @@ local Remotes = {}
 local remotesFolder: Folder? = nil
 
 local function getRemotesFolder(): Folder
-	if remotesFolder then
-		return remotesFolder
+	local cached = remotesFolder
+	if cached then
+		return cached
 	end
 
 	local existing = ReplicatedStorage:FindFirstChild("Remotes")
 	if existing and existing:IsA("Folder") then
 		remotesFolder = existing
-		return remotesFolder
+		return existing
 	end
 
 	local folder = Instance.new("Folder")
@@ -93,11 +94,7 @@ end
 
 --- Connect to a RemoteEvent with validation (server-side)
 --- Invalid requests are silently ignored to avoid giving exploiters feedback
-function Remotes.onEvent<T>(
-	name: string,
-	handler: (player: Player, data: T) -> (),
-	validator: (args: { any }) -> T?
-)
+function Remotes.onEvent<T>(name: string, handler: (player: Player, data: T) -> (), validator: (args: { any }) -> T?)
 	local event = Remotes.getEvent(name)
 	event.OnServerEvent:Connect(function(player, ...)
 		local data = validator({ ... })
@@ -110,13 +107,9 @@ end
 
 --- Connect to a RemoteFunction with validation (server-side)
 --- Returns nil to client on validation failure
-function Remotes.onInvoke<T, R>(
-	name: string,
-	handler: (player: Player, data: T) -> R,
-	validator: (args: { any }) -> T?
-)
+function Remotes.onInvoke<T, R>(name: string, handler: (player: Player, data: T) -> R, validator: (args: { any }) -> T?)
 	local func = Remotes.getFunction(name)
-	func.OnServerInvoke = function(player, ...)
+	func.OnServerInvoke = function(player, ...): R?
 		local data = validator({ ... })
 		if data == nil then
 			return nil -- Invalid args

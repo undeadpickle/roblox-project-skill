@@ -216,18 +216,16 @@ echo "Code Quality"
 echo "------------"
 
 # Check if Selene is available and configured
-SELENE_OUTPUT=$(selene "$PROJECT_ROOT/assets/starter-code/" 2>&1)
+# Use the config template from assets/config/
+SELENE_OUTPUT=$(selene --config "$PROJECT_ROOT/assets/config/selene.toml" "$PROJECT_ROOT/assets/starter-code/" 2>&1)
 SELENE_EXIT=$?
 
-if echo "$SELENE_OUTPUT" | grep -q "rokit.toml\|selene.toml"; then
-    # Selene can't run due to missing config in this directory
-    warn "Selene not configured for this directory" "Add selene.toml or use Rokit in a project"
-elif [ $SELENE_EXIT -eq 0 ]; then
+if [ $SELENE_EXIT -eq 0 ]; then
     pass "Starter code passes Selene lint"
 elif [ $SELENE_EXIT -eq 127 ]; then
     warn "Selene not installed" "Install via Rokit for Luau linting"
 else
-    fail "Starter code has Selene errors" "Run: selene assets/starter-code/"
+    fail "Starter code has Selene errors" "Run: selene --config assets/config/selene.toml assets/starter-code/"
 fi
 
 # Check if StyLua is available and configured

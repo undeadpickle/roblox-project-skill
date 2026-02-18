@@ -4,6 +4,8 @@
 
 This wizard asks foundation questions FIRST, then generates a scaffold tailored to the user's needs. The goal: surface critical decisions early so they don't become painful refactors later.
 
+> **Command mode:** When invoked via `/roblox-dev:new-project [game-type]`, the command file orchestrates this wizard. Read the sections it directs you to — don't read this entire file at once. The command file manages phase transitions and profile state.
+
 ---
 
 ## How to Use This Wizard
@@ -107,14 +109,18 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "What are we optimizing for right now?",
-  "header": "Intent",
-  "options": [
-    { "label": "Prototype", "description": "Experimenting, might throw this away" },
-    { "label": "MVP", "description": "Shipping something real with a small team" },
-    { "label": "Long-lived", "description": "Building a project that will grow and be maintained" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "What are we optimizing for right now?",
+      "header": "Intent",
+      "options": [
+        { "label": "Prototype", "description": "Experimenting, might throw this away" },
+        { "label": "MVP", "description": "Shipping something real with a small team" },
+        { "label": "Long-lived", "description": "Building a project that will grow and be maintained" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -129,13 +135,17 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "What should be the source of truth for your project?",
-  "header": "Source",
-  "options": [
-    { "label": "Git + Rojo", "description": "VS Code edits, Studio syncs/builds from files" },
-    { "label": "Studio-first", "description": "Work primarily in Studio, external tools optional" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "What should be the source of truth for your project?",
+      "header": "Source",
+      "options": [
+        { "label": "Git + Rojo", "description": "VS Code edits, Studio syncs/builds from files" },
+        { "label": "Studio-first", "description": "Work primarily in Studio, external tools optional" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -187,15 +197,19 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "What's the core loop? Pick 1-2 that fit best (or type your own description):",
-  "header": "Game loop",
-  "options": [
-    { "label": "Skill/movement", "description": "Obby, platformer, racing" },
-    { "label": "Combat/competition", "description": "Arena, shooter, sports, fighting" },
-    { "label": "Economy/building", "description": "Tycoon, builder, factory" },
-    { "label": "Progression/collection", "description": "Pets, simulator, RPG-lite, idle" }
-  ],
-  "multiSelect": true
+  "questions": [
+    {
+      "question": "What's the core loop? Pick 1-2 that fit best (or type your own description):",
+      "header": "Game loop",
+      "options": [
+        { "label": "Skill/movement", "description": "Obby, platformer, racing" },
+        { "label": "Combat/competition", "description": "Arena, shooter, sports, fighting" },
+        { "label": "Economy/building", "description": "Tycoon, builder, factory" },
+        { "label": "Progression/collection", "description": "Pets, simulator, RPG-lite, idle" }
+      ],
+      "multiSelect": true
+    }
+  ]
 }
 ```
 
@@ -217,15 +231,19 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "How do players experience your game?",
-  "header": "Session",
-  "options": [
-    { "label": "Continuous world", "description": "Players join an ongoing world, no distinct start/end" },
-    { "label": "Rounds/matches", "description": "Discrete games with clear start, end, and winners" },
-    { "label": "Runs/attempts", "description": "Roguelike, obby attempts, or 'try until you win' loops" },
-    { "label": "Instanced levels", "description": "Dungeons, story chapters, or separate play areas" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "How do players experience your game?",
+      "header": "Session",
+      "options": [
+        { "label": "Continuous world", "description": "Players join an ongoing world, no distinct start/end" },
+        { "label": "Rounds/matches", "description": "Discrete games with clear start, end, and winners" },
+        { "label": "Runs/attempts", "description": "Roguelike, obby attempts, or 'try until you win' loops" },
+        { "label": "Instanced levels", "description": "Dungeons, story chapters, or separate play areas" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -240,15 +258,19 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "What's your primary platform?",
-  "header": "Platform",
-  "options": [
-    { "label": "Mobile-first", "description": "Touch controls, smaller UI, performance-sensitive" },
-    { "label": "PC-first", "description": "Keyboard/mouse, larger UI, more complex controls" },
-    { "label": "Cross-platform", "description": "Both mobile and PC equally important" },
-    { "label": "Gamepad important", "description": "Console or controller players are a priority" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "What's your primary platform?",
+      "header": "Platform",
+      "options": [
+        { "label": "Mobile-first", "description": "Touch controls, smaller UI, performance-sensitive" },
+        { "label": "PC-first", "description": "Keyboard/mouse, larger UI, more complex controls" },
+        { "label": "Cross-platform", "description": "Both mobile and PC equally important" },
+        { "label": "Gamepad important", "description": "Console or controller players are a priority" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -263,14 +285,18 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "If someone cheats on their client, how bad is it?",
-  "header": "Exploits",
-  "options": [
-    { "label": "Not a big deal", "description": "Casual/single-player experience" },
-    { "label": "Annoying but survivable", "description": "Leaderboards exist but aren't critical" },
-    { "label": "Catastrophic", "description": "Ranked PvP, trading, real-money value, competitive integrity" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "If someone cheats on their client, how bad is it?",
+      "header": "Exploits",
+      "options": [
+        { "label": "Not a big deal", "description": "Casual/single-player experience" },
+        { "label": "Annoying but survivable", "description": "Leaderboards exist but aren't critical" },
+        { "label": "Catastrophic", "description": "Ranked PvP, trading, real-money value, competitive integrity" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -285,14 +311,18 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "Do you need to save player data between sessions right away?",
-  "header": "Persistence",
-  "options": [
-    { "label": "No", "description": "Pure arcade experience, nothing persists" },
-    { "label": "Light", "description": "Cosmetics, settings, high scores, unlocks" },
-    { "label": "Core economy", "description": "Inventory, currency, progression, building state" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "Do you need to save player data between sessions right away?",
+      "header": "Persistence",
+      "options": [
+        { "label": "No", "description": "Pure arcade experience, nothing persists" },
+        { "label": "Light", "description": "Cosmetics, settings, high scores, unlocks" },
+        { "label": "Core economy", "description": "Inventory, currency, progression, building state" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -307,14 +337,18 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "How do you want code organized?",
-  "header": "Structure",
-  "options": [
-    { "label": "Simple", "description": "Flat Scripts folder, shared modules, minimal structure" },
-    { "label": "Layered", "description": "shared/, server/, client/ boundaries (recommended)" },
-    { "label": "Feature-based", "description": "features/combat/, features/inventory/, etc." }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "How do you want code organized?",
+      "header": "Structure",
+      "options": [
+        { "label": "Simple", "description": "Flat Scripts folder, shared modules, minimal structure" },
+        { "label": "Layered", "description": "shared/, server/, client/ boundaries (recommended)" },
+        { "label": "Feature-based", "description": "features/combat/, features/inventory/, etc." }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 
@@ -329,13 +363,17 @@ If the user's request is:
 **AskUserQuestion format:**
 ```json
 {
-  "question": "Anything else I should know? (Special requirements, packages, constraints)",
-  "header": "Notes",
-  "options": [
-    { "label": "No, let's go", "description": "Ready to proceed with setup" },
-    { "label": "Yes", "description": "I have additional requirements (type in 'Other')" }
-  ],
-  "multiSelect": false
+  "questions": [
+    {
+      "question": "Anything else I should know? (Special requirements, packages, constraints)",
+      "header": "Notes",
+      "options": [
+        { "label": "No, let's go", "description": "Ready to proceed with setup" },
+        { "label": "Yes", "description": "I have additional requirements (type in 'Other')" }
+      ],
+      "multiSelect": false
+    }
+  ]
 }
 ```
 

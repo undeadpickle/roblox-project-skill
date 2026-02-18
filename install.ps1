@@ -78,6 +78,13 @@ try {
         Copy-Item -Path "$ExtractedDir\VERSION" -Destination $SkillDir -Force
     }
 
+    # Install slash command
+    $CommandsDir = "$env:USERPROFILE\.claude\commands\roblox-dev"
+    if (Test-Path $CommandsDir) { Remove-Item $CommandsDir -Recurse -Force }
+    New-Item -ItemType Directory -Force -Path $CommandsDir | Out-Null
+    Copy-Item -Path "$ExtractedDir\commands\roblox-dev\new-project.md" -Destination $CommandsDir -Force
+    Write-Host "→ Slash command installed" -ForegroundColor Yellow
+
     Write-Host ""
     Write-Host "✓ Installation complete!" -ForegroundColor Green
     if ($Version -ne "main") {
@@ -85,7 +92,8 @@ try {
     }
     Write-Host ""
     Write-Host "Usage:"
-    Write-Host "  Ask Claude: `"Set up a new Roblox project`""
+    Write-Host "  Run:  /roblox-dev:new-project"
+    Write-Host "  Or ask Claude: `"Set up a new Roblox project`""
     Write-Host ""
     Write-Host "Docs: $RepoUrl#readme"
 }

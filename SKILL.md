@@ -9,6 +9,8 @@ Professional Roblox game development with Rojo, Wally, and modern Luau patterns.
 
 ## Quick Navigation
 
+- **Slash command:** `/roblox-dev:new-project` — Interactive wizard for new projects
+- **With game type:** `/roblox-dev:new-project tycoon` — Quick-start with genre defaults
 - [Reference Routing](#reference-routing) — Which docs answer which questions
 - [Project Setup](#project-setup-workflow) — Create a new project from scratch
 - [Testing Guidelines](#testing-guidelines) — When and how to write tests

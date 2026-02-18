@@ -69,7 +69,7 @@ jobs:
           done
 
           # Check that core files exist
-          for file in SKILL.md PROJECT_WIZARD.md VERSION; do
+          for file in SKILL.md PROJECT_WIZARD.md VERSION commands/roblox-dev/new-project.md; do
             if [ ! -f "$file" ]; then
               echo "❌ Missing core file: $file"
               errors=$((errors + 1))
@@ -79,7 +79,7 @@ jobs:
           done
 
           # Check asset directories exist
-          for dir in assets/starter-code assets/config assets/claude-template assets/vscode references; do
+          for dir in assets/starter-code assets/config assets/claude-template assets/vscode references commands/roblox-dev; do
             if [ ! -d "$dir" ]; then
               echo "❌ Missing directory: $dir"
               errors=$((errors + 1))

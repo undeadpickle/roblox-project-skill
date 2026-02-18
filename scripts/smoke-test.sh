@@ -207,6 +207,20 @@ else
     fail "install.ps1 missing" "Windows installer"
 fi
 
+# Slash command file
+if [ -f "$PROJECT_ROOT/commands/roblox-dev/new-project.md" ]; then
+    pass "commands/roblox-dev/new-project.md exists"
+
+    # Check for YAML frontmatter (starts with ---)
+    if head -1 "$PROJECT_ROOT/commands/roblox-dev/new-project.md" | grep -q "^---$"; then
+        pass "Slash command has YAML frontmatter"
+    else
+        fail "Slash command missing frontmatter" "File must start with --- delimiter"
+    fi
+else
+    fail "commands/roblox-dev/new-project.md missing" "Slash command for /roblox-dev:new-project"
+fi
+
 echo ""
 
 # ----------------------------------------

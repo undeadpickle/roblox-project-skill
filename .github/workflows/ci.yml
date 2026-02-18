@@ -14,7 +14,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: ShellCheck install.sh
-        uses: ludeeus/action-shellcheck@master
+        uses: ludeeus/action-shellcheck@v2
         with:
           scandir: '.'
           additional_files: 'install.sh'
@@ -48,8 +48,8 @@ jobs:
 
           errors=0
 
-          # Check assets/ references in SKILL.md
-          for path in $(grep -oE 'assets/[^`"'\''[:space:]]+' SKILL.md | sort -u); do
+          # Check assets/ references in SKILL.md and PROJECT_WIZARD.md
+          for path in $(grep -oE 'assets/[^`"'\''[:space:]]+' SKILL.md PROJECT_WIZARD.md | sort -u); do
             if [ ! -e "$path" ]; then
               echo "❌ Missing: $path"
               errors=$((errors + 1))
@@ -58,8 +58,8 @@ jobs:
             fi
           done
 
-          # Check references/ mentions in SKILL.md
-          for path in $(grep -oE 'references/[^`"'\''[:space:]]+' SKILL.md | sort -u); do
+          # Check references/ mentions in SKILL.md and PROJECT_WIZARD.md
+          for path in $(grep -oE 'references/[^`"'\''[:space:]]+' SKILL.md PROJECT_WIZARD.md | sort -u); do
             if [ ! -e "$path" ]; then
               echo "❌ Missing: $path"
               errors=$((errors + 1))
@@ -69,7 +69,7 @@ jobs:
           done
 
           # Check that core files exist
-          for file in SKILL.md PROJECT_WIZARD.md VERSION commands/roblox-dev/new-project.md; do
+          for file in SKILL.md PROJECT_WIZARD.md VERSION; do
             if [ ! -f "$file" ]; then
               echo "❌ Missing core file: $file"
               errors=$((errors + 1))
@@ -79,7 +79,7 @@ jobs:
           done
 
           # Check asset directories exist
-          for dir in assets/starter-code assets/config assets/claude-template assets/vscode references commands/roblox-dev; do
+          for dir in assets/starter-code assets/config assets/claude-template assets/vscode assets/docs references; do
             if [ ! -d "$dir" ]; then
               echo "❌ Missing directory: $dir"
               errors=$((errors + 1))
@@ -110,7 +110,8 @@ jobs:
           errors=0
 
           # Find all markdown files and check internal links
-          for md in references/*.md; do
+          # Scans root-level .md files (SKILL.md, PROJECT_WIZARD.md, etc.) + all of references/
+          for md in $(find . -maxdepth 1 -name "*.md" | sort) $(find references -name "*.md" | sort); do
             # Extract relative links like [text](other-file.md) or [text](../path)
             links=$(grep -oE '\]\([^http][^)]+\.md\)' "$md" 2>/dev/null | sed 's/\](\(.*\))/\1/' || true)
 
@@ -132,3 +133,73 @@ jobs:
           fi
 
           echo "All markdown links valid!"
+
+  verify-integrity:
+    name: Verify Skill Integrity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check frontmatter and template placeholders
+        run: |
+          echo "Checking SKILL.md frontmatter and template placeholder integrity..."
+
+          errors=0
+
+          # SKILL.md must have frontmatter fields — without these Claude can't discover the skill
+          if grep -q "^name:" SKILL.md; then
+            echo "✓ SKILL.md has 'name:' frontmatter"
+          else
+            echo "❌ SKILL.md missing 'name:' frontmatter — skill won't be discoverable"
+            errors=$((errors + 1))
+          fi
+
+          if grep -q "^description:" SKILL.md; then
+            echo "✓ SKILL.md has 'description:' frontmatter"
+          else
+            echo "❌ SKILL.md missing 'description:' frontmatter — skill won't be discoverable"
+            errors=$((errors + 1))
+          fi
+
+          # CLAUDE.md template must contain key placeholders — if removed, generated project
+          # files will have unfilled fields
+          CLAUDE_TEMPLATE="assets/claude-template/CLAUDE.md"
+          PLACEHOLDERS=("PROJECT_NAME" "PROJECT_INTENT" "PROJECT_SOURCE_OF_TRUTH" "PROJECT_EXPLOIT_SENSITIVITY" "PROJECT_PERSISTENCE")
+
+          if [ -f "$CLAUDE_TEMPLATE" ]; then
+            for placeholder in "${PLACEHOLDERS[@]}"; do
+              if grep -q "$placeholder" "$CLAUDE_TEMPLATE"; then
+                echo "✓ CLAUDE.md template contains $placeholder"
+              else
+                echo "❌ CLAUDE.md template missing $placeholder"
+                errors=$((errors + 1))
+              fi
+            done
+          else
+            echo "❌ CLAUDE.md template not found"
+            errors=$((errors + 1))
+          fi
+
+          # README template must contain PROJECT_NAME
+          README_TEMPLATE="assets/docs/README.md"
+
+          if [ -f "$README_TEMPLATE" ]; then
+            if grep -q "PROJECT_NAME" "$README_TEMPLATE"; then
+              echo "✓ README.md template contains PROJECT_NAME"
+            else
+              echo "❌ README.md template missing PROJECT_NAME"
+              errors=$((errors + 1))
+            fi
+          else
+            echo "❌ README.md template not found"
+            errors=$((errors + 1))
+          fi
+
+          if [ $errors -gt 0 ]; then
+            echo ""
+            echo "Found $errors integrity issue(s)"
+            exit 1
+          fi
+
+          echo ""
+          echo "All integrity checks passed!"

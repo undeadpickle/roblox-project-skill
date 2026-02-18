@@ -13,11 +13,20 @@ Unit testing and integration testing patterns for Roblox games.
 ```toml
 # wally.toml
 [dev-dependencies]
-Jest = "jsdotlua/jest@3.10.0"
-JestGlobals = "jsdotlua/jest-globals@3.10.0"
+Jest = "jsdotlua/jest@^3.10.0"
+JestGlobals = "jsdotlua/jest-globals@^3.10.0"
 ```
 
 Then `wally install`.
+
+**Required config:** The `@DevPackages` require alias needs two things:
+
+1. Add to `.luaurc.json` (already included in skill template):
+```json
+{ "aliases": { "DevPackages": "./DevPackages" } }
+```
+
+2. Add a `DevPackages` entry to `default.project.json` so Rojo syncs it to Studio. The exact service location (ReplicatedStorage vs ServerStorage) depends on where your tests run — check the [Jest Lua docs](https://jsdotlua.github.io/jest-lua/) for the recommended mapping for your runner setup.
 
 ### File Naming Convention
 

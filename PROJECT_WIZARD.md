@@ -57,6 +57,7 @@ Adapt clusters based on context — if earlier answers make some questions irrel
 | "obby", "parkour", "platformer", "racing" | `references/game-types/obby.md` |
 | "simulator", "pet game", "clicker", "idle" | `references/game-types/simulator.md` |
 | "arena", "pvp", "shooter", "fighting", "competitive" | `references/game-types/combat-arena.md` |
+| "horror", "escape room", "exploration", "doors", "piggy" | `references/game-types/horror-exploration.md` |
 
 ### Quick-Start Flow
 
@@ -103,6 +104,41 @@ If the user's request is:
 ---
 
 ## Phase 1: Foundation Questions
+
+### Pre-question: Project Name
+
+Before asking the foundation questions, confirm the project name.
+
+1. **Get the current folder name:** Run `basename $(pwd)` and convert to PascalCase as the default.
+
+2. **Ask inline** (no AskUserQuestion needed yet):
+   > "What should we call this project?" (default: `[folder-name-in-PascalCase]`)
+
+3. **If the user gives a name that differs from the current folder name**, use AskUserQuestion to resolve the mismatch:
+
+```json
+{
+  "questions": [
+    {
+      "question": "The project name '[ProjectName]' doesn't match the current folder '[folder-name]'. Which would you like?",
+      "header": "Folder name",
+      "options": [
+        { "label": "Rename the folder", "description": "Rename '[folder-name]' to '[project-name]' to match the project name" },
+        { "label": "Use folder name", "description": "Keep '[folder-name]' and use that as the project name instead" }
+      ],
+      "multiSelect": false
+    }
+  ]
+}
+```
+
+If they choose **Rename the folder**: run `mv "../[folder-name]" "../[project-name]"` and `cd` into the renamed directory before continuing. Note this in the profile summary.
+
+If they choose **Use folder name**: update `projectName` to the folder name in PascalCase.
+
+Record as `projectName`. This is used when replacing `PROJECT_NAME` placeholders in generated files.
+
+---
 
 ### Question 1: Project Intent
 
@@ -214,9 +250,9 @@ If the user's request is:
 ```
 
 **Note:** Tool only supports 4 options. If user selects "Other", they can type freeform (e.g., "horror tycoon with trading"). Additional categories to recognize from freeform input:
-- **Story/exploration** — horror, adventure, mystery
-- **Social/roleplay** — hangout, RP, social deduction
-- **Creation/sandbox** — building tools, user-generated content
+- **Story/exploration** — horror, escape room, exploration → use `references/game-types/horror-exploration.md` as the closest profile. Adventure and mystery games are not yet covered by a dedicated profile; treat them as horror-exploration until one exists.
+- **Social/roleplay** — hangout, RP, social deduction → no profile exists; use full wizard with custom discussion
+- **Creation/sandbox** — building tools, user-generated content → no profile exists; use full wizard with custom discussion
 
 **Why it matters:** Different loops have different architecture needs. Combat games need tight server authority. Tycoons need heavy persistence. Social games can be more client-trusted.
 

@@ -199,10 +199,9 @@ The skill includes guides that Claude reads when relevant:
 
 | Guide | What it covers |
 |-------|----------------|
-| **game-types/** | Genre-specific profiles (tycoon, obby, simulator, arena, horror) with implied decisions, MVP checklists, and common patterns |
-| **patterns/** | Reusable code patterns: AI systems, audio, camera effects, multiplayer, anti-exploit, triggers |
+| **game-types/** | Genre-specific profiles (tycoon, obby, simulator, arena) with implied decisions, MVP checklists, and common patterns |
 | **libraries.md** | Which packages to use and migration paths |
-| **gotchas.md** | Common mistakes and how to fix them |
+| **gotchas.md** | Index → routes to `gotchas-tooling.md`, `gotchas-runtime.md`, `gotchas-lsp.md` |
 | **luau-conventions.md** | Code style and naming conventions |
 | **luau-patterns.md** | Reusable code patterns |
 | **tool-versions.md** | Rokit, version pinning, team setup |
@@ -210,7 +209,6 @@ The skill includes guides that Claude reads when relevant:
 | **mcp-setup.md** | Connecting Claude directly to Roblox Studio |
 | **testing.md** | Unit testing with Jest Lua |
 | **debugging.md** | Finding and fixing bugs in Studio |
-| **quick-reference.md** | Cheat sheet for common Luau patterns |
 
 ---
 

@@ -39,11 +39,10 @@ For horror games, configure the state machine with these states:
 
 Each pattern file includes:
 
-1. **Overview** — What the pattern does and when to use it
-2. **Core Implementation** — The main code pattern
-3. **Variations** — Adaptations for different use cases
-4. **Usage Examples** — How to integrate into a game
-5. **Pitfalls** — Common mistakes to avoid
+- **When/Why/Related metadata** on each major section (matches `luau-patterns.md` format)
+- **Code examples** with `--!strict` headers and convention-compliant style
+- **Pitfalls** — Common mistakes and how to fix them
+- **Cross-references** to foundational patterns in `luau-patterns.md`
 
 ---
 

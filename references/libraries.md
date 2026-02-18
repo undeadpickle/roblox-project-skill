@@ -1,17 +1,24 @@
 # Library Recommendations
 
-What to use, what to avoid, and how they work together.
+A reference for "which library wins when I need X." **This is not a shopping list** — most games need 2-3 of these at most. The project wizard and game-type profiles determine what your specific game should actually install.
 
-## Quick Reference: The 2025 Stack
+**Most prototypes and small games only need:**
+- GoodSignal + Trove (core utilities) — sufficient for most games
+- Add Promise when you have complex multi-step async flows or need chaining/cancellation; pcall + Async suffix is fine for simple cases
+- Nothing else until you hit a concrete need for it
 
-| Category | Recommended | Notes |
-|----------|-------------|-------|
-| **Async** | Promise (evaera) | Industry standard |
-| **Signals** | GoodSignal (stravant) | Full RBXScriptSignal API parity |
-| **Cleanup** | Trove or Janitor | Pick one, not both |
-| **Data** | ProfileStore (loleris) | Successor to ProfileService |
-| **UI** | Fusion 0.3 (Elttob) | Luau-native, built-in cleanup |
-| **Networking** | Raw RemoteEvents | Fine for most games |
+Add ProfileStore when you need persistence. Add Fusion when you need reactive UI. Don't install a library before you need it.
+
+## Quick Reference: Best Options by Category
+
+| Category | Best Option | When you need it |
+|----------|-------------|-----------------|
+| **Async** | Promise (evaera) | Any async operation (DataStore, HTTP, sequenced animations) |
+| **Signals** | GoodSignal (stravant) | Custom events between modules (AI state changes, game events) |
+| **Cleanup** | Trove or Janitor | Managing connections/instances with a defined lifetime |
+| **Data** | ProfileStore (loleris) | Saving player progress, inventory, or any cross-session state |
+| **UI** | Fusion 0.3 (dphfox) | Complex reactive UI — overkill for simple static screens |
+| **Networking** | Raw RemoteEvents | Always start here; upgrade only at MMO/physics-sync scale |
 
 ---
 
@@ -21,7 +28,6 @@ What to use, what to avoid, and how they work together.
 - Version control with Git (branching, history, collaboration)
 - External tooling (Selene linting, StyLua formatting, CI/CD)
 - Use any editor (VS Code, Neovim, etc.)
-- Studio Script Sync is still in beta with fewer features
 
 **Why framework-less over Knit?**
 - Knit was archived July 2024 — the author recommends against it
@@ -79,9 +85,11 @@ ProfileStore is the successor to ProfileService by the same author (loleris):
 
 | Library | Status | Recommendation |
 |---------|--------|----------------|
-| **Fusion 0.3** | Active | ✅ Recommended for new projects |
+| **Fusion 0.3** | Active (0.4 in dev) | ✅ Recommended for new projects |
 | React-lua | Active | Good if you already know React |
 | Roact | Deprecated | ❌ Migrate to React-lua or Fusion |
+
+**Repo:** `github.com/dphfox/Fusion` (Wally package remains `elttob/fusion`). Fusion 0.4 is in active development on main — use 0.3 for stable projects.
 
 ### Why Fusion 0.3?
 
@@ -106,16 +114,18 @@ For most solo/small team games, **raw RemoteEvents work fine**. Bandwidth gains 
 | Library | Status | Notes |
 |---------|--------|-------|
 | **Raw RemoteEvents** | Always works | ✅ Default choice |
-| Zap 0.6.x | Active (rewrite in progress) | Use stable branch if needed |
+| Zap 0.6.x | Active (0.6.28, Dec 2024; v0.7 rewrite on separate branch, not released) | Production-ready |
+| Blink 0.x | Active (1Axen/blink) | IDL-based like Zap; gaining traction |
 | BridgeNet2 | Archived | ❌ Don't use |
 | ByteNet | Archived | ❌ Don't use |
 | Red | Low activity | Works but not recommended |
 
-### When to consider Zap
+### When to consider Zap or Blink
 
 - MMO-scale player counts
 - High-frequency replication (physics sync, real-time combat)
 - You need buffer-based serialization
+- Both are IDL compilers with similar feature sets — check current community momentum before picking one
 
 ---
 
@@ -123,9 +133,11 @@ For most solo/small team games, **raw RemoteEvents work fine**. Bandwidth gains 
 
 ### Promise (evaera)
 
-**Status:** Active, industry standard
+**Status:** Active, widely used
 
-Use for any async operation: DataStore calls, HTTP requests, animations with timeouts.
+Use for complex async flows — multi-step sequences, chaining, cancellation, race conditions. For simple async operations (single DataStore call, one HTTP request), `pcall` + the `Async` naming convention is sufficient and avoids a dependency.
+
+**The tradeoff:** Promise adds structure and error propagation for complex async, but comes with type limitations in strict Luau and overhead for trivial cases. See `luau-conventions.md` → Yielding for the pcall pattern.
 
 ```luau
 local Promise = require(Packages.Promise)
@@ -398,19 +410,22 @@ The main loss is automatic service discovery. In practice, explicit requires are
 
 ## Wally Package Names
 
-For `wally.toml`:
+For `wally.toml`. **Wally requires version specifiers — entries without `@version` will fail to install.** Use caret ranges (`^major.minor.patch`) not exact pins; verify current versions via the Wally index before writing.
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"
-GoodSignal = "stravant/goodsignal"
-Trove = "sleitnick/trove"
+Promise = "evaera/promise@^4.0.0"
+GoodSignal = "stravant/goodsignal@^0.3.1"
+Trove = "sleitnick/trove@^1.8.0"
+
+# If using Janitor instead of Trove (pick one, not both):
+# Janitor = "howmanysmall/janitor@^1.13.13"
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"
+ProfileStore = "lm-loleris/profilestore@^1.0.3"
 ```
 
 **Notes:**
 - ProfileStore goes in `[server-dependencies]` (server-only)
-- Fusion is typically vendored or submoduled, not on Wally
-- Don't pin versions unless you have a specific reason—let Wally resolve latest
+- Fusion is available on Wally (`elttob/fusion`) but the community often vendors it directly for tighter version control — check the Fusion docs for current guidance
+- Always look up current versions before writing — versions above are examples, not guaranteed current. Quick check: `curl -s "https://raw.githubusercontent.com/UpliftGames/wally-index/main/AUTHOR/PACKAGE" | tail -1`

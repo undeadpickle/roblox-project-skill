@@ -26,15 +26,15 @@ When you say "obby" or "platformer," you're usually implying:
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"        # Async operations
-GoodSignal = "stravant/goodsignal" # Custom events
-Trove = "sleitnick/trove"         # Cleanup management
+Promise = "evaera/promise@^4.0.0"        # Async operations
+GoodSignal = "stravant/goodsignal@^0.3.1" # Custom events
+Trove = "sleitnick/trove@^1.8.0"         # Cleanup management
 ```
 
 **Optional:**
 ```toml
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"  # Only if saving progress/unlocks
+ProfileStore = "lm-loleris/profilestore@^1.0.3"  # Only if saving progress/unlocks
 ```
 
 **Often not needed:** Heavy data persistence, rate limiters (unless competitive)

@@ -90,6 +90,9 @@ echo "-------------------"
 REFS=(
     "libraries.md"
     "gotchas.md"
+    "gotchas-tooling.md"
+    "gotchas-runtime.md"
+    "gotchas-lsp.md"
     "luau-conventions.md"
     "luau-patterns.md"
     "tool-versions.md"
@@ -97,7 +100,6 @@ REFS=(
     "mcp-setup.md"
     "testing.md"
     "debugging.md"
-    "quick-reference.md"
 )
 
 for ref in "${REFS[@]}"; do
@@ -105,6 +107,41 @@ for ref in "${REFS[@]}"; do
         pass "references/$ref"
     else
         fail "references/$ref missing" "This doc is referenced in SKILL.md"
+    fi
+done
+
+GAME_TYPE_REFS=(
+    "game-types/INDEX.md"
+    "game-types/tycoon.md"
+    "game-types/obby.md"
+    "game-types/simulator.md"
+    "game-types/combat-arena.md"
+    "game-types/horror-exploration.md"
+)
+
+for ref in "${GAME_TYPE_REFS[@]}"; do
+    if [ -f "$PROJECT_ROOT/references/$ref" ]; then
+        pass "references/$ref"
+    else
+        fail "references/$ref missing" "Game type profile referenced in SKILL.md routing table"
+    fi
+done
+
+PATTERN_REFS=(
+    "patterns/INDEX.md"
+    "patterns/ai-systems.md"
+    "patterns/audio-systems.md"
+    "patterns/camera-effects.md"
+    "patterns/multiplayer-systems.md"
+    "patterns/anti-exploit.md"
+    "patterns/trigger-systems.md"
+)
+
+for ref in "${PATTERN_REFS[@]}"; do
+    if [ -f "$PROJECT_ROOT/references/$ref" ]; then
+        pass "references/$ref"
+    else
+        fail "references/$ref missing" "Pattern file referenced in SKILL.md routing table"
     fi
 done
 
@@ -146,6 +183,8 @@ STARTER=(
     "starter-code/RateLimiter.luau"
     "starter-code/ErrorReporter.luau"
     "starter-code/Analytics.luau"
+    "starter-code/MathUtils.luau"
+    "starter-code/MathUtils.spec.luau"
 )
 
 for starter in "${STARTER[@]}"; do
@@ -169,11 +208,23 @@ else
     fail "assets/vscode/extensions.json missing" "Recommended extensions list"
 fi
 
-# CLAUDE.md template
+if [ -f "$PROJECT_ROOT/assets/vscode/tasks.json" ]; then
+    pass "assets/vscode/tasks.json"
+else
+    fail "assets/vscode/tasks.json missing" "VS Code task shortcuts (Rojo Serve, Wally Install, etc.)"
+fi
+
+# Templates
 if [ -f "$PROJECT_ROOT/assets/claude-template/CLAUDE.md" ]; then
     pass "assets/claude-template/CLAUDE.md"
 else
     fail "assets/claude-template/CLAUDE.md missing" "Template for generated projects"
+fi
+
+if [ -f "$PROJECT_ROOT/assets/docs/README.md" ]; then
+    pass "assets/docs/README.md"
+else
+    fail "assets/docs/README.md missing" "README template copied to project root in Step 6"
 fi
 
 echo ""
@@ -205,20 +256,6 @@ if [ -f "$PROJECT_ROOT/install.ps1" ]; then
     pass "install.ps1 exists"
 else
     fail "install.ps1 missing" "Windows installer"
-fi
-
-# Slash command file
-if [ -f "$PROJECT_ROOT/commands/roblox-dev/new-project.md" ]; then
-    pass "commands/roblox-dev/new-project.md exists"
-
-    # Check for YAML frontmatter (starts with ---)
-    if head -1 "$PROJECT_ROOT/commands/roblox-dev/new-project.md" | grep -q "^---$"; then
-        pass "Slash command has YAML frontmatter"
-    else
-        fail "Slash command missing frontmatter" "File must start with --- delimiter"
-    fi
-else
-    fail "commands/roblox-dev/new-project.md missing" "Slash command for /roblox-dev:new-project"
 fi
 
 echo ""
@@ -259,7 +296,64 @@ fi
 echo ""
 
 # ----------------------------------------
-# 6. Skill Installation (if installed)
+# 6. Skill Integrity
+# ----------------------------------------
+echo "Skill Integrity"
+echo "---------------"
+
+# Frontmatter validation — SKILL.md must have name: and description: fields
+# so Claude can discover and route to this skill
+if grep -q "^name:" "$PROJECT_ROOT/SKILL.md" 2>/dev/null; then
+    pass "SKILL.md has 'name:' frontmatter field"
+else
+    fail "SKILL.md missing 'name:' frontmatter" "Skill won't be discoverable without a name field"
+fi
+
+if grep -q "^description:" "$PROJECT_ROOT/SKILL.md" 2>/dev/null; then
+    pass "SKILL.md has 'description:' frontmatter field"
+else
+    fail "SKILL.md missing 'description:' frontmatter" "Skill won't be discoverable without a description field"
+fi
+
+# Template placeholder integrity — verify key placeholders exist in templates
+# (prevents accidental clearing that would break generated project files)
+CLAUDE_TEMPLATE="$PROJECT_ROOT/assets/claude-template/CLAUDE.md"
+README_TEMPLATE="$PROJECT_ROOT/assets/docs/README.md"
+
+TEMPLATE_PLACEHOLDERS=(
+    "PROJECT_NAME"
+    "PROJECT_INTENT"
+    "PROJECT_SOURCE_OF_TRUTH"
+    "PROJECT_EXPLOIT_SENSITIVITY"
+    "PROJECT_PERSISTENCE"
+)
+
+if [ -f "$CLAUDE_TEMPLATE" ]; then
+    for placeholder in "${TEMPLATE_PLACEHOLDERS[@]}"; do
+        if grep -q "$placeholder" "$CLAUDE_TEMPLATE" 2>/dev/null; then
+            pass "CLAUDE.md template contains $placeholder"
+        else
+            fail "CLAUDE.md template missing $placeholder" "Placeholder was removed — generated projects won't have this field filled in"
+        fi
+    done
+else
+    warn "CLAUDE.md template not found" "Skipping placeholder checks"
+fi
+
+if [ -f "$README_TEMPLATE" ]; then
+    if grep -q "PROJECT_NAME" "$README_TEMPLATE" 2>/dev/null; then
+        pass "README.md template contains PROJECT_NAME"
+    else
+        fail "README.md template missing PROJECT_NAME" "Generated README won't have the project name filled in"
+    fi
+else
+    warn "README.md template not found" "Skipping placeholder check"
+fi
+
+echo ""
+
+# ----------------------------------------
+# 7. Skill Installation (if installed)
 # ----------------------------------------
 echo "Skill Installation"
 echo "------------------"

@@ -26,12 +26,12 @@ When you say "arena," "PvP," or "competitive," you're usually implying:
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"        # Async operations
-GoodSignal = "stravant/goodsignal" # Custom events (critical for match events)
-Trove = "sleitnick/trove"         # Cleanup between rounds
+Promise = "evaera/promise@^4.0.0"        # Async operations
+GoodSignal = "stravant/goodsignal@^0.3.1" # Custom events (critical for match events)
+Trove = "sleitnick/trove@^1.8.0"         # Cleanup between rounds
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"  # For persistent stats/ranks
+ProfileStore = "lm-loleris/profilestore@^1.0.3"  # For persistent stats/ranks
 ```
 
 **Consider adding:**

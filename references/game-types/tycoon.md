@@ -26,12 +26,12 @@ When you say "tycoon," you're usually implying:
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"        # Async operations
-GoodSignal = "stravant/goodsignal" # Custom events
-Trove = "sleitnick/trove"         # Cleanup management
+Promise = "evaera/promise@^4.0.0"        # Async operations
+GoodSignal = "stravant/goodsignal@^0.3.1" # Custom events
+Trove = "sleitnick/trove@^1.8.0"         # Cleanup management
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"  # Data persistence (required for tycoons)
+ProfileStore = "lm-loleris/profilestore@^1.0.3"  # Data persistence (required for tycoons)
 ```
 
 **Optional but common:**

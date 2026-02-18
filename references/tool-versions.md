@@ -42,9 +42,9 @@ rokit add rojo-rbx/rojo@7.6.1     # Exact version
 ### Example: Team Project Setup
 
 ```toml
-# rokit.toml (committed to git)
+# rokit.toml (committed to git) — verify current versions before writing
 [tools]
-rojo = "rojo-rbx/rojo@7.7.0"
+rojo = "rojo-rbx/rojo@7.6.1"
 wally = "UpliftGames/wally@0.3.2"
 selene = "Kampfkarren/selene@0.30.0"
 stylua = "JohnnyMorganz/StyLua@2.3.1"
@@ -54,23 +54,19 @@ Team members run `rokit install` after pulling to get exact versions.
 
 ### Wally Package Pinning
 
-Same principles apply to Wally packages in `wally.toml`:
+**Important:** Wally requires a version specifier — entries without `@version` will fail to install. Use caret ranges or exact versions:
 
 ```toml
-# No pin (latest compatible)
+# Caret range (latest compatible within major/minor)
 [dependencies]
-Promise = "evaera/promise"
+Promise = "evaera/promise@^4.0.0"   # Gets 4.x.x, never 5.0.0
 
-# Pinned to major (safe updates)
-[dependencies]
-Promise = "evaera/promise@4"
-
-# Exact (team projects, production)
+# Exact (fully reproducible, team/production)
 [dependencies]
 Promise = "evaera/promise@4.0.0"
 ```
 
-**Recommendation:** For team projects, pin Wally packages to exact versions and update deliberately.
+**Recommendation:** Use caret ranges (`^major.minor.patch`) by default. Pin to exact versions for CI/CD or team projects where reproducibility matters. Always verify current versions before writing — check via `curl -s "https://raw.githubusercontent.com/UpliftGames/wally-index/main/AUTHOR/PACKAGE" | tail -1`.
 
 ## Checking Installed Versions
 
@@ -82,7 +78,10 @@ rokit list
 
 ```bash
 # Update a specific tool to latest
-rokit add rojo-rbx/rojo
+rokit update rojo-rbx/rojo
+
+# Update all tools in rokit.toml
+rokit update
 
 # Update Rokit itself
 rokit self-update
@@ -125,27 +124,6 @@ rokit self-update
 - Run Luau scripts outside of Roblox Studio
 - Useful for build scripts, testing, CI/CD automation
 - Install: `rokit add lune-org/lune`
-
-## A Note on GitHub Activity
-
-Some libraries show infrequent commits. This usually means **"stable and feature-complete,"** not "abandoned."
-
-Examples:
-- **GoodSignal** — Does one job perfectly. No changes needed.
-- **ProfileStore** — Mature, battle-tested. Updates only for engine changes.
-
-Before assuming a library is abandoned, check:
-
-1. **Are issues being responded to?** Active maintainer engagement matters more than commit frequency.
-2. **Are there recent releases?** Releases can happen without commits (version bumps, CI builds).
-3. **Is it still recommended in DevForum discussions?** Community consensus is a strong signal.
-4. **When was the last meaningful update?** A library last updated 6 months ago for a bug fix is healthy.
-
-**Red flags** (actually abandoned):
-- Unanswered issues piling up for 1+ years
-- Broken with current Roblox engine, no fix in sight
-- Author explicitly archived the repo
-- Superseded by author's own newer library (e.g., ProfileService → ProfileStore)
 
 ## Troubleshooting
 

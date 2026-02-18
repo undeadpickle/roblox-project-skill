@@ -31,7 +31,10 @@ Consult these files based on the topic:
 | Roblox API, engine classes, how does X work | Context7: `/websites/create_roblox_reference_engine` → fallback: `create.roblox.com/docs/reference/engine` |
 | Tutorials, guides, best practices, "how to" | Context7: `/websites/create_roblox` → fallback: `create.roblox.com/docs` |
 | Package recommendations, "what library for X", dependencies | `references/libraries.md` |
-| Something not working, debugging, errors, "why isn't X working" | `references/gotchas.md` then `references/debugging.md` |
+| Rojo sync issues, Wally package errors, Git problems | `references/gotchas-tooling.md` then `references/debugging.md` |
+| Runtime errors, memory leaks, DataStores, "works in Studio breaks in prod" | `references/gotchas-runtime.md` then `references/debugging.md` |
+| Type errors, LSP config, strict mode, sourcemap issues | `references/gotchas-lsp.md` |
+| Something not working (unclear category) | `references/gotchas.md` (index) → load the relevant category file |
 | Code style, naming conventions, file organization | `references/luau-conventions.md` |
 | How to implement patterns (services, cleanup, validation, etc.) | `references/luau-patterns.md` |
 | AI behavior, state machines, pathfinding, detection | `references/patterns/ai-systems.md` |
@@ -44,7 +47,6 @@ Consult these files based on the topic:
 | MCP setup, Studio connection, AI-assisted development | `references/mcp-setup.md` |
 | Images, sounds, models, asset workflows | `references/asset-pipeline.md` |
 | Testing, Jest Lua, writing tests | `references/testing.md` |
-| Quick syntax lookup, common APIs | `references/quick-reference.md` |
 | "What should I build next?", progress guidance | Check project's `CLAUDE.md` roadmap section |
 
 **Starter code in `assets/starter-code/`** shows recommended patterns:
@@ -103,22 +105,23 @@ touch Packages/.gitkeep ServerPackages/.gitkeep
 
 ```bash
 git init
-rokit init
-rokit add rojo-rbx/rojo
-rokit add UpliftGames/wally
-rokit add JohnnyMorganz/StyLua
-rokit add Kampfkarren/selene
 ```
 
-**Verify tools installed:**
+**Check if Rokit tools are already globally installed:**
 ```bash
-rojo --version
-wally --version
-stylua --version
-selene --version
+rojo --version && wally --version && stylua --version && selene --version
 ```
 
-If any command fails, check Rokit installation and retry `rokit add`.
+- **If all four pass:** Tools are globally available — skip `rokit init` and `rokit add`, proceed to `wally init`.
+- **If any fail:** Install via Rokit:
+  ```bash
+  rokit init
+  rokit add rojo-rbx/rojo
+  rokit add UpliftGames/wally
+  rokit add JohnnyMorganz/StyLua
+  rokit add Kampfkarren/selene
+  ```
+  Then re-verify all four tools before continuing.
 
 Initialize Wally:
 ```bash
@@ -192,7 +195,7 @@ realm = "shared"
 private = true
 ```
 
-**Note:** `private = true` prevents accidental publishing. See `references/gotchas.md` for other Wally pitfalls.
+**Note:** `private = true` prevents accidental publishing. See `references/gotchas-tooling.md` for other Wally pitfalls.
 
 ### Step 8: Optional — Add Common Packages
 
@@ -202,25 +205,33 @@ private = true
 > - **Data persistence:** ProfileStore
 > - **UI framework:** Fusion (typically vendored, not via Wally)"
 
-Based on response, add to `wally.toml`:
+**Before writing wally.toml, look up current versions:**
+
+Wally requires explicit version specifiers — never write a package entry without a version. Use `brave-search` to search `wally.run {author} {package}`, or fetch `https://wally.run/package/{author}/{package}` directly to get the current latest.
+
+Use **caret syntax** (`^major.minor.patch`) — not exact pins. This follows community standard and allows compatible updates:
+- `^4.0.0` — gets 4.x.x, never 5.0.0 (safe for major-version API stability)
+- `^0.3.1` — gets 0.3.x only (pre-1.0: caret is conservative within the minor)
+
+Based on response, add to `wally.toml` (versions shown are examples — **verify current before writing**):
 
 **Core utilities (recommended):**
 ```toml
 [dependencies]
-Promise = "evaera/promise"
-GoodSignal = "stravant/goodsignal"
-Trove = "sleitnick/trove"
+Promise = "evaera/promise@^4.0.0"
+GoodSignal = "stravant/goodsignal@^0.3.1"
+Trove = "sleitnick/trove@^1.8.0"
 ```
 
 **With data persistence:**
 ```toml
 [dependencies]
-Promise = "evaera/promise"
-GoodSignal = "stravant/goodsignal"
-Trove = "sleitnick/trove"
+Promise = "evaera/promise@^4.0.0"
+GoodSignal = "stravant/goodsignal@^0.3.1"
+Trove = "sleitnick/trove@^1.8.0"
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"
+ProfileStore = "lm-loleris/profilestore@^1.0.3"
 ```
 
 Then run:
@@ -230,49 +241,60 @@ wally install
 
 **For detailed library recommendations:** See `references/libraries.md`.
 
-### Step 9: Optional — MCP Setup
+### Step 9: Note — MCP Setup
 
-**Ask the user:**
-> "Do you have Roblox Studio MCP configured? (Lets Claude run code and inspect objects in Studio)"
+MCP is covered at Step 12. Continue to optional modules now.
 
-If no and they want it, follow `references/mcp-setup.md` for complete setup instructions.
+### Step 10: Apply Optional Modules
 
-MCP is optional but powerful—skip for now if you just want to start coding.
+Apply modules based on the profile from the wizard. If no wizard was run, ask the user using the decision table below.
 
-### Choosing Optional Modules
+**Module decision table:**
 
-Before asking about each module, provide context:
+| Module | Auto-include when... | Ask if... |
+|--------|---------------------|-----------|
+| DataManager | `persistence` = `core` | persistence is `light` or unclear |
+| RateLimiter | `exploitSensitivity` = `high`, OR `medium` + persistence ≠ `none` | exploit sensitivity is unclear |
+| ErrorReporter | `intent` = `long-lived` | intent is `mvp` and game will have live players |
+| Analytics | `intent` = `long-lived` AND persistence ≠ `none` | user asks for behavior tracking |
+| Jest Lua | User explicitly requests it | project has complex business logic worth testing |
 
-| Module | Add if your game... |
-|--------|---------------------|
-| DataManager | Saves player progress (inventory, levels, currency) |
-| RateLimiter | Has combat, trading, or player-triggered server actions |
-| ErrorReporter | Will have live players (catches production bugs) |
-| Analytics | Needs player behavior tracking |
-| Jest Lua | Has complex logic worth unit testing |
+**For most games:** DataManager + ErrorReporter is a safe default starting set.
 
-**For most games:** Start with DataManager + ErrorReporter. Add others as needed.
+### Asking About Modules
 
-### Step 10: Optional — Data Manager
+When a module is in the "Ask if" column, use AskUserQuestion with three options:
 
-If user selected ProfileStore, ask:
-> "Want me to add a DataManager starter module? (ProfileStore + Promise integration)"
+```json
+{
+  "question": "Should I include [ModuleName]?",
+  "header": "[ModuleName]",
+  "options": [
+    { "label": "Yes, include it", "description": "[one-line plain-language description of what it does]" },
+    { "label": "Skip it for now", "description": "You can add it later if you need it" },
+    { "label": "Tell me more", "description": "Explain what it does, the trade-offs, and whether I actually need it" }
+  ],
+  "multiSelect": false
+}
+```
 
-If yes, copy `assets/starter-code/DataManager.luau` to `src/server/modules/DataManager.luau`.
+If they pick **Tell me more**: explain the module in plain, non-technical language — what problem it solves, what happens if you don't have it, and a direct recommendation based on their project profile. Then ask again with just Yes / Skip. Don't hedge; give a real opinion.
 
-### Step 10b: Optional — Rate Limiting
+---
 
-Ask:
-> "Want me to add rate limiting for RemoteEvents? (Recommended for exploit protection)"
+#### DataManager (ProfileStore + Promise integration)
 
-If yes, copy `assets/starter-code/RateLimiter.luau` to `src/server/modules/RateLimiter.luau`.
+If auto-selected or user confirms:
+1. Copy `assets/starter-code/DataManager.luau` to `src/server/modules/DataManager.luau`
 
-### Step 10c: Optional — Error Reporting
+#### RateLimiter (RemoteEvent exploit protection)
 
-Ask:
-> "Want me to add global error reporting? (Captures unhandled errors)"
+If auto-selected or user confirms:
+1. Copy `assets/starter-code/RateLimiter.luau` to `src/server/modules/RateLimiter.luau`
 
-If yes:
+#### ErrorReporter (Global error capture)
+
+If auto-selected or user confirms:
 1. Copy `assets/starter-code/ErrorReporter.luau` to `src/server/modules/ErrorReporter.luau`
 2. Add to `init.server.luau` after requires:
 ```luau
@@ -280,34 +302,25 @@ local ErrorReporter = require(ServerModules.ErrorReporter)
 ErrorReporter.init()
 ```
 
-**For production:** The module runs in "development" mode by default (logs to Output). For live games, configure an endpoint to receive errors — see `references/debugging.md` → "Production Error Reporting" for Discord webhook setup.
+**For production:** The module runs in "development" mode by default (logs to Output). For live games, configure an endpoint — see `references/debugging.md` → "Production Error Reporting" for Discord webhook setup.
 
-### Step 10d: Optional — Analytics
+#### Analytics (Player event tracking)
 
-Ask:
-> "Want me to add player analytics tracking? (Session, purchase, level events)"
+If auto-selected or user confirms:
+1. Copy `assets/starter-code/Analytics.luau` to `src/server/modules/Analytics.luau`
 
-If yes, copy `assets/starter-code/Analytics.luau` to `src/server/modules/Analytics.luau`.
+#### Jest Lua (Unit testing)
 
-### Step 10e: Optional — Testing Setup
-
-Ask:
-> "Want me to set up Jest Lua for unit testing?"
-
-If yes:
+If requested:
 1. Add to `wally.toml`:
 ```toml
 [dev-dependencies]
 Jest = "jsdotlua/jest@3.10.0"
 JestGlobals = "jsdotlua/jest-globals@3.10.0"
 ```
-
 2. Run `wally install`
-
 3. Create `scripts/run-tests.luau` with the test runner (see `references/testing.md`)
-
-4. Inform user:
-> "Testing is set up! Create test files with `.spec.luau` suffix next to your modules. Run tests in Studio or via `run-in-roblox`."
+4. Inform user: "Testing is set up! Create test files with `.spec.luau` suffix next to your modules."
 
 ### Step 11: Verify & Commit
 
@@ -360,6 +373,8 @@ Tell user:
 
 5. **Test:** Press F5 in Studio, check Output for "[Client] Ready" and "[Server] Ready"
 
+6. **Optional — MCP:** If you want Claude to run code and inspect objects directly in Studio, set up the Roblox Studio MCP. Follow `references/mcp-setup.md` for complete instructions. Skip for now if you just want to start coding.
+
 **Project is ready for development.**
 
 ---
@@ -388,44 +403,6 @@ Don't push tests for:
 - Direct Roblox API wrappers
 - Quick prototypes (unless user asks)
 
-### How to Write Tests
+### How to Write and Run Tests
 
-1. **Create test file** next to the module:
-   ```
-   src/shared/MathUtils.luau
-   src/shared/MathUtils.spec.luau  ← Test file
-   ```
-
-2. **Follow Jest Lua syntax** (see `references/testing.md`):
-   ```luau
-   local JestGlobals = require("@DevPackages/JestGlobals")
-   local describe = JestGlobals.describe
-   local it = JestGlobals.it
-   local expect = JestGlobals.expect
-
-   return function()
-       describe("ModuleName", function()
-           it("should do the expected thing", function()
-               expect(result).toBe(expected)
-           end)
-       end)
-   end
-   ```
-
-3. **Test behavior, not implementation** — Focus on inputs/outputs
-
-### How to Run Tests
-
-**In Studio:**
-- Run the test runner script (usually `scripts/run-tests.luau`)
-- Check Output window for results
-
-**From CLI (CI/CD):**
-```bash
-run-in-roblox --place test-place.rbxl --script scripts/run-tests.luau
-```
-
-**Pure logic tests (no Roblox APIs):**
-```bash
-lune run tests/math-utils.spec.luau
-```
+See `references/testing.md` for Jest Lua syntax, file placement conventions, and how to run tests in Studio vs CLI vs Lune.

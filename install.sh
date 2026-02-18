@@ -89,15 +89,6 @@ if [ -f "$TMP_DIR/$EXTRACT_DIR/VERSION" ]; then
     cp "$TMP_DIR/$EXTRACT_DIR/VERSION" "$SKILL_DIR/"
 fi
 
-# Install slash command (Claude Code local only — not available in computer use)
-if [ ! -d "/mnt/skills/user" ]; then
-    COMMANDS_DIR="${HOME}/.claude/commands/roblox-dev"
-    rm -rf "$COMMANDS_DIR"
-    mkdir -p "$COMMANDS_DIR"
-    cp "$TMP_DIR/$EXTRACT_DIR/commands/roblox-dev/new-project.md" "$COMMANDS_DIR/"
-    echo "→ Slash command installed"
-fi
-
 echo ""
 echo "✓ Installation complete!"
 if [ "$VERSION" != "main" ]; then
@@ -105,7 +96,6 @@ if [ "$VERSION" != "main" ]; then
 fi
 echo ""
 echo "Usage:"
-echo "  Run:  /roblox-dev:new-project"
-echo "  Or ask Claude: \"Set up a new Roblox project\""
+echo "  Ask Claude: \"Set up a new Roblox project\""
 echo ""
 echo "Docs: ${REPO_URL}#readme"

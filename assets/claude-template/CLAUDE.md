@@ -4,7 +4,7 @@
 
 Brief description of what this project does.
 
-> Generated with [roblox-dev skill](https://github.com/undeadpickle/roblox-project-skill) vSKILL_VERSION
+> Generated with roblox-dev skill vSKILL_VERSION
 
 ## Project Profile
 

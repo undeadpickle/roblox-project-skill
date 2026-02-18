@@ -26,12 +26,12 @@ When you say "simulator" or "pet game," you're usually implying:
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"        # Async operations (critical for egg hatching)
-GoodSignal = "stravant/goodsignal" # Custom events
-Trove = "sleitnick/trove"         # Cleanup management
+Promise = "evaera/promise@^4.0.0"        # Async operations (critical for egg hatching)
+GoodSignal = "stravant/goodsignal@^0.3.1" # Custom events
+Trove = "sleitnick/trove@^1.8.0"         # Cleanup management
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"  # Required - heavy data needs
+ProfileStore = "lm-loleris/profilestore@^1.0.3"  # Required - heavy data needs
 ```
 
 **Consider adding:**

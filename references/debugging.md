@@ -319,9 +319,9 @@ The `ErrorReporter` module captures errors automatically but needs a destination
    - Copy the webhook URL (looks like `https://discord.com/api/webhooks/...`)
 
 2. **Create a proxy** — Roblox can't call Discord directly (domain not allowed). Use a free service:
-   - [Hyra](https://hyra.io/) — Roblox-focused, free tier
-   - [Guilded webhook proxy](https://github.com/lewisakura/webhook-proxy) — Self-hostable
-   - Any serverless function (Cloudflare Workers, Vercel)
+   - [Cloudflare Workers](https://workers.cloudflare.com/) — Free tier, reliable, simple deploy
+   - [Vercel](https://vercel.com/) — Free tier, good if you already use it
+   - Any serverless function works; see the worker example below
 
 3. **Configure ErrorReporter** in your server init:
 
@@ -398,5 +398,5 @@ print(HttpService:JSONEncode(myTable))
 print(debug.traceback())
 
 -- Safe access with fallback
-local value = data and data.coins or 0
+local value = if data then data.coins else 0
 ```

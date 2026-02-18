@@ -52,7 +52,6 @@ Check that these exist in `~/.claude/skills/roblox-dev/`:
 - [ ] `assets/` folder — Templates and starter code
 - [ ] `references/` folder — Guide documents
 - [ ] `references/game-types/` folder — Genre profiles (tycoon.md, obby.md, etc.)
-- [ ] `references/patterns/` folder — Reusable code patterns (ai-systems.md, audio-systems.md, etc.)
 
 > **What this checks:** The installer downloaded everything to the right place.
 
@@ -170,10 +169,8 @@ Claude should give accurate answers based on the reference documents.
 |---------------|---------------------|
 | "Set up a tycoon" | `references/game-types/tycoon.md` → quick-start with implied decisions |
 | "What's the MVP for an obby?" | `references/game-types/obby.md` → Phase 1 checklist |
-| "How do I add camera shake?" | `references/patterns/camera-effects.md` → shake system |
-| "Show me an AI state machine" | `references/patterns/ai-systems.md` → state machine pattern |
 | "What library should I use for saving data?" | `references/libraries.md` → recommends ProfileStore |
-| "My Rojo plugin won't connect" | `references/gotchas.md` → troubleshooting steps |
+| "My Rojo plugin won't connect" | `references/gotchas-tooling.md` → Rojo troubleshooting steps |
 | "How do I clean up connections?" | `references/luau-patterns.md` → Trove pattern |
 | "What's the naming convention for modules?" | `references/luau-conventions.md` → PascalCase |
 | "What should I build next?" | Project's `CLAUDE.md` → build roadmap |
@@ -221,7 +218,7 @@ Then restart VS Code / Claude Code.
 |---------|----------|
 | Installer fails | Check your internet connection. Try downloading manually from GitHub. |
 | Claude doesn't know about Roblox | Restart Claude Code after installing the skill. |
-| Rojo won't connect | See `references/gotchas.md` → Rojo section |
+| Rojo won't connect | See `references/gotchas-tooling.md` → Rojo section |
 | "Module not found" errors | Run `wally install` to download packages |
 | Selene/StyLua not found | Run `rokit install` in your project folder |
 

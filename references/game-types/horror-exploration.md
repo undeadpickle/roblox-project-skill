@@ -227,12 +227,12 @@ When you say "horror," "escape," or "story game," you're usually implying:
 
 ```toml
 [dependencies]
-Promise = "evaera/promise"        # Async operations (cutscenes, timed events)
-GoodSignal = "stravant/goodsignal" # Custom events (AI state changes, triggers)
-Trove = "sleitnick/trove"         # Cleanup between chapters
+Promise = "evaera/promise@^4.0.0"        # Async operations (cutscenes, timed events)
+GoodSignal = "stravant/goodsignal@^0.3.1" # Custom events (AI state changes, triggers)
+Trove = "sleitnick/trove@^1.8.0"         # Cleanup between chapters
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"  # Chapter progress, unlocks
+ProfileStore = "lm-loleris/profilestore@^1.0.3"  # Chapter progress, unlocks
 ```
 
 **Custom modules to build** (see [patterns/](../patterns/INDEX.md)):

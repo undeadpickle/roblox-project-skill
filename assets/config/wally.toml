@@ -6,9 +6,9 @@ realm = "shared"
 private = true
 
 [dependencies]
-Promise = "evaera/promise"
-GoodSignal = "stravant/goodsignal"
-Trove = "sleitnick/trove"
+Promise = "evaera/promise@^4.0.0"
+GoodSignal = "stravant/goodsignal@^0.3.1"
+Trove = "sleitnick/trove@^1.8.0"
 
 [server-dependencies]
-ProfileStore = "lm-loleris/profilestore"
+ProfileStore = "lm-loleris/profilestore@^1.0.3"
